@@ -1,6 +1,6 @@
 ---
 name: develop
-description: Frappe Harness entry point for any Frappe app development request (UI tweak, feature, bug fix, refactoring, upgrade, investigation). Picks a playbook, decides whether to grill, and delegates to the Implementer and Tester agents.
+description: REQUIRED first step for ANY request that changes a Frappe app or site in a project using Frappe Harness — code, DocType JSON, metadata, even tiny UI tweaks like field order or labels — and for upgrades or investigations. Picks a playbook, decides whether to grill, and delegates implementation to the implementer agent and verification to the tester agent. Main must not edit production code itself.
 ---
 
 # develop — Playbook 선택과 위임 (Main 전용)

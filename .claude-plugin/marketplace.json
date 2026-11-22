@@ -1,0 +1,7 @@
+{
+  "name": "frappe-harness-local",
+  "owner": { "name": "local" },
+  "plugins": [
+    { "name": "frappe-harness", "source": "./", "description": "Frappe app development harness" }
+  ]
+}
