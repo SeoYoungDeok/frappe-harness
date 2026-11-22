@@ -76,7 +76,7 @@ P=(-- . ':(exclude,glob)**/test_*.py' ':(exclude,glob)**/tests/**' ':(exclude,gl
 - 사용자와 합의했거나 Tester가 검증한 중요 결정만 프로젝트 결정 문서(`.frappe-harness.toml`의 `context_doc`)에 상태와 함께 적는다.
 
 ## 6. 작업 기록 (작업당 정확히 1줄)
-종료 시 `.frappe-harness/tasks.jsonl`에 한 줄 append. 측정하지 못한 값은 추정하지 말고 `null`.
+종료 시 `.frappe-harness/tasks.jsonl`에 한 줄 append. 판정·계획·조사만 하고 코드를 바꾸지 않은 작업, 사용자 질문으로 멈춘 작업도 포함한다(`outcome`에 `PLANNED`·`ANSWERED`·`WAITING_USER` 사용 가능). 측정하지 못한 값은 추정하지 말고 `null`.
 
 ```json
 {"task_id":"YYYY-MM-DD-NNN","cli":"claude-code|codex","playbook":"small-change","started_at":"...","ended_at":"...","elapsed_seconds":0,"outcome":"PASS|FAIL|UNVERIFIED","test_mode":"sequential|parallel","token_input":null,"token_output":null,"token_source":null,"token_status":"unavailable","notes":""}

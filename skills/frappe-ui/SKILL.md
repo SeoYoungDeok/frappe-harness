@@ -14,6 +14,7 @@ description: Checkpoints for Frappe UI work — Desk forms and lists, client scr
 - 폼 스크립트는 표준 API만: `frm.set_query`, `frm.add_custom_button`, `frm.set_df_property`, `frm.toggle_display`, `frappe.call`.
 - **화면에서 숨기거나 막아도 서버는 열려 있다.** 입력 제한·권한은 서버 검증과 함께 바꾼다(frappe-backend).
 - 목록 열 순서는 `in_list_view` 필드 순서 또는 List View Settings(사이트 데이터)가 정한다. 사이트 데이터라면 다른 사이트로 옮겨지지 않는다.
+  - **v16.60.2 확인(2026-11-22 Investigation):** List View Settings `fields`가 있으면 `in_list_view` 열을 그 순서로 다시 짜고, Settings에 없는 열은 빠진다(`frappe/public/js/frappe/list/list_view.js` `setup_columns`·`reorder_listview_fields`). Desk 목록 설정 대화상자로 저장하면 `in_list_view` Property Setter가 생긴다(`frappe/desk/doctype/list_view_settings/list_view_settings.py` `set_in_list_view_property`).
 - **v16.60.2 확인:** Desk 경로는 `/desk/<doctype-slug>`이고 `/app/...`은 `/desk`로 리디렉션된다.
 
 ## 커스텀 프런트엔드(SPA)
