@@ -13,6 +13,7 @@ frappe-harness/
 ├── .agents/plugins/marketplace.json Codex 로컬 마켓플레이스
 ├── agents/{implementer,tester}.md   역할 원본(Claude Code가 직접 로드)
 ├── adapters/codex/agents/*.toml     Codex용 사본(프로젝트 .codex/agents에 복사)
+├── adapters/codex/hooks.json        Codex용 guard 연결(프로젝트 .codex/hooks.json에 복사)
 ├── skills/
 │   ├── develop/                     진입점: Playbook 선택·위임·동결·기록
 │   │   └── playbooks/               small-change, feature, bug-fix, refactoring, upgrade, investigation
@@ -44,7 +45,8 @@ codex plugin add frappe-harness@frappe-harness-local
   [projects."/path/to/frappe-bench/apps/<app>"]
   trust_level = "trusted"
   ```
-- **guard Hook은 Codex에서 아직 동작하지 않는다(UNVERIFIED).** 이 버전에서는 플러그인의 `hooks/hooks.json`도, 매니페스트 inline 선언도 `/hooks` 목록에 나타나지 않았다(문서상 플러그인 Hook은 데스크톱 앱 수동 설치에서만 지원). Codex에서는 승인 규칙(develop §7)과 샌드박스 승인에 의존한다.
+- **guard Hook은 프로젝트 Hook으로 연결한다.** 이 버전은 플러그인의 `hooks/hooks.json`도, 매니페스트 inline 선언도 인식하지 않았다. 대신 `adapters/codex/hooks.json`을 프로젝트 `.codex/hooks.json`으로 복사하면 동작한다. 이 파일은 설치된 플러그인 캐시의 `scripts/guard.py`를 가리키므로 플러그인 버전(`0.0.1`)이 바뀌면 경로도 고친다.
+- 처음 실행할 때(또는 Hook이 바뀐 뒤) 대화형 Codex가 "Hooks need review"를 띄운다. 명령을 확인하고 신뢰해야 실행된다. 기기마다 한 번씩 필요하다.
 
 ## 프로젝트 설정 (앱 저장소 루트)
 
@@ -54,6 +56,7 @@ codex plugin add frappe-harness@frappe-harness-local
 | `CLAUDE.md` | `@AGENTS.md` 한 줄(두 CLI가 같은 규칙을 읽음) |
 | `.frappe-harness.toml` | `bench`(상대 경로 가능), `app`, `context_doc`, `[sites] dev/test`, `[test_server] port` |
 | `.codex/agents/*.toml` | Codex용 Implementer/Tester |
+| `.codex/hooks.json` | Codex용 guard 연결(`adapters/codex/hooks.json` 복사) |
 | `.gitignore` | `.frappe-harness/` (작업 기록·증거는 로컬 전용) |
 
 예시:
@@ -86,7 +89,7 @@ port = 8001
 | Tester 독립성 | 서브 에이전트는 받은 프롬프트만 봄 | `spawn_agent` 기본이 대화 전체 상속 → `fork_turns: "none"` 필수(develop에 명시). 서브 에이전트끼리 메시지 가능 → 역할 파일로 금지 |
 | 서브 에이전트 권한 제한 | 플러그인 에이전트의 `permissionMode` 무시 | 부모 샌드박스·승인 설정 상속 |
 | Test 화면 스크린샷 | 헤드리스 Chrome 가능 | 샌드박스 안에서 Chrome 실패. 대화형에서 권한 상승 승인 필요, `codex exec`는 UNVERIFIED |
-| guard Hook | `ask`로 사용자 승인 요청(`-p`에서는 거부), 실호출 확인 | 플러그인 Hook 미인식으로 미동작. `guard.py`의 Codex 분기(거부, exit 2)는 단위 테스트로만 확인 |
+| guard Hook | 플러그인 Hook. `ask`로 사용자 승인 요청(`-p`에서는 거부), 실호출 확인 | 프로젝트 `.codex/hooks.json` + `/hooks` 신뢰. `ask` 미지원이라 거부(exit 2), 실호출 확인 |
 
 - guard는 문자열 패턴만 본다. 변수로 감춘 명령, 따옴표로 감싼 하위 명령, `find -delete`, 파일에서 읽는 SQL, `DELETE FROM`, 상위 폴더 삭제, CRLF 줄 이음은 놓친다. 명령을 언급만 하는 `echo`·커밋 메시지는 잘못 걸린다. 보호의 기본은 사용자 승인 규칙과 파일·DB 권한이다.
 - `scripts/check.py`와 별도 `verify` Skill은 만들지 않는다(D-24).
