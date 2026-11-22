@@ -55,13 +55,15 @@ description: REQUIRED first step for ANY request that changes a Frappe app or si
 ```
 
 ## 4. 코드 동결과 스냅샷 (검증 전·후 동일해야 함)
-Implementer 완료 후, Tester 호출 직전과 Tester 보고 직후에 앱 저장소에서 같은 명령으로 지문을 만든다.
+Implementer 완료 후, Tester 호출 직전과 Tester 보고 직후에 앱 저장소에서 같은 명령으로 **프로덕션 코드 지문**을 만든다. 테스트 파일은 Tester 소유라 제외한다(미커밋·미추적 파일 포함).
 
 ```bash
-{ git status --porcelain=v1 --untracked-files=all; git diff HEAD; git ls-files -o --exclude-standard -z | xargs -0 shasum 2>/dev/null; } | shasum | cut -c1-12
+P=(-- . ':(exclude,glob)**/test_*.py' ':(exclude,glob)**/tests/**' ':(exclude,glob)**/*.spec.*' ':(exclude,glob)**/*.test.*')
+{ git status --porcelain=v1 --untracked-files=all "${P[@]}"; git diff HEAD "${P[@]}"; git ls-files -o --exclude-standard -z "${P[@]}" | xargs -0 shasum 2>/dev/null; } | shasum | cut -c1-12
 ```
 
-두 값이 다르면 그 검증은 무효다. 재검증한다. 검증 중에는 Implementer를 다시 부르지 않는다.
+- 두 값이 다르면 그 검증은 무효다. 이유를 붙여 PASS로 바꾸지 말고 재검증한다. 검증 중에는 Implementer를 다시 부르지 않는다.
+- Tester가 바꾼 테스트 파일은 `git status`로 따로 확인해 보고에 적는다. 기존 테스트의 단정을 바꿨다면 무엇을 왜 바꿨는지 사용자에게 보인다.
 
 ## 5. 판정과 보고
 - Tester 결과가 PASS이고 스냅샷이 일치할 때만 "완료"라고 보고한다. 그 외에는 FAIL / UNVERIFIED와 이유를 그대로 보고한다.
