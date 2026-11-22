@@ -96,3 +96,6 @@ port = 8001
 
 ## 개발 이력
 Phase 0~4의 실행 증거는 하네스 저장소의 `.frappe-harness/evidence/phase*/`(git 제외)에 있다.
+
+## 라이선스
+[MIT](LICENSE)
