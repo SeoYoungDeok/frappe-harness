@@ -23,10 +23,10 @@ description: REQUIRED first step for ANY request that changes a Frappe app or si
 | 신규 기능, 업무 동작 변경 | `playbooks/feature.md` | 작아도 업무 로직이 바뀌면 Feature |
 | 의도와 실제 동작의 차이 | `playbooks/bug-fix.md` | 요구사항이 바뀌면 Feature |
 | 외부 동작 보존, 내부 구조 개선 | `playbooks/refactoring.md` | 발견한 버그는 별도 Bug Fix |
-| Frappe/앱/의존성 버전 변경 | Upgrade (Phase 3) | |
-| 사실·원인·대안 조사(변경 없음) | Investigation (Phase 3) | 변경은 별도 작업 |
+| Frappe/앱/의존성 버전 변경 | `playbooks/upgrade.md` | 판정만 요청하면 적용하지 않는다 |
+| 사실·원인·대안 조사(변경 없음) | `playbooks/investigation.md` | 변경은 별도 작업 |
 
-아직 없는 Playbook이 필요하면 사용자에게 알리고 Small Change 절차를 억지로 적용하지 않는다. 유형이 바뀌면 이유를 한 줄로 남긴다.
+유형이 바뀌면 이유를 한 줄로 남긴다.
 
 **Grilling:** 신규/모호/구조 변경이면 `grill` Skill을 먼저 따른다. 명확한 Small Change는 생략한다.
 
