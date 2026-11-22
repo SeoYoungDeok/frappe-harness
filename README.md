@@ -1,6 +1,6 @@
 # Frappe Harness
 
-Frappe 앱 개발용 Claude Code·Codex 공용 플러그인. 요청을 작업 유형(Playbook)으로 나누고, 중요한 설계만 사용자에게 묻고(Grilling), **구현(Implementer)과 테스트·최종 검증(Tester)을 항상 다른 에이전트가** 맡게 한다. 설계 근거는 [FRAPPE_HARNESS_HANDOFF_V2_2.md](FRAPPE_HARNESS_HANDOFF_V2_2.md).
+Frappe 앱 개발용 Claude Code·Codex 공용 플러그인. 요청을 작업 유형(Playbook)으로 나누고, 중요한 설계만 사용자에게 묻고(Grilling), **구현(Implementer)과 테스트·최종 검증(Tester)을 항상 다른 에이전트가** 맡게 한다.
 
 ## 구성
 
