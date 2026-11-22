@@ -30,6 +30,7 @@ description: REQUIRED first step for ANY request that changes a Frappe app or si
 - Implementer와 Tester는 **항상 서로 다른 에이전트 호출**이다. 같은 에이전트에게 구현과 검증을 함께 맡기지 않는다.
 - **Tester에게는 Implementer의 계획·자기평가·diff 설명을 넘기지 않는다.** 원래 요구사항, 확정 결정, 대상 Test 사이트, 변경된 파일 경로(내용 설명 없이)만 넘긴다.
 - **Codex:** Tester는 `spawn_agent`에 `agent_type: "tester"`, `fork_turns: "none"`으로 띄운다(기본 `all`은 Main 대화 전체를 상속해 독립성이 깨진다). Implementer도 `fork_turns: "none"`을 권장한다.
+  - 서브 에이전트가 권한 승인을 기다리는 동안에는 그 에이전트를 중단하거나 같은 역할을 새로 띄우지 않는다. 사용자에게 "승인 대기 중: <thread>"라고 알리고 기다린다.
 - **Claude Code:** `frappe-harness:implementer` / `frappe-harness:tester` 서브 에이전트를 쓴다(프롬프트만 전달됨).
 - 위임 메시지는 아래 템플릿에서 필요한 항목만 채운다. 별도 Contract 파일을 만들지 않는다.
 
