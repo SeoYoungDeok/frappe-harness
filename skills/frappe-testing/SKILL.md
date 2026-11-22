@@ -39,6 +39,7 @@ description: How to verify Frappe changes on the Test site — applying shared c
    ```
 2. 설치된 Chrome/Chromium 헤드리스로 캡처(`?sid=`로 로그인). v16 Desk 경로는 `/desk/<doctype-slug>`.
    실행 파일: macOS `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`, Linux/WSL `google-chrome` 또는 `chromium`(`command -v`로 확인). 없으면 설치하지 말고 `UNVERIFIED`로 보고한다.
+   **Codex 샌드박스:** macOS에서 Chrome이 샌드박스 안에서 바로 죽는다(종료 코드 134). 이 캡처 명령만 샌드박스 밖 실행(권한 상승)을 요청해 사용자 승인을 받는다. 승인을 받을 수 없는 실행(`codex exec` 등)이면 `UNVERIFIED`.
    ```bash
    "$CHROME" --headless=new --disable-gpu \
      --hide-scrollbars --window-size=1400,1000 --virtual-time-budget=20000 \
