@@ -11,6 +11,10 @@ description: REQUIRED first step for ANY request that changes a Frappe app or si
 1. 프로젝트 루트의 `.frappe-harness.toml`에서 Bench 경로, Dev/Test 사이트, 결정 문서(`context_doc`)를 읽는다. 경로가 상대 경로면 이 파일이 있는 폴더 기준이다(기기마다 Bench 위치가 다를 수 있음). 없으면 사용자에게 묻는다.
 2. 요청과 관련된 코드·DocType JSON·프로젝트 결정 문서(`.frappe-harness.toml`의 `context_doc`)만 읽는다. 코드로 답할 수 있는 것은 묻지 않는다.
 3. 시작 시각을 기록한다: `date -u +%Y-%m-%dT%H:%M:%SZ`.
+4. `task_id`를 정한다: 오늘 날짜 + 3자리 번호. `.frappe-harness/tasks.jsonl`과 `.frappe-harness/evidence/`에 이미 있는 같은 날짜의 가장 큰 번호 다음을 쓴다(재사용 금지, 증거 폴더 이름과 같다).
+   ```bash
+   d=$(date +%F); n=$( { grep -ho "\"$d-[0-9]\{3\}\"" .frappe-harness/tasks.jsonl 2>/dev/null | tr -d '"'; ls .frappe-harness/evidence 2>/dev/null; } | grep -o "^$d-[0-9]\{3\}$" | sort | tail -1 | cut -c12-); printf '%s-%03d\n' "$d" $((10#${n:-0}+1))
+   ```
 
 ## 2. Playbook 선택
 | 요청의 주목적 | Playbook | 경계 |
