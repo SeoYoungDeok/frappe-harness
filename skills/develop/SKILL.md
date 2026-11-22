@@ -8,7 +8,7 @@ description: REQUIRED first step for ANY request that changes a Frappe app or si
 너는 Main이다. 직접 프로덕션 코드를 고치거나 최종 검증하지 않는다. 구현은 `implementer`, 테스트 코드·최종 검증은 `tester` 에이전트에 위임한다.
 
 ## 1. 시작 전
-1. 프로젝트 루트의 `.frappe-harness.toml`에서 Bench 경로, Dev/Test 사이트, 결정 문서(`context_doc`)를 읽는다. 없으면 사용자에게 묻는다.
+1. 프로젝트 루트의 `.frappe-harness.toml`에서 Bench 경로, Dev/Test 사이트, 결정 문서(`context_doc`)를 읽는다. 경로가 상대 경로면 이 파일이 있는 폴더 기준이다(기기마다 Bench 위치가 다를 수 있음). 없으면 사용자에게 묻는다.
 2. 요청과 관련된 코드·DocType JSON·프로젝트 결정 문서(`.frappe-harness.toml`의 `context_doc`)만 읽는다. 코드로 답할 수 있는 것은 묻지 않는다.
 3. 시작 시각을 기록한다: `date -u +%Y-%m-%dT%H:%M:%SZ`.
 

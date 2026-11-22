@@ -5,7 +5,7 @@ description: How to verify Frappe changes on the Test site — applying shared c
 
 # frappe-testing — Test 사이트에서 검증하는 방법
 
-값은 프로젝트 `.frappe-harness.toml`에서 읽는다: `bench`(Bench 경로), `sites.test`, `test_server.port`.
+값은 프로젝트 `.frappe-harness.toml`에서 읽는다: `bench`(Bench 경로, 상대 경로면 이 파일 기준), `sites.test`, `test_server.port`.
 
 ## Dev/Test 공유 Bench 주의
 - 코드는 공유, DB는 분리. DocType JSON 변경은 Test에 `bench --site <test> migrate`를 해야 반영된다.
@@ -37,9 +37,10 @@ description: How to verify Frappe changes on the Test site — applying shared c
    print(frappe.local.session_obj.sid); frappe.db.commit(); frappe.destroy()
    EOF
    ```
-2. 설치된 Chrome 헤드리스로 캡처(`?sid=`로 로그인). v16 Desk 경로는 `/desk/<doctype-slug>`:
+2. 설치된 Chrome/Chromium 헤드리스로 캡처(`?sid=`로 로그인). v16 Desk 경로는 `/desk/<doctype-slug>`.
+   실행 파일: macOS `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`, Linux/WSL `google-chrome` 또는 `chromium`(`command -v`로 확인). 없으면 설치하지 말고 `UNVERIFIED`로 보고한다.
    ```bash
-   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --disable-gpu \
+   "$CHROME" --headless=new --disable-gpu \
      --hide-scrollbars --window-size=1400,1000 --virtual-time-budget=20000 \
      --user-data-dir="$(mktemp -d)" --screenshot=<evidence>/<name>.png \
      "http://<test>:<port>/desk/<doctype-slug>/new?sid=<sid>"
