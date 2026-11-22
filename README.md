@@ -44,7 +44,7 @@ codex plugin add frappe-harness@frappe-harness-local
   [projects."/path/to/frappe-bench/apps/<app>"]
   trust_level = "trusted"
   ```
-- **guard Hook은 대화형 Codex에서 `/hooks`로 한 번 신뢰해야 실행된다.** 하네스가 바뀌어 Hook 내용이 달라지면 다시 신뢰해야 한다.
+- **guard Hook은 Codex에서 아직 동작하지 않는다(UNVERIFIED).** 이 버전에서는 플러그인의 `hooks/hooks.json`도, 매니페스트 inline 선언도 `/hooks` 목록에 나타나지 않았다(문서상 플러그인 Hook은 데스크톱 앱 수동 설치에서만 지원). Codex에서는 승인 규칙(develop §7)과 샌드박스 승인에 의존한다.
 
 ## 프로젝트 설정 (앱 저장소 루트)
 
@@ -86,7 +86,7 @@ port = 8001
 | Tester 독립성 | 서브 에이전트는 받은 프롬프트만 봄 | `spawn_agent` 기본이 대화 전체 상속 → `fork_turns: "none"` 필수(develop에 명시). 서브 에이전트끼리 메시지 가능 → 역할 파일로 금지 |
 | 서브 에이전트 권한 제한 | 플러그인 에이전트의 `permissionMode` 무시 | 부모 샌드박스·승인 설정 상속 |
 | Test 화면 스크린샷 | 헤드리스 Chrome 가능 | 샌드박스 안에서 Chrome 실패. 대화형에서 권한 상승 승인 필요, `codex exec`는 UNVERIFIED |
-| guard Hook | `ask`로 사용자 승인 요청(`-p`에서는 거부) | `ask` 미지원 → 거부(exit 2). `/hooks` 신뢰 필요 |
+| guard Hook | `ask`로 사용자 승인 요청(`-p`에서는 거부), 실호출 확인 | 플러그인 Hook 미인식으로 미동작. `guard.py`의 Codex 분기(거부, exit 2)는 단위 테스트로만 확인 |
 
 - guard는 문자열 패턴만 본다. 변수로 감춘 명령, 따옴표로 감싼 하위 명령, `find -delete`, 파일에서 읽는 SQL, `DELETE FROM`, 상위 폴더 삭제, CRLF 줄 이음은 놓친다. 명령을 언급만 하는 `echo`·커밋 메시지는 잘못 걸린다. 보호의 기본은 사용자 승인 규칙과 파일·DB 권한이다.
 - `scripts/check.py`와 별도 `verify` Skill은 만들지 않는다(D-24).
