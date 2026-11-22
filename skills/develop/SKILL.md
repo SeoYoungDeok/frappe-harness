@@ -16,9 +16,9 @@ description: REQUIRED first step for ANY request that changes a Frappe app or si
 | 요청의 주목적 | Playbook | 경계 |
 |---|---|---|
 | 핵심 구조/규칙/권한 변화 없는 UI·UX 수정 | `playbooks/small-change.md` | 필드 추가·타입·Link·저장/계산 규칙·권한·Workflow가 바뀌면 Feature |
-| 신규 기능, 업무 동작 변경 | Feature (Phase 2) | 작아도 업무 로직이 바뀌면 Feature |
-| 의도와 실제 동작의 차이 | Bug Fix (Phase 2) | 요구사항이 바뀌면 Feature |
-| 외부 동작 보존, 내부 구조 개선 | Refactoring (Phase 2) | 발견한 버그는 별도 Bug Fix |
+| 신규 기능, 업무 동작 변경 | `playbooks/feature.md` | 작아도 업무 로직이 바뀌면 Feature |
+| 의도와 실제 동작의 차이 | `playbooks/bug-fix.md` | 요구사항이 바뀌면 Feature |
+| 외부 동작 보존, 내부 구조 개선 | `playbooks/refactoring.md` | 발견한 버그는 별도 Bug Fix |
 | Frappe/앱/의존성 버전 변경 | Upgrade (Phase 3) | |
 | 사실·원인·대안 조사(변경 없음) | Investigation (Phase 3) | 변경은 별도 작업 |
 
