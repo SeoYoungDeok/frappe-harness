@@ -19,6 +19,10 @@ description: How to verify Frappe changes on the Test site — applying shared c
   ```
 - 사이트 확인: Test 세션 sid로 `/api/method/frappe.auth.get_logged_user`가 `Administrator`를 돌려주는지 본다(Dev sid는 거부돼야 함).
 
+## 정적 검사
+- 변경 파일만 검사한다(검사만, 자동 수정 금지): `ruff check <files>`, `ruff format --check <files>`, JS/Vue는 프로젝트 ESLint.
+- `ruff` 명령이 없으면 `uvx ruff ...`로 실행한다. 그래도 실행할 수 없을 때만 `UNVERIFIED`.
+
 ## 자동 테스트
 - `bench --site <test> run-tests --app <app> [--module <module.path>]`. Dev 사이트에서 실행하지 않는다.
 - v16: DB 필요 → `frappe.tests.IntegrationTestCase`, 순수 함수 → `frappe.tests.UnitTestCase` (`FrappeTestCase`는 폐기 예정).
