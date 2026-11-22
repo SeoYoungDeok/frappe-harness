@@ -86,3 +86,4 @@ P=(-- . ':(exclude,glob)**/test_*.py' ':(exclude,glob)**/tests/**' ':(exclude,gl
 - 자율: 코드 수정, DocType 변경, 정상 `bench migrate`, 빌드, Test 데이터 생성·정리, 자동 검사, 합의된 기능 구현.
 - **사용자 승인 필요:** `drop-site`/`reinstall`/DB 재생성, 영구 데이터 대량 삭제·복구 어려운 변환, DB를 덮어쓰는 복원, 복구용 백업 삭제, 승인된 파괴 작업의 대상·범위 변경.
 - Test 사이트에서 이번 테스트가 만든 데이터만 정리하는 것은 자율.
+- guard Hook(`scripts/guard.py`)이 묻거나 막으면 명령을 바꿔 우회하지 않는다. 무엇을 왜 실행하려 했는지 사용자에게 알리고 결정을 받는다. Hook은 보조 장치일 뿐이라 걸리지 않았다고 승인 대상이 아닌 것은 아니다.
