@@ -48,6 +48,14 @@ codex plugin add frappe-harness@frappe-harness-local
 - **guard Hook은 프로젝트 Hook으로 연결한다.** 이 버전은 플러그인의 `hooks/hooks.json`도, 매니페스트 inline 선언도 인식하지 않았다. 대신 `adapters/codex/hooks.json`을 프로젝트 `.codex/hooks.json`으로 복사하면 동작한다. 이 파일은 설치된 플러그인 캐시의 `scripts/guard.py`를 가리키므로 플러그인 버전(`0.0.1`)이 바뀌면 경로도 고친다.
 - 처음 실행할 때(또는 Hook이 바뀐 뒤) 대화형 Codex가 "Hooks need review"를 띄운다. 명령을 확인하고 신뢰해야 실행된다. 기기마다 한 번씩 필요하다.
 
+### Linux/WSL 화면 검증 준비
+`frappe-testing`은 PATH의 `google-chrome` 또는 `chromium`으로 Test 화면을 캡처한다. 둘 다 없으면 화면 검증은 `UNVERIFIED`가 된다. 기기마다 한 번 준비한다.
+- 브라우저: `google-chrome`을 apt로 설치하거나, sudo 없이 Chrome for Testing의 `chrome-headless-shell`을 받아 PATH의 `chromium`으로 링크한다.
+  ```bash
+  ln -sfn ~/.local/opt/chrome-headless-shell/chrome-headless-shell ~/.local/bin/chromium
+  ```
+- 한글 글꼴: 없으면 한글이 네모로 찍힌다. `fonts-nanum`을 설치하거나 `.ttf`를 `~/.local/share/fonts/`에 넣고 `fc-cache -f`를 실행한다(`fc-list :lang=ko`로 확인).
+
 ## 프로젝트 설정 (앱 저장소 루트)
 
 | 파일 | 내용 |
