@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$HOME/.codex/plugins/cache/frappe-harness-local/frappe-harness/0.0.1/scripts/guard.py\"",
+            "command": "python3 \"$HOME/.codex/plugins/cache/frappe-harness-local/frappe-harness/0.0.2/scripts/guard.py\"",
             "timeout": 10
           }
         ]

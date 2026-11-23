@@ -45,7 +45,7 @@ codex plugin add frappe-harness@frappe-harness-local
   [projects."/path/to/frappe-bench/apps/<app>"]
   trust_level = "trusted"
   ```
-- **guard Hook은 프로젝트 Hook으로 연결한다.** 이 버전은 플러그인의 `hooks/hooks.json`도, 매니페스트 inline 선언도 인식하지 않았다. 대신 `adapters/codex/hooks.json`을 프로젝트 `.codex/hooks.json`으로 복사하면 동작한다. 이 파일은 설치된 플러그인 캐시의 `scripts/guard.py`를 가리키므로 플러그인 버전(`0.0.1`)이 바뀌면 경로도 고친다.
+- **guard Hook은 프로젝트 Hook으로 연결한다.** 이 버전은 플러그인의 `hooks/hooks.json`도, 매니페스트 inline 선언도 인식하지 않았다. 대신 `adapters/codex/hooks.json`을 프로젝트 `.codex/hooks.json`으로 복사하면 동작한다. 이 파일은 설치된 플러그인 캐시의 `scripts/guard.py`를 가리키므로 플러그인 버전(`0.0.2`)이 바뀌면 경로도 고친다.
 - 처음 실행할 때(또는 Hook이 바뀐 뒤) 대화형 Codex가 "Hooks need review"를 띄운다. 명령을 확인하고 신뢰해야 실행된다. 기기마다 한 번씩 필요하다.
 
 ### Linux/WSL 화면 검증 준비
