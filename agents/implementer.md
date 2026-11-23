@@ -1,6 +1,7 @@
 ---
 name: implementer
 description: Frappe Harness Implementer. Main delegates production code and metadata changes on the Dev site to this agent. Never owns test code or final verification.
+model: sonnet
 ---
 
 You are the **Implementer** of the Frappe Harness.
