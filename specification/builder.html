@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:">
-<title>Frappe 기능 명세</title>
+<title>작업 요청서</title>
 <style>
 :root{--bg:#f8f8f8;--pn:#fff;--ctl:#f3f3f3;--hv:#ededed;--ln:#ededed;--bd:#e2e2e2;--bd2:#c7c7c7;--tx:#171717;--tx2:#525252;--mu:#666;--ok:#1e6b40;--wn:#a3410a;--er:#b42318;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 *{box-sizing:border-box}
@@ -22,7 +22,13 @@ header{display:flex;gap:10px;align-items:center;height:48px;padding:0 16px 0 20p
 .logo{position:relative;width:24px;height:24px;border-radius:6px;background:var(--tx);flex:none}
 .logo::before{content:"";position:absolute;left:7px;top:5px;width:10px;height:14px;border-radius:2px;background:#fff}
 .logo::after{content:"";position:absolute;left:9px;top:9px;width:6px;height:1.5px;background:var(--tx);box-shadow:0 3px 0 var(--tx),0 6px 0 var(--tx)}
+.home{gap:10px;height:34px;margin-left:-6px;padding:0 8px 0 6px;background:transparent}
+.home:hover{background:var(--ctl)}
 .app{font-size:14px;font-weight:600;white-space:nowrap}
+.kind{font-size:14px;font-weight:500;color:var(--tx);white-space:nowrap}
+.resume{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 16px;border:1px solid var(--bd);border-radius:10px;background:#fafafa}
+.resume-t{display:flex;align-items:center;gap:10px;min-width:0}
+.resume-t b{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sep{color:var(--bd2)}
 .crumb{font-size:14px;color:var(--tx2);max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .saved{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--mu);white-space:nowrap;margin-right:4px}
@@ -541,7 +547,7 @@ function changed() {
 	if (spec && spec.status === 'confirmed') {
 		spec.status = 'draft';
 		delete spec.confirmed_at;
-		notice = '확정된 명세를 수정하여 초안(draft)으로 되돌렸습니다. 다시 확정해야 합니다.';
+		notice = '확정된 요청서를 수정하여 초안(draft)으로 되돌렸습니다. 다시 확정해야 합니다.';
 	}
 	approved = false;
 	save();
@@ -934,7 +940,7 @@ function verifyEditor() {
 	var go = btn('확정', doConfirm, 'pri lg');
 	if (!res.ok) go.disabled = true;
 	var confirmSec = spec.status === 'confirmed'
-		? sec('확정', null, h('div', { class: 'callout c-ok' }, '확정된 명세입니다. JSON을 내보내 개발을 요청하세요.'), h('div', { class: 'bar' }, btn('JSON 내보내기', exportJson, 'pri')))
+		? sec('확정', null, h('div', { class: 'callout c-ok' }, '확정된 요청서입니다. JSON을 내보내 개발을 요청하세요.'), h('div', { class: 'bar' }, btn('JSON 내보내기', exportJson, 'pri')))
 		: sec('확정', null,
 			blockers.length ? h('div', { class: 'callout c-wn' }, h('b', null, '확정 전에 해결할 것'), h('ul', null, blockers.map(function (m) { return h('li', null, m); }))) : null,
 			h('div', { class: 'note' }, '확정하면 채택하지 않은 AI 제안은 빠지고, 채택한 제안은 요청 항목이 되며, 해결된 결정은 확정된 결정으로 옮겨집니다. JSON 내보내기만으로는 확정되지 않습니다.'),
@@ -966,7 +972,7 @@ function previewEditor() {
 }
 
 function ioEditor() {
-	var ta = h('textarea', { rows: 10, placeholder: '여기에 명세 JSON을 붙여넣으세요', class: 'mono' });
+	var ta = h('textarea', { rows: 10, placeholder: '여기에 요청서 JSON을 붙여넣으세요', class: 'mono' });
 	var file = h('input', { type: 'file', accept: '.json,application/json' });
 	file.addEventListener('change', function () {
 		var f = file.files[0];
@@ -978,10 +984,10 @@ function ioEditor() {
 	var restore = null;
 	try { if (localStorage.getItem(LS_KEY)) restore = btn('브라우저 임시 저장본 복원', function () { importText(localStorage.getItem(LS_KEY)); }, 'gh'); } catch (e) { /* no storage */ }
 	return [
-		sec('파일에서 불러오기', null, h('label', { class: 'drop' }, h('span', { class: 'drop-t' }, '명세 JSON 파일 선택'), h('span', { class: 'mu' }, '.json'), file)),
+		sec('파일에서 불러오기', null, h('label', { class: 'drop' }, h('span', { class: 'drop-t' }, '요청서 JSON 파일 선택'), h('span', { class: 'mu' }, '.json'), file)),
 		sec('붙여넣기', null, form('', field('JSON', ta, { wide: true })),
 			h('div', { class: 'bar' }, btn('불러오기', function () { importText(ta.value); }, 'pri'), restore, h('span', { class: 'sp' }),
-				spec ? btn('현재 명세 JSON 내보내기', exportJson) : null)),
+				spec ? btn('현재 요청서 JSON 내보내기', exportJson) : null)),
 		h('div', { class: 'note' }, '브라우저 임시 저장은 보조 수단입니다. 반드시 JSON으로 내보내 보관하세요.')
 	];
 }
@@ -990,7 +996,11 @@ function startEditor() {
 	var types = [['feature', '새 기능', '새 DocType, 화면, 권한, 업무 규칙을 함께 정의합니다'],
 		['change', '기존 기능 변경', '현재 동작, 바꿀 동작, 유지할 동작을 정리합니다'],
 		['bug', '버그', '현상, 재현 방법, 기대 동작을 정리합니다']];
-	return [sec(null, '무엇을 정리할지 고르세요', h('div', { class: 'types' }, types.map(function (t) {
+	var cur = spec ? sec('작성 중인 요청서', null, h('div', { class: 'resume' },
+		h('div', { class: 'resume-t' }, h('span', { class: 'badge' }, TYPE_NAMES[spec.type] || spec.type), h('b', null, nonEmpty(spec.name) ? spec.name : '(이름 없음)'),
+			chip(spec.status === 'confirmed' ? '확정됨' : '초안', spec.status === 'confirmed' ? 'b-request dot' : 'b-draft dot')),
+		h('span', { class: 'sp' }), btn('JSON 내보내기', exportJson), btn('이어서 작성', function () { go({ k: 'basics' }); }, 'pri'))) : null;
+	return [cur, sec('새 요청서', '무엇을 요청할지 고르세요', h('div', { class: 'types' }, types.map(function (t) {
 		return h('button', { type: 'button', class: 'tcard', onclick: function () { newSpec(t[0]); } },
 			h('span', { class: 'tk' }, t[0]), h('span', { class: 'tt' }, t[1]), h('span', { class: 'td' }, t[2]));
 	})))].concat(ioEditor());
@@ -998,8 +1008,8 @@ function startEditor() {
 
 /* ===== chrome ===== */
 var collapsed = {};
-var TITLES = { basics: '기본 정보', acceptance: '완료 조건', decisions: '결정', verify: '검증 · 확정', preview: 'Markdown 미리보기', io: 'JSON 불러오기 · 내보내기', start: '시작하기' };
-var TYPE_NAMES = { feature: '새 기능 명세', change: '기존 기능 변경 명세', bug: '버그 명세' };
+var TITLES = { basics: '기본 정보', acceptance: '완료 조건', decisions: '결정', verify: '검증 · 확정', preview: 'Markdown 미리보기', io: 'JSON 불러오기 · 내보내기', start: '작업 요청서' };
+var TYPE_NAMES = { feature: '새 기능', change: '기존 기능 변경', bug: '버그' };
 function itemLabel(key, it) {
 	if (!isObj(it)) return '(비정상 항목)';
 	var l = key === 'permissions' ? (it.doctype || '') + (it.role ? ' / ' + it.role : '') : key === 'ui' ? it.target
@@ -1022,12 +1032,12 @@ function renderNav() {
 	nav.appendChild(body); nav.appendChild(foot);
 	if (!spec) {
 		body.appendChild(h('div', { class: 'cap' }, '시작'));
-		body.appendChild(navItem('새 명세 만들기', { k: 'start' }));
+		body.appendChild(navItem('새 요청서 만들기', { k: 'start' }));
 		body.appendChild(navItem('JSON 불러오기', { k: 'io' }));
 		return;
 	}
 	var openN = asArr(spec.open_decisions).filter(function (d) { return d && d.required === true && unresolved(d); }).length;
-	body.appendChild(h('div', { class: 'cap' }, '명세'));
+	body.appendChild(h('div', { class: 'cap' }, '요청서'));
 	body.appendChild(navItem('기본 정보', { k: 'basics' }));
 	body.appendChild(navItem('완료 조건', { k: 'acceptance' }, count(asArr(spec.acceptance_criteria).length)));
 	body.appendChild(navItem('결정', { k: 'decisions' }, openN ? chip('필요 ' + openN, 'b-decision') : count(asArr(spec.open_decisions).length)));
@@ -1063,14 +1073,17 @@ function renderNav() {
 	foot.appendChild(navItem('검증 · 확정', { k: 'verify' }, n ? chip(String(n), 'b-decision') : spec.status === 'confirmed' ? chip('확정됨', 'b-request') : null, null, 'tool'));
 	foot.appendChild(navItem('Markdown 미리보기', { k: 'preview' }, null, null, 'tool'));
 	foot.appendChild(navItem('JSON 불러오기 · 내보내기', { k: 'io' }, null, null, 'tool'));
+	foot.appendChild(navItem('처음 화면 · 다른 요청서', { k: 'start' }, null, null, 'tool'));
 }
 function renderTop() {
 	var top = $('top');
 	clear(top);
-	top.appendChild(h('span', { class: 'logo', 'aria-hidden': 'true' }));
-	top.appendChild(h('span', { class: 'app' }, 'Frappe 기능 명세'));
+	top.appendChild(h('button', { type: 'button', class: 'home', title: '처음 화면으로', onclick: function () { go({ k: 'start' }); } },
+		h('span', { class: 'logo', 'aria-hidden': 'true' }), h('span', { class: 'app' }, '작업 요청서')));
 	if (spec) {
 		var n = validateSpec(spec).length;
+		top.appendChild(h('span', { class: 'sep', 'aria-hidden': 'true' }, '/'));
+		top.appendChild(h('span', { class: 'kind' }, TYPE_NAMES[spec.type] || spec.type));
 		top.appendChild(h('span', { class: 'sep', 'aria-hidden': 'true' }, '/'));
 		top.appendChild(h('span', { class: 'crumb', title: spec.name || '' }, nonEmpty(spec.name) ? spec.name : '(이름 없음)'));
 		top.appendChild(chip(spec.status === 'confirmed' ? '확정됨' : '초안', spec.status === 'confirmed' ? 'b-request dot' : 'b-draft dot'));
@@ -1091,7 +1104,11 @@ function pageHead(eyebrow, title, meta) {
 function renderEditor() {
 	var ed = $('editor'), head, body;
 	clear(ed);
-	if (!spec) { head = pageHead('시작하기', sel.k === 'io' ? TITLES.io : '새 명세 만들기'); body = sel.k === 'io' ? ioEditor() : startEditor(); }
+	if (!spec || sel.k === 'start') {
+		if (!spec && sel.k !== 'io') sel = { k: 'start' };
+		head = pageHead(null, sel.k === 'io' ? TITLES.io : '작업 요청서');
+		body = sel.k === 'io' ? ioEditor() : startEditor();
+	}
 	else if (sel.k === 'item') {
 		var list = asArr(spec[sel.list]), i = list.findIndex(function (x) { return isObj(x) && x.id === sel.id; });
 		if (i < 0) { sel = { k: 'basics' }; renderNav(); }
@@ -1106,9 +1123,9 @@ function renderEditor() {
 		}
 	}
 	if (spec && !body) {
-		var k = sel.k in TITLES && sel.k !== 'start' ? sel.k : 'basics';
+		var k = sel.k in TITLES ? sel.k : 'basics';
 		if (k !== sel.k) sel = { k: k };
-		head = pageHead(TYPE_NAMES[spec.type] || '', TITLES[k]);
+		head = pageHead(null, TITLES[k]);
 		body = { basics: basicsEditor, acceptance: acceptanceEditor, decisions: decisionsEditor, verify: verifyEditor, preview: previewEditor, io: ioEditor }[k]();
 	}
 	ed.appendChild(h('div', { class: 'wrap' }, head, h('div', { class: 'card' }, spec ? dtDatalist() : null, body)));
@@ -1124,6 +1141,7 @@ function renderAll() { renderTop(); renderNav(); renderEditor(); }
 
 /* ===== import / export ===== */
 function newSpec(type) {
+	if (spec && !window.confirm('작성 중인 요청서를 새 요청서로 바꿉니다. JSON으로 내보내지 않은 내용은 사라집니다. 계속할까요?')) return;
 	spec = { schema_version: '1.0', type: type, status: 'draft' };
 	sel = { k: 'basics' };
 	notice = '';
@@ -1160,7 +1178,7 @@ function boot() {
 		try {
 			var data = JSON.parse(raw);
 			if (isObj(data)) { spec = normalize(data); sel = { k: 'basics' }; }
-		} catch (e) { notice = '내장된 명세 JSON을 해석하지 못했습니다.'; }
+		} catch (e) { notice = '내장된 요청서 JSON을 해석하지 못했습니다.'; }
 	}
 	renderAll();
 }
