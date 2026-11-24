@@ -93,6 +93,47 @@ class RenderSpecTest(unittest.TestCase):
 			d["answer"] = "x"
 		self.assertEqual(run("validate", self.write(s))[0], 1)
 
+	def test_suggestion_group_must_agree(self):
+		s = base()
+		s["suggestions"] = [{"id": "sg-a", "title": "A"}]
+		photo = s["doctypes"][0]["fields"][-1]
+		photo["suggestion_group"] = "sg-a"
+		ac = s["acceptance_criteria"][-1]
+		ac["suggestion_group"] = "sg-a"
+		photo["selected"], ac["selected"] = True, False
+		rc, out, _ = run("validate", self.write(s))
+		self.assertEqual(rc, 1)
+		self.assertIn("disagree", out)
+		ac["selected"] = True
+		self.assertEqual(run("validate", self.write(s))[0], 0)
+		ac["suggestion_group"] = "sg-missing"
+		self.assertIn("not listed", run("validate", self.write(s))[1])
+
+	def test_decision_options_with_impact_and_recommendation(self):
+		s = base()
+		d = s["open_decisions"][0]
+		d["options"] = [{"value": "차단한다", "impact": "사용 불가", "excludes": ["f-photo"]}, "경고만 표시한다"]
+		d["recommendation"] = "차단한다"
+		self.assertEqual(run("validate", self.write(s))[0], 0)
+		d["recommendation"] = "없는 선택지"
+		self.assertIn("recommendation", run("validate", self.write(s))[1])
+		d["recommendation"] = "차단한다"
+		d["options"][0]["affects"] = ["no-such-id"]
+		self.assertIn("unknown id", run("validate", self.write(s))[1])
+
+	def test_confirmed_must_not_keep_review_metadata(self):
+		s = base()
+		s["status"], s["confirmed_at"] = "confirmed", "2026-01-01T00:00:00Z"
+		for blk in s["doctypes"]:
+			blk["fields"] = [f for f in blk["fields"] if f.get("origin") != "suggestion"]
+		s["reports"] = []
+		s["acceptance_criteria"] = [c for c in s["acceptance_criteria"] if c.get("origin") != "suggestion"]
+		for d in s["open_decisions"]:
+			d["answer"] = "x"
+		self.assertEqual(run("validate", self.write(s))[0], 0)
+		s["suggestions"] = []
+		self.assertIn("suggestions", run("validate", self.write(s))[1])
+
 	def test_render_escapes_data_block(self):
 		s = base()
 		s["name"] = EVIL + " {{7*7}} <b>x</b>    "

@@ -2,7 +2,7 @@
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"$id": "frappe-harness-spec-1.0",
 	"title": "Frappe Harness Specification 1.0",
-	"description": "Value authority: an explicit value (including false, 0, empty string) is Explicit; {\"mode\":\"auto\"} is Auto; {\"mode\":\"none\"} is None; a missing key is Unspecified; null is never allowed. Origin (request/suggestion/technical) is per block or item. Unknown keys are allowed and preserved. Semantic rules (duplicate ids, confirmed-state rules, basics) are checked by scripts/render_spec.py validate.",
+	"description": "Value authority: an explicit value (including false, 0, empty string) is Explicit; {\"mode\":\"auto\"} is Auto; {\"mode\":\"none\"} is None; a missing key is Unspecified; null is never allowed. Origin (request/suggestion/technical) is per block or item. Unknown keys are allowed and preserved. Semantic rules (duplicate ids, confirmed-state rules, basics) are checked by scripts/render_spec.py validate. Suggestion groups: items with origin 'suggestion' that share suggestion_group are adopted together.",
 	"type": "object",
 	"required": [
 		"schema_version",
@@ -143,6 +143,36 @@
 			"items": {
 				"$ref": "#/$defs/businessRule"
 			}
+		},
+		"original_request": {
+			"type": "string",
+			"description": "The user's request as they wrote it"
+		},
+		"approach": {
+			"type": "string",
+			"description": "How the AI understood the request and plans to build it"
+		},
+		"suggestions": {
+			"type": "array",
+			"description": "AI suggestion groups for review; items join a group via suggestion_group. Removed on confirm.",
+			"items": {
+				"type": "object",
+				"required": [
+					"id",
+					"title"
+				],
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"reason": {
+						"type": "string"
+					}
+				}
+			}
 		}
 	},
 	"$defs": {
@@ -232,6 +262,9 @@
 						},
 						"adopted_from_suggestion": {
 							"type": "boolean"
+						},
+						"suggestion_group": {
+							"type": "string"
 						}
 					}
 				}
@@ -250,7 +283,17 @@
 					"type": "string"
 				},
 				"options": {
-					"$ref": "#/$defs/strList"
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"$ref": "#/$defs/decisionOption"
+							}
+						]
+					}
 				},
 				"required": {
 					"type": "boolean"
@@ -259,6 +302,13 @@
 					"type": "string"
 				},
 				"note": {
+					"type": "string"
+				},
+				"recommendation": {
+					"type": "string",
+					"description": "AI's recommended option value; never applied automatically"
+				},
+				"recommendation_reason": {
 					"type": "string"
 				}
 			}
@@ -303,6 +353,9 @@
 						},
 						"adopted_from_suggestion": {
 							"type": "boolean"
+						},
+						"suggestion_group": {
+							"type": "string"
 						}
 					}
 				}
@@ -374,6 +427,17 @@
 				},
 				"description": {
 					"type": "string"
+				},
+				"suggestion_group": {
+					"type": "string"
+				},
+				"change": {
+					"enum": [
+						"add",
+						"modify",
+						"remove"
+					],
+					"description": "change specs: what happens to this field"
 				}
 			}
 		},
@@ -446,6 +510,9 @@
 					"items": {
 						"$ref": "#/$defs/ruleItem"
 					}
+				},
+				"suggestion_group": {
+					"type": "string"
 				}
 			}
 		},
@@ -523,6 +590,9 @@
 				},
 				"rules": {
 					"type": "string"
+				},
+				"suggestion_group": {
+					"type": "string"
 				}
 			}
 		},
@@ -593,6 +663,9 @@
 				},
 				"docstatus_meaning": {
 					"$ref": "#/$defs/tri"
+				},
+				"suggestion_group": {
+					"type": "string"
 				}
 			}
 		},
@@ -655,6 +728,9 @@
 				},
 				"reference_images": {
 					"$ref": "#/$defs/strList"
+				},
+				"suggestion_group": {
+					"type": "string"
 				}
 			}
 		},
@@ -703,6 +779,9 @@
 				},
 				"report_type": {
 					"$ref": "#/$defs/tri"
+				},
+				"suggestion_group": {
+					"type": "string"
 				}
 			}
 		},
@@ -759,6 +838,31 @@
 							"type": "string"
 						}
 					}
+				},
+				"suggestion_group": {
+					"type": "string"
+				}
+			}
+		},
+		"decisionOption": {
+			"type": "object",
+			"required": [
+				"value"
+			],
+			"properties": {
+				"value": {
+					"type": "string"
+				},
+				"impact": {
+					"type": "string"
+				},
+				"affects": {
+					"$ref": "#/$defs/strList",
+					"description": "ids Main will revise if this option is chosen"
+				},
+				"excludes": {
+					"$ref": "#/$defs/strList",
+					"description": "ids that must leave the scope if this option is chosen"
 				}
 			}
 		}

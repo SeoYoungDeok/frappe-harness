@@ -170,6 +170,7 @@ def strip_suggestions(node):
 					continue
 				y = strip_suggestions(x)
 				y.pop("selected", None)
+				y.pop("suggestion_group", None)
 				y["origin"] = "request"
 				y["adopted_from_suggestion"] = True
 				out.append(y)
@@ -197,10 +198,15 @@ def basics_missing(spec):
 	return miss
 
 
+def opt_value(o):
+	return o.get("value") if isinstance(o, dict) else o
+
+
 def semantic_problems(spec):
 	probs = []
 	confirmed = spec.get("status") == "confirmed"
 	seen = {}
+	groups = {}
 
 	def visit(d, path, list_name):
 		i = d.get("id")
@@ -211,14 +217,42 @@ def semantic_problems(spec):
 				seen[i] = path
 		elif confirmed and list_name in ID_LISTS and path:
 			probs.append(f"{path}: missing id")
+		g = d.get("suggestion_group")
+		if isinstance(g, str):
+			if d.get("origin") != "suggestion":
+				probs.append(f"{path}: suggestion_group is only for items with origin 'suggestion'")
+			else:
+				groups.setdefault(g, set()).add(d.get("selected") is True)
 		if confirmed:
+			if "suggestion_group" in d:
+				probs.append(f"{path}: confirmed spec must not contain 'suggestion_group'")
 			if d.get("origin") == "suggestion":
 				probs.append(f"{path}: confirmed spec contains a suggestion (origin 'suggestion')")
 			if "selected" in d:
 				probs.append(f"{path}: confirmed spec must not contain 'selected'")
 
 	walk(spec, visit)
+	listed = {x.get("id") for x in spec.get("suggestions") or [] if isinstance(x, dict)}
+	for g, states in sorted(groups.items()):
+		if len(states) > 1:
+			probs.append(f"suggestion group '{g}': items disagree on 'selected' (adopt or drop the group as a whole)")
+		if "suggestions" in spec and g not in listed:
+			probs.append(f"suggestion group '{g}' is not listed in 'suggestions'")
+	for i, d in enumerate(spec.get("open_decisions") or []):
+		if not isinstance(d, dict):
+			continue
+		opts = d.get("options") or []
+		values = [opt_value(o) for o in opts]
+		if "recommendation" in d and d["recommendation"] not in values:
+			probs.append(f"open_decisions[{i}]: recommendation must be one of the options")
+		for o in opts:
+			for k in ("affects", "excludes"):
+				for ref in (o.get(k) or []) if isinstance(o, dict) else []:
+					if ref not in seen:
+						probs.append(f"open_decisions[{i}]: option '{o.get('value')}' {k} unknown id '{ref}'")
 	if confirmed:
+		if "suggestions" in spec:
+			probs.append("confirmed spec must not contain 'suggestions'")
 		for i, d in enumerate(spec.get("open_decisions") or []):
 			if isinstance(d, dict) and d.get("required") is True and unresolved(d):
 				probs.append(f"open_decisions[{i}] ('{d.get('id', '?')}'): required decision is unresolved")
@@ -278,7 +312,7 @@ def tag(it):
 	if o == "suggestion":
 		return " `[AI 제안: " + ("채택" if it.get("selected") is True else "미채택") + "]`"
 	if o == "technical":
-		return " `[기술 결정]`"
+		return " `[AI가 정함]`"
 	if isinstance(it, dict) and it.get("adopted_from_suggestion"):
 		return " `[제안 채택]`"
 	return ""
@@ -343,7 +377,7 @@ def block_md(spec):
 def to_markdown(spec):
 	L = [f"# {spec.get('name') or spec.get('target') or spec.get('id') or '(이름 없음)'}",
 		f"_type: {spec.get('type')}, status: {spec.get('status')}, schema {spec.get('schema_version')}_", ""]
-	L += kv(spec, [("id", "ID"), ("app", "App"), ("module", "Module"), ("purpose", "목적"), ("users", "사용자"),
+	L += kv(spec, [("id", "ID"), ("original_request", "원본 요청"), ("approach", "AI 이해와 구현 방향"), ("app", "App"), ("module", "Module"), ("purpose", "목적"), ("users", "사용자"),
 		("flow", "업무 흐름"), ("scope", "구현 범위"), ("target", "대상"), ("current_behavior", "현재 동작"),
 		("desired_behavior", "바꿀 동작"), ("data_handling", "기존 데이터 처리"), ("actual", "실제 현상"),
 		("reproduction", "재현"), ("expected", "기대 동작"), ("evidence", "증거"), ("confirmed_at", "확정 시각")])
@@ -361,7 +395,7 @@ def to_markdown(spec):
 		for d in spec["open_decisions"]:
 			state = "해결: " + one(d["answer"]) if not unresolved(d) else "미해결"
 			req = "필수" if d.get("required") is True else "선택"
-			opts = " / ".join(str(o) for o in d.get("options") or [])
+			opts = " / ".join(str(opt_value(o)) for o in d.get("options") or [])
 			L.append(f"- [{req}] {one(d.get('question', ''))} ({opts}) -> {state}")
 	if spec.get("decisions"):
 		L += ["", "## 확정된 결정"] + [f"- {one(d.get('question', ''))} -> {one(d.get('answer', ''))}" for d in spec["decisions"]]

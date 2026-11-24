@@ -86,7 +86,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--tx);width:15px;height:
 .ni:hover{background:transparent}
 .nr.on .ni{color:var(--tx);font-weight:600}
 .nl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
-.nr.sub .ni{padding-left:28px}
+.nr.sub .ni{padding-left:10px}
 .nr.dim .nl{color:#7a7a7a}
 .nr .acts{display:none;position:absolute;right:4px;top:4px;gap:0;padding-left:8px;border-radius:5px;background:inherit}
 .nr:hover .acts,.nr:focus-within .acts{display:flex}
@@ -97,10 +97,18 @@ input[type=checkbox],input[type=radio]{accent-color:var(--tx);width:15px;height:
 .ng{margin-bottom:2px}
 .nh{display:flex;align-items:center;border-radius:6px}
 .nh:hover{background:var(--ctl)}
-.nh-t{flex:1;min-width:0;justify-content:flex-start;gap:6px;height:30px;padding:0 6px 0 8px;background:transparent;font-weight:500;color:var(--tx)}
+.nh-t{flex:1;min-width:0;justify-content:flex-start;gap:6px;height:32px;padding:0 6px 0 4px;background:transparent;font-weight:500;color:var(--tx)}
 .nh-t:hover{background:transparent}
 .nh-t .cnt{margin-left:2px}
-.chev{width:14px;color:var(--mu);font-size:10px;text-align:center}
+.chev{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;flex:none;color:var(--tx2)}
+.chev::before{content:"";width:6px;height:6px;margin-left:-3px;border-right:1.75px solid currentColor;border-bottom:1.75px solid currentColor;transform:rotate(-45deg);transition:transform .15s}
+.chev.open::before{margin:-4px 0 0;transform:rotate(45deg)}
+.nh-l{font-weight:600}
+.nh.empty .nh-t{color:var(--mu)}
+.nh.empty .nh-l{font-weight:500}
+.ng-items{margin:2px 0 6px 16px;padding-left:6px;border-left:1px solid var(--bd)}
+.nr.sub .ni{color:var(--tx2)}
+.nr.sub.on .ni{color:var(--tx)}
 .nh .add-i{margin-right:4px;font-size:16px;color:var(--mu);opacity:0}
 .nh:hover .add-i,.nh:focus-within .add-i{opacity:1}
 .nav-foot .nr.on{background:var(--hv)}
@@ -149,17 +157,70 @@ input[type=checkbox],input[type=radio]{accent-color:var(--tx);width:15px;height:
 .tbl tr:hover td{background:#fcfcfc}
 .rb{display:inline-flex;opacity:.4;transition:opacity .12s}
 .tbl tr:hover .rb,.tbl tr:focus-within .rb,.box:hover .rb,.box:focus-within .rb{opacity:1}
-.tog{margin-left:2px;font-size:11px;color:var(--tx2)}
+.tog{margin-left:2px}
 .tbl tr.open .tog{background:var(--hv);color:var(--tx)}
 .tbl tr.brk td,.tbl tr.brk:hover td{background:#fafafa}
 .tbl tr.brk td input[type=text]{font-weight:600}
 .tbl tr.sug td,.tbl tr.sug:hover td{background:#fffcf0}
+.tbl tr.sug.on td,.tbl tr.sug.on:hover td{background:#f5fbf7}
+.tbl td.mid{text-align:center;padding-top:12px}
+.badge.cond{height:20px;padding:0 7px;font-size:11px;cursor:help}
+.tbl td.mid .badge{margin-top:-3px}
+.form>.wide{grid-column:1/-1}
+.opts{display:flex;flex-wrap:wrap;gap:10px 28px}
+.help-i{margin-left:6px;font-size:12px;color:var(--mu)}
+.note-i{padding:8px 12px;border-radius:6px;background:#f8f8f8;font-size:12px;color:var(--tx2)}
+.dev{margin-top:18px;padding:10px 12px;border:1px dashed var(--bd);border-radius:8px;background:#fcfcfc}
+.dev-t{margin-bottom:8px;font-size:12px;font-weight:600;color:var(--tx2)}
+.dev-t .mu{font-weight:400}
+.dev-l{display:flex;flex-wrap:wrap;gap:6px}
+.dev-i{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:4px;background:var(--ctl);font-size:12px;color:var(--tx2);overflow-wrap:anywhere}
+.dev-k{color:var(--mu)}
+.lst{display:flex;flex-direction:column;gap:6px}
+.lst-r{display:flex;align-items:center;gap:8px}
+.lst-b{flex:none;width:5px;height:5px;margin-left:4px;border-radius:50%;background:var(--bd2)}
+.lst-r .ib{opacity:.45}
+.lst-r:hover .ib,.lst-r:focus-within .ib{opacity:1}
+button.lst-add{align-self:flex-start;height:26px;margin-left:5px;padding:0 8px;font-size:12px}
+.more-w{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:16px}
+.more{display:flex;flex-wrap:wrap;gap:6px}
+button.chip-b{height:26px;padding:0 10px;border:1px dashed var(--bd2);border-radius:13px;font-size:12px;font-weight:400}
+.rights{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px 16px}
 .tbl tr.det td,.tbl tr.det:hover td{padding:14px 18px 18px 52px;background:#f8f8f8;border-top:1px dashed var(--bd)}
 .tbl tr.det input[type=text],.tbl tr.det select,.tbl tr.det textarea{background:#fff;border-color:var(--bd)}
 .det-h{margin-bottom:12px;font-size:12px;font-weight:600;color:var(--tx2)}
 .tbl tr.empty td{padding:18px;text-align:center;color:var(--mu);font-size:12px}
 .origin{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding-top:3px}
-.adopt{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--tx2);cursor:pointer}
+.adopt{height:24px;padding:0 10px;border:1px solid var(--bd2);background:#fff;color:var(--tx2);font-size:12px}
+.adopt:hover{background:var(--ctl);color:var(--tx)}
+.adopt.on{border-color:transparent;background:#e6f7ec;color:var(--ok)}
+.o-req{font-size:12px;color:var(--mu)}
+.legend{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin:-6px 0 18px;font-size:12px;color:var(--mu)}
+.lg-t{font-weight:600;color:var(--tx2)}
+.lg-i{display:inline-flex;align-items:center;gap:6px}
+.legend .badge{height:20px;padding:0 8px;font-size:11px}
+select.unset{color:#8f8f8f}
+select.unset option{color:var(--tx)}
+button.sm-t{height:26px;padding:0 10px;font-size:12px}
+.dec .q{min-height:30px;padding:4px 8px;margin:0 -8px;width:calc(100% + 16px);background:transparent;font-size:15px;font-weight:600;line-height:1.45}
+.dec .q:hover{background:var(--ctl)}
+.dec .q{resize:none;overflow:hidden}
+.tbl .origin{min-height:30px;padding-top:0}
+.dec-a{margin:14px 0 0}
+.dec-a>.fl{margin-bottom:8px}
+.choices{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.choice{display:flex;align-items:center;gap:10px;min-height:40px;padding:6px 12px;border:1px solid var(--bd);border-radius:8px;background:#fff;cursor:pointer;transition:border-color .12s,background-color .12s}
+.choice:hover{border-color:var(--bd2)}
+.choice.on{border-color:var(--tx);background:#fafafa;box-shadow:inset 0 0 0 1px var(--tx)}
+.choice>span{flex:1 1 auto;min-width:0;overflow-wrap:anywhere;line-height:1.45}
+.choice.other>span{flex:none}
+.choice.other{grid-column:1/-1}
+.choice.other input[type=text]{flex:1;min-width:0;height:28px;background:var(--ctl)}
+.choice.other input[type=text]:disabled{opacity:.5}
+.dec-a button.sm-t{margin-top:8px}
+.dec .fld{margin-top:14px}
+.dec-f{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--ln)}
+.box.done{border-color:#cdebd8}
 
 /* ---------- badges ---------- */
 .badge{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 10px;border-radius:11px;border:0;background:var(--ctl);color:var(--tx2);font-size:12px;font-weight:500;white-space:nowrap}
@@ -206,6 +267,114 @@ select.badge.plain:hover{background:var(--ctl);filter:none}
 .drop-t{font-weight:500}
 .drop input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
 
+
+/* ---------- review screens ---------- */
+.sec-h.row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.lnk{height:auto;padding:0;background:none;color:var(--lk,#0b5ca8);font-weight:500;text-decoration:underline;text-underline-offset:2px;white-space:normal;display:inline}
+.lnk:hover{background:none;color:#08467f}
+.para{margin:0;line-height:1.65;white-space:pre-wrap}
+.para.tgt{margin-top:14px}
+.bul{margin:0;padding-left:18px;line-height:1.7}
+.mt{margin-top:16px}
+.cap2{margin-bottom:6px;font-size:12px;font-weight:600;color:var(--mu)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.qbox{padding:14px 16px;border:1px solid var(--bd);border-radius:10px;background:#fafafa}
+.qbox.ai{background:#fff}
+.qbox blockquote{margin:0;padding-left:12px;border-left:3px solid var(--bd2);white-space:pre-wrap;line-height:1.65}
+.kv2{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.kv2>div{display:flex;gap:12px}.kv2 .k{flex:none;width:56px;font-size:12px;font-weight:600;color:var(--mu);padding-top:1px}
+.cmp-b,.cmp-a{padding:14px 16px;border-radius:10px;border:1px solid var(--bd)}
+.cmp-b{background:#fff8f7;border-color:#f6d3cf}
+.cmp-a{background:#f3faf6;border-color:#cdebd8}
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:0;padding:0;list-style:none}
+.flow li{position:relative;display:flex;align-items:flex-start;gap:8px;max-width:260px;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;background:#fff;line-height:1.5}
+.flow li+li::before{content:"→";position:absolute;left:-15px;top:50%;transform:translateY(-50%);color:var(--bd2);font-size:13px}
+.flow li+li{margin-left:14px}
+.fn{flex:none;width:20px;height:20px;border-radius:10px;background:var(--tx);color:#fff;font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+.steps{margin:0;padding-left:20px;line-height:1.8}
+.steps li.dim{color:#8a8a8a}
+.steps .badge{margin-left:8px;height:20px;font-size:11px}
+.ev{margin:0;font-size:12px}
+.ov-top{display:flex;flex-direction:column;gap:12px;padding:20px 24px;border-bottom:1px solid var(--ln)}
+.rstrip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rs{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:2px;height:auto;padding:14px 16px;border:1px solid var(--bd);border-radius:10px;background:#fff;text-align:left;white-space:normal}
+.rs:hover{background:#fafafa;border-color:var(--bd2)}
+.rs-v{font-size:18px;font-weight:600;line-height:1.3}
+.rs-l{font-size:12px;font-weight:600;color:var(--tx2)}
+.rs-s{font-size:12px;font-weight:400;color:var(--mu)}
+.rs.need{border-color:#f2c7c2;background:#fffafa}.rs.need .rs-v{color:var(--er)}
+.rs.sugg{border-color:#f1dfa2;background:#fffdf5}.rs.sugg .rs-v{color:#7a4b00}
+.rs.done .rs-v{color:var(--ok)}
+.restore{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tree{display:flex;flex-direction:column;gap:6px}
+.tn{width:100%;justify-content:flex-start;gap:10px;height:auto;min-height:42px;padding:8px 12px;border:1px solid var(--bd);border-radius:8px;background:#fff;font-weight:400;text-align:left;white-space:normal}
+.tn:hover{background:#fafafa;border-color:var(--bd2)}
+.tn.child{background:#fcfcfc}
+.tn.ext{display:flex;align-items:center;gap:8px;min-height:36px;padding:6px 12px;border:1px dashed var(--bd);border-radius:8px;font-size:12px}
+.tn-l{width:10px;height:10px;margin-top:-8px;border-left:1.5px solid var(--bd2);border-bottom:1.5px solid var(--bd2);border-bottom-left-radius:3px;flex:none}
+.dtt{display:inline-flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.en{font-family:var(--mono);font-size:12px;color:var(--mu)}
+.badge.kind{height:20px;padding:0 7px;font-size:11px;background:#eef2f7;color:#3b4a5c}
+.blines{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.bl{display:flex;gap:12px;align-items:flex-start}
+.bl-k{flex:none;width:72px;padding-top:6px;font-size:12px;font-weight:600;color:var(--mu)}
+.bl-v{display:flex;flex-wrap:wrap;gap:6px}
+.bl-i{height:auto;min-height:30px;padding:4px 10px;border:1px solid var(--bd);background:#fff;font-weight:400;white-space:normal;text-align:left;gap:6px}
+.bl-i:hover{background:#fafafa;border-color:var(--bd2)}
+.bl-i .badge{height:18px;font-size:11px;padding:0 7px}
+.ct{padding:12px 14px;border:1px solid var(--bd);border-radius:10px}
+.ct-h{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ct-g{display:flex;flex-direction:column;gap:6px}
+.ct-r{display:flex;align-items:baseline;gap:10px;line-height:1.6}
+.ct-r .badge{flex:none;height:20px;font-size:11px}
+.chg-add{background:#e6f7ec;color:var(--ok)}.chg-modify{background:#e8f1fc;color:#0b4f94}.chg-remove{background:#ffeded;color:var(--er)}
+select.chg{height:28px;padding:0 4px}
+.tbl tr.rm td input[type=text]{text-decoration:line-through;color:var(--mu)}
+.dlist{display:flex;flex-direction:column;gap:6px}
+.dl-i{justify-content:flex-start;gap:10px;height:auto;min-height:38px;padding:6px 12px;border:1px solid var(--bd);background:#fff;font-weight:400;text-align:left;white-space:normal}
+.dl-i:hover{background:#fafafa;border-color:var(--bd2)}
+.dl-i .badge{flex:none}
+.dl-q{flex:1;min-width:0}
+.dl-a{flex:none;color:var(--ok);font-weight:500}
+.stack.tight{gap:8px}
+.sg{padding:12px 14px;border:1px solid #f1dfa2;border-radius:10px;background:#fffdf5}
+.sg.on{border-color:#cdebd8;background:#f5fbf7}
+.sg-h{display:flex;align-items:center;gap:10px}
+.sg-r{margin:4px 0 0;font-size:12px;color:var(--tx2);line-height:1.55}
+.sg-m{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+.sg-m li{display:flex;align-items:center;gap:8px;font-size:13px}
+.b-rec{background:#e8f1fc;color:#0b4f94}
+.recbox{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;padding:8px 12px;border-radius:8px;background:#f4f8fd;font-size:13px}
+.choices.rich{grid-template-columns:minmax(0,1fr)}
+.choice{align-items:flex-start}
+.choice>input{margin-top:3px}
+.ch-b{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ch-v{display:flex;align-items:center;gap:8px;font-weight:500}
+.ch-v .badge{height:18px;padding:0 7px;font-size:11px}
+.ch-i{font-size:12px;color:var(--tx2);line-height:1.5}
+.ch-x{font-size:12px;color:var(--mu)}
+.choice.rec{border-color:#bcd5f1}
+.choice.rec.on{border-color:var(--tx)}
+.c-info{background:#f4f8fd;border-color:#d7e5f5;color:#1f3b5c}
+.eff{margin-top:12px}.eff>div+div{margin-top:6px}
+.oped{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.oped-r{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr) 24px;gap:8px;align-items:center}
+.adv{margin-top:18px;border-top:1px dashed var(--bd);padding-top:12px}
+.adv-t{height:28px;padding:0 6px 0 2px;background:transparent;color:var(--tx2);font-weight:500;font-size:12px}
+.adv-t:hover{background:var(--ctl)}
+.adv-b{margin-top:12px}
+.form.c6{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px 16px}
+.mono-in{font-family:var(--mono);font-size:12px}
+.rel{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;padding:10px 12px;border-radius:8px;background:#f6f8fb;font-size:13px}
+.rel>div{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ns{display:block;font-family:var(--mono);font-size:11px;color:var(--mu);font-weight:400;overflow:hidden;text-overflow:ellipsis}
+.ni:has(.ns){height:auto;min-height:40px;padding-top:4px;padding-bottom:4px}
+.ni:has(.ns) .nl{white-space:normal;line-height:1.35}
+.ph-en{font-family:var(--mono);font-size:13px;color:var(--mu)}
+.dirty{font-size:12px;padding:3px 9px;border-radius:11px;background:#fff1e5;color:var(--wn);white-space:nowrap}
+.tcell{padding-top:10px !important;vertical-align:top}
+.tcell .badge{margin-left:8px;height:20px;font-size:11px}
+@media (max-width:1100px){.form.c6{grid-template-columns:repeat(3,minmax(0,1fr))}.rstrip,.two{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:900px){
 #main{display:block;height:auto}
 #nav{width:auto;border-right:0;border-bottom:1px solid var(--bd)}
@@ -232,17 +401,16 @@ var FIELD_TYPES = ['Data', 'Int', 'Float', 'Currency', 'Check', 'Select', 'Link'
 	'Color', 'JSON', 'Section Break', 'Column Break', 'Tab Break'];
 var BREAKS = ['Section Break', 'Column Break', 'Tab Break'];
 var RIGHTS = ['read', 'write', 'create', 'delete', 'submit', 'cancel', 'amend', 'report', 'export', 'print', 'email', 'share'];
-var ORIGINS = [['request', '요청 반영'], ['suggestion', 'AI 제안'], ['technical', '기술 결정']];
 var YESNO = [[true, '예'], [false, '아니오']];
 var LS_KEY = 'frappe-harness-spec-draft';
 var BLOCKS = [['doctypes', 'DocType', 'dt'], ['permissions', '권한', 'perm'], ['workflows', '워크플로', 'wf'],
 	['ui', 'UI/UX', 'ui'], ['reports', '리포트', 'rp'], ['business_rules', '업무 규칙/API', 'br']];
 var BASIC = {
 	feature: [['name', '기능 이름'], ['app', '대상 App'], ['module', 'Module'], ['purpose', '목적', 'ml'], ['users', '실제 사용자', 'ml'],
-		['flow', '업무 흐름', 'ml'], ['scope', '구현 범위', 'ml'], ['out_of_scope', '제외 범위 (줄마다 하나)', 'list']],
+		['flow', '업무 흐름', 'ml'], ['scope', '구현 범위', 'ml'], ['out_of_scope', '제외 범위', 'list']],
 	change: [['name', '변경 이름'], ['app', '대상 App'], ['module', 'Module'], ['target', '대상 (기능/DocType/화면)'],
-		['current_behavior', '현재 동작', 'ml'], ['desired_behavior', '바꿀 동작', 'ml'], ['preserve', '유지할 동작 (줄마다 하나)', 'list'],
-		['data_handling', '기존 데이터 처리', 'ml'], ['out_of_scope', '제외 범위 (줄마다 하나)', 'list']],
+		['current_behavior', '현재 동작', 'ml'], ['desired_behavior', '바꿀 동작', 'ml'], ['preserve', '유지할 동작', 'list'],
+		['data_handling', '기존 데이터 처리', 'ml'], ['out_of_scope', '제외 범위', 'list']],
 	bug: [['name', '버그 이름'], ['app', '대상 App'], ['module', 'Module'], ['target', '대상'], ['actual', '실제 현상', 'ml'],
 		['reproduction', '재현 조건/방법', 'ml'], ['expected', '기대 동작', 'ml'], ['evidence', '오류 메시지/증거', 'ml']]
 };
@@ -308,6 +476,7 @@ function strip(n) {
 				if (x.selected !== true) return;
 				var y = strip(x);
 				delete y.selected;
+				delete y.suggestion_group;
 				y.origin = 'request';
 				y.adopted_from_suggestion = true;
 				out.push(y);
@@ -337,13 +506,13 @@ function basicsMissing(spec) {
 function confirmSpec(spec, approved) {
 	var reasons = [];
 	if (!approved) reasons.push('"이 내용으로 개발을 승인합니다"에 체크해야 합니다.');
-	var out = strip(spec);
-	asArr(out.open_decisions).forEach(function (d) {
+	asArr(spec.open_decisions).forEach(function (d) {
 		if (isObj(d) && d.required === true && unresolved(d)) reasons.push('필수 결정이 미해결입니다: ' + (d.question || d.id || '?'));
 	});
-	basicsMissing(out).forEach(function (k) {
-		reasons.push('필수 기본 정보가 비어 있습니다: ' + (k === 'acceptance_criteria' ? '완료 조건 1개 이상' : k));
-	});
+	conflicts(spec).forEach(function (m) { reasons.push(m); });
+	validateSpec(spec).forEach(function (m) { reasons.push('검증 문제: ' + m); });
+	var out = strip(spec);
+	delete out.suggestions;
 	if (Array.isArray(out.open_decisions) || Array.isArray(out.decisions)) {
 		var moved = asArr(out.open_decisions).filter(function (d) { return isObj(d) && !unresolved(d); })
 			.map(function (d) { return { id: d.id, question: d.question, answer: d.answer }; });
@@ -352,7 +521,53 @@ function confirmSpec(spec, approved) {
 	}
 	out.status = 'confirmed';
 	out.confirmed_at = new Date().toISOString();
+	validateSpec(out).forEach(function (m) { reasons.push('확정본 검증 문제: ' + m); });
 	return { ok: reasons.length === 0, reasons: reasons, spec: out };
+}
+
+/* ----- review helpers ----- */
+function optVal(o) { return isObj(o) ? o.value : o; }
+function groupKey(it) { return nonEmpty(it.suggestion_group) ? it.suggestion_group : 'item:' + (it.id || ''); }
+/* every AI suggestion, grouped; items sharing suggestion_group are adopted together */
+function suggestionGroups(spec) {
+	var order = [], by = {};
+	asArr(spec.suggestions).forEach(function (g) { if (isObj(g) && nonEmpty(g.id)) { by[g.id] = { id: g.id, title: g.title, reason: g.reason, items: [] }; order.push(g.id); } });
+	walk(spec, function (d, path, list) {
+		if (d.origin !== 'suggestion') return;
+		var k = groupKey(d);
+		if (!by[k]) { by[k] = { id: k, title: null, reason: d.description || null, items: [] }; order.push(k); }
+		by[k].items.push({ it: d, list: list, path: path });
+	}, '', null);
+	return order.map(function (k) {
+		var g = by[k], on = g.items.filter(function (x) { return x.it.selected === true; }).length;
+		g.selected = g.items.length > 0 && on === g.items.length;
+		g.mixed = on > 0 && on < g.items.length;
+		if (!g.title && g.items.length) g.title = itemTitle(g.items[0].it, g.items[0].list);
+		return g;
+	}).filter(function (g) { return g.items.length; });
+}
+function setGroup(g, on) { g.items.forEach(function (x) { x.it.selected = on; }); }
+function itemTitle(it, list) {
+	var key = { doctypes: 'doctypes', permissions: 'permissions', workflows: 'workflows', ui: 'ui', reports: 'reports', business_rules: 'business_rules' }[list];
+	if (key) return itemLabel(key, it);
+	return it.label || it.text || it.name || it.id || '(이름 없음)';
+}
+var KIND_NAMES = { doctypes: 'DocType', fields: '필드', rules: '규칙', permissions: '권한', workflows: '워크플로', ui: 'UI', reports: '리포트',
+	business_rules: '업무 규칙', acceptance_criteria: '완료 조건', states: '상태', transitions: '상태 이동' };
+/* ids that stay in scope after unadopted suggestions are dropped */
+function scopeIds(spec) { var ids = {}; walk(strip(spec), function (d) { if (typeof d.id === 'string') ids[d.id] = d; }, '', null); return ids; }
+function allIds(spec) { var ids = {}; walk(spec, function (d, path, list) { if (typeof d.id === 'string') ids[d.id] = { d: d, list: list }; }, '', null); return ids; }
+function chosenOption(d) { return asArr(d.options).filter(function (o) { return isObj(o) && !unresolved(d) && o.value === d.answer; })[0] || null; }
+/* a chosen answer that excludes items still in scope contradicts the draft; Main must reconcile it */
+function conflicts(spec) {
+	var inScope = scopeIds(spec), out = [];
+	asArr(spec.open_decisions).forEach(function (d) {
+		var o = isObj(d) ? chosenOption(d) : null;
+		asArr(o && o.excludes).forEach(function (id) {
+			if (inScope[id]) out.push('결정 "' + (d.question || d.id) + '"의 답("' + d.answer + '")과 명세가 충돌합니다: "' + itemTitle(inScope[id], null) + '"이(가) 아직 범위에 있습니다.');
+		});
+	});
+	return out;
 }
 
 function triProblem(v, where) {
@@ -367,10 +582,15 @@ function validateSpec(spec) {
 	if (spec.schema_version !== '1.0') p.push('schema_version은 "1.0"이어야 합니다.');
 	if (['feature', 'change', 'bug'].indexOf(spec.type) < 0) p.push('type은 feature/change/bug 중 하나여야 합니다.');
 	if (['draft', 'confirmed'].indexOf(spec.status) < 0) p.push('status는 draft/confirmed 중 하나여야 합니다.');
-	var confirmed = spec.status === 'confirmed';
+	var confirmed = spec.status === 'confirmed', groups = {};
 	walk(spec, function (d, path, list) {
 		if (typeof d.id === 'string') {
 			if (seen[d.id]) p.push('중복 id "' + d.id + '": ' + path + ' / ' + seen[d.id]); else seen[d.id] = path;
+		}
+		if (typeof d.suggestion_group === 'string') {
+			if (d.origin !== 'suggestion') p.push(path + ': suggestion_group은 AI 제안 항목에만 씁니다.');
+			else (groups[d.suggestion_group] = groups[d.suggestion_group] || {})[d.selected === true] = 1;
+			if (confirmed) p.push(path + ': 확정 명세에 suggestion_group이 남아 있습니다.');
 		}
 		if (confirmed) {
 			if (d.origin === 'suggestion') p.push(path + ': 확정 명세에 제안이 남아 있습니다.');
@@ -397,7 +617,24 @@ function validateSpec(spec) {
 	});
 	asArr(spec.ui).forEach(function (x, i) { tri(x, TRI.ui, 'ui[' + i + ']'); });
 	asArr(spec.reports).forEach(function (x, i) { tri(x, TRI.reports, 'reports[' + i + ']'); });
+	var listed = {};
+	asArr(spec.suggestions).forEach(function (g) { if (isObj(g)) listed[g.id] = 1; });
+	Object.keys(groups).forEach(function (g) {
+		if (Object.keys(groups[g]).length > 1) p.push('제안 묶음 "' + g + '"의 채택 상태가 항목마다 다릅니다.');
+		if (Array.isArray(spec.suggestions) && !listed[g]) p.push('제안 묶음 "' + g + '"이 suggestions 목록에 없습니다.');
+	});
+	asArr(spec.open_decisions).forEach(function (d, i) {
+		if (!isObj(d)) return;
+		var vals = asArr(d.options).map(optVal);
+		if ('recommendation' in d && vals.indexOf(d.recommendation) < 0) p.push('open_decisions[' + i + ']: AI 추천은 선택지 중 하나여야 합니다.');
+		asArr(d.options).forEach(function (o) {
+			['affects', 'excludes'].forEach(function (k) {
+				asArr(isObj(o) && o[k]).forEach(function (ref) { if (!seen[ref]) p.push('open_decisions[' + i + ']: 선택지 "' + o.value + '"의 ' + k + '에 없는 id "' + ref + '"'); });
+			});
+		});
+	});
 	if (confirmed) {
+		if ('suggestions' in spec) p.push('확정 명세에 suggestions가 남아 있습니다.');
 		asArr(spec.open_decisions).forEach(function (d) {
 			if (isObj(d) && d.required === true && unresolved(d)) p.push('필수 결정 미해결: ' + (d.question || d.id));
 		});
@@ -421,7 +658,7 @@ function cellMd(v) { return one(v).replace(/\|/g, '\\|'); }
 function tag(it) {
 	if (!isObj(it)) return '';
 	if (it.origin === 'suggestion') return ' `[AI 제안: ' + (it.selected === true ? '채택' : '미채택') + ']`';
-	if (it.origin === 'technical') return ' `[기술 결정]`';
+	if (it.origin === 'technical') return ' `[AI가 정함]`';
 	if (it.adopted_from_suggestion) return ' `[제안 채택]`';
 	return '';
 }
@@ -437,7 +674,7 @@ function g(o, k, dflt) { return isObj(o) && k in o ? o[k] : dflt; }
 function toMarkdown(spec) {
 	var L = ['# ' + (spec.name || spec.target || spec.id || '(이름 없음)'),
 		'_type: ' + spec.type + ', status: ' + spec.status + ', schema ' + spec.schema_version + '_', ''];
-	L = L.concat(kv(spec, [['id', 'ID'], ['app', 'App'], ['module', 'Module'], ['purpose', '목적'], ['users', '사용자'],
+	L = L.concat(kv(spec, [['id', 'ID'], ['original_request', '원본 요청'], ['approach', 'AI 이해와 구현 방향'], ['app', 'App'], ['module', 'Module'], ['purpose', '목적'], ['users', '사용자'],
 		['flow', '업무 흐름'], ['scope', '구현 범위'], ['target', '대상'], ['current_behavior', '현재 동작'],
 		['desired_behavior', '바꿀 동작'], ['data_handling', '기존 데이터 처리'], ['actual', '실제 현상'],
 		['reproduction', '재현'], ['expected', '기대 동작'], ['evidence', '증거'], ['confirmed_at', '확정 시각']]));
@@ -506,7 +743,7 @@ function toMarkdown(spec) {
 		L.push('', '## 결정 필요');
 		spec.open_decisions.forEach(function (d) {
 			L.push('- [' + (g(d, 'required', false) === true ? '필수' : '선택') + '] ' + one(g(d, 'question', '')) +
-				' (' + asArr(d.options).join(' / ') + ') -> ' + (unresolved(d) ? '미해결' : '해결: ' + one(d.answer)));
+				' (' + asArr(d.options).map(optVal).join(' / ') + ') -> ' + (unresolved(d) ? '미해결' : '해결: ' + one(d.answer)));
 		});
 	}
 	if (asArr(spec.decisions).length) {
@@ -518,6 +755,7 @@ function toMarkdown(spec) {
 
 /* ===== state ===== */
 var spec = null, sel = { k: 'start' }, approved = false, notice = '', expanded = {}, saveOK = true;
+var LS_PREFIX = 'frappe-harness-spec:', draftKey = null, savedAt = null, lastExport = '', restoreOffer = null;
 function $(id) { return document.getElementById(id); }
 
 /* ===== DOM helpers (all user text goes through text nodes / .value) ===== */
@@ -555,8 +793,12 @@ function changed() {
 	renderNav();
 }
 function refresh() { changed(); renderEditor(); }
+/* each spec keeps its own browser draft, keyed by id */
 function save() {
-	try { localStorage.setItem(LS_KEY, JSON.stringify(spec)); saveOK = true; } catch (e) { saveOK = false; }
+	if (!spec) return;
+	if (!draftKey) draftKey = keyFor(spec);
+	var now = new Date();
+	try { localStorage.setItem(draftKey, JSON.stringify({ saved_at: now.toISOString(), spec: spec })); saveOK = true; savedAt = now; } catch (e) { saveOK = false; }
 }
 
 /* ----- controls ----- */
@@ -569,16 +811,6 @@ function txt(o, key, opt) {
 	el.value = o[key] === undefined ? '' : String(o[key]);
 	el.addEventListener('input', function () {
 		if (el.value === '') delete o[key]; else o[key] = el.value;
-		changed();
-	});
-	return el;
-}
-function linesCtl(o, key) {
-	var el = h('textarea', { rows: 3 });
-	el.value = asArr(o[key]).join('\n');
-	el.addEventListener('input', function () {
-		var a = el.value.split('\n').filter(function (s) { return s.trim() !== ''; });
-		if (a.length) o[key] = a; else delete o[key];
 		changed();
 	});
 	return el;
@@ -603,13 +835,15 @@ function triSel(o, key, choices, opt) {
 		if (isWrapper(v)) cur = v.mode;
 		else { var i = choices.findIndex(function (c) { return c[0] === v; }); cur = i >= 0 ? 'v' + i : 'x'; }
 	}
-	if (opt.auto || cur === 'auto') opts.push(['auto', 'Auto']);
+	if (opt.auto || cur === 'auto') opts.push(['auto', 'AI가 정함']);
 	if (opt.none || cur === 'none') opts.push(['none', '사용 안 함']);
 	if (cur === 'x') opts.push(['x', typeof v === 'string' ? v : JSON.stringify(v)]);
 	var s = h('select', { class: 't' }, opts.map(function (p) { return h('option', { value: p[0], selected: p[0] === cur }, p[1]); }));
 	s.value = cur;
+	s.classList.toggle('unset', cur === '');
 	s.addEventListener('change', function () {
 		var x = s.value;
+		s.classList.toggle('unset', x === '');
 		if (x === 'x') return;
 		if (x === '') delete o[key];
 		else if (x === 'auto' || x === 'none') o[key] = wrap(x);
@@ -627,12 +861,12 @@ function triText(o, key, opt) {
 	if (opt.ph) inp.setAttribute('placeholder', opt.ph);
 	if (opt.list) inp.setAttribute('list', opt.list);
 	inp.value = cur === 'val' ? String(v) : '';
-	var opts = [['', '미지정'], ['val', '값 입력'], ['auto', 'Auto']];
+	var opts = [['', '미지정'], ['val', '직접 입력'], ['auto', 'AI가 정함']];
 	if (opt.none !== false) opts.push(['none', '사용 안 함']);
 	var s = h('select', { class: 't' }, opts.map(function (p) { return h('option', { value: p[0], selected: p[0] === cur }, p[1]); }));
 	s.value = cur;
 	var box = h('div', { class: 'tri' + (opt.ml ? ' ml' : '') }, s, inp);
-	function show() { var on = s.value === 'val'; inp.style.display = on ? '' : 'none'; box.classList.toggle('on', on); }
+	function show() { var on = s.value === 'val'; inp.style.display = on ? '' : 'none'; box.classList.toggle('on', on); s.classList.toggle('unset', s.value === ''); }
 	s.addEventListener('change', function () {
 		if (s.value === '') delete o[key];
 		else if (s.value === 'val') o[key] = inp.value;
@@ -683,27 +917,39 @@ function ib(label, title, fn, disabled) {
 }
 function chip(text, cls) { return h('span', { class: 'badge' + (cls ? ' ' + cls : '') }, text); }
 
+var ORIGIN_INFO = {
+	suggestion: '요청에 없던 AI의 추가 아이디어입니다. 채택해야 개발 범위에 들어갑니다',
+	technical: '요청에 없어서 AI가 대신 정한 내용입니다. 생각과 다르면 고치세요'
+};
+/* the user's own request shows nothing; only what the AI added or decided is marked */
 function originCtl(it) {
 	var o = it.origin || 'request';
-	var s = h('select', { class: 'badge ' + (o === 'request' ? 'plain' : 'b-' + o), title: '출처', 'aria-label': '출처' }, ORIGINS.map(function (p) { return h('option', { value: p[0], selected: p[0] === o }, p[1]); }));
-	s.value = o;
-	s.addEventListener('change', function () {
-		if (s.value === 'request') delete it.origin; else it.origin = s.value;
-		if (s.value === 'suggestion') { if (typeof it.selected !== 'boolean') it.selected = false; } else delete it.selected;
-		refresh();
-	});
-	var cb = null;
 	if (o === 'suggestion') {
-		cb = h('label', { class: 'adopt' }, h('input', { type: 'checkbox', checked: it.selected === true, onchange: function (e) {
-			it.selected = e.target.checked; changed();
-		} }), '채택');
+		var on = it.selected === true;
+		var b = h('button', { type: 'button', class: 'adopt' + (on ? ' on' : ''), 'aria-pressed': on ? 'true' : 'false',
+			title: on ? '누르면 채택을 취소합니다' : '누르면 개발 범위에 넣습니다', onclick: function () {
+				var g = suggestionGroups(spec).filter(function (x) { return x.items.some(function (y) { return y.it === it; }); })[0];
+				if (g) setGroup(g, !on); else it.selected = !on;
+				refresh();
+			} }, on ? '✓ 채택함' : '채택하기');
+		var grouped = nonEmpty(it.suggestion_group);
+		return h('span', { class: 'origin' }, h('span', { class: 'badge b-suggestion', title: ORIGIN_INFO.suggestion + (grouped ? ' (같은 묶음의 항목과 함께 채택됩니다)' : '') }, grouped ? 'AI 제안 · 묶음' : 'AI 제안'), b);
 	}
-	return h('span', { class: 'origin' }, s, cb);
+	if (o === 'technical') return h('span', { class: 'origin' }, h('span', { class: 'badge b-technical', title: ORIGIN_INFO.technical }, 'AI가 정함'));
+	return null;
+}
+function originLegend(root) {
+	var sug = false, tech = false;
+	walk(root, function (d) { if (d.origin === 'suggestion') sug = true; if (d.origin === 'technical') tech = true; }, '', null);
+	if (!sug && !tech) return null;
+	return h('div', { class: 'legend' },
+		sug ? h('span', { class: 'lg-i' }, chip('AI 제안', 'b-suggestion'), ORIGIN_INFO.suggestion) : null,
+		tech ? h('span', { class: 'lg-i' }, chip('AI가 정함', 'b-technical'), ORIGIN_INFO.technical) : null);
 }
 function badgeFor(it) {
 	var o = isObj(it) && it.origin || 'request';
 	if (o === 'suggestion') return chip(it.selected === true ? '채택' : '제안', 'b-suggestion');
-	if (o === 'technical') return chip('기술', 'b-technical');
+	if (o === 'technical') return chip('AI', 'b-technical');
 	return null;
 }
 
@@ -721,19 +967,279 @@ function rowBtns(arr, i) {
 }
 function ensure(o, k) { if (!Array.isArray(o[k])) o[k] = []; return o[k]; }
 
-/* ===== editors (each returns a list of sections) ===== */
+/* ===== simple controls for reviewers ===== */
+/* one input per list item; stored as an array of non-empty strings (key removed when empty) */
+function listCtl(o, key, opt) {
+	opt = opt || {};
+	var arr = asArr(o[key]).map(String), box = h('div', { class: 'lst' });
+	function sync() { var a = arr.filter(nonEmpty); if (a.length) o[key] = a; else delete o[key]; changed(); }
+	function draw(focus) {
+		clear(box);
+		arr.forEach(function (v, i) {
+			var inp = h('input', { type: 'text', placeholder: opt.ph || '', 'aria-label': (opt.label || '항목') + ' ' + (i + 1) });
+			inp.value = v;
+			inp.addEventListener('input', function () { arr[i] = inp.value; sync(); });
+			inp.addEventListener('keydown', function (e) {
+				if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); arr.splice(i + 1, 0, ''); draw(i + 1); }
+				else if (e.key === 'Backspace' && inp.value === '' && arr.length > 1) { e.preventDefault(); arr.splice(i, 1); sync(); draw(Math.max(0, i - 1)); }
+			});
+			box.appendChild(h('div', { class: 'lst-r' }, h('span', { class: 'lst-b', 'aria-hidden': 'true' }), inp,
+				ib('×', '삭제', function () { arr.splice(i, 1); sync(); draw(); })));
+			if (focus === i) setTimeout(function () { inp.focus(); }, 0);
+		});
+		box.appendChild(btn('+ ' + (opt.add || '추가'), function () { arr.push(''); draw(arr.length - 1); }, 'gh lst-add'));
+	}
+	draw();
+	return box;
+}
+/* checkbox: writes an explicit true/false only when the user changes it */
+function chk(o, key, label, help) {
+	var c = h('input', { type: 'checkbox', checked: o[key] === true });
+	c.addEventListener('change', function () { o[key] = c.checked; changed(); });
+	var auto = isWrapper(o[key]) && o[key].mode === 'auto';
+	return h('label', { class: 'check' }, c, h('span', null, label, auto ? h('span', { class: 'mu' }, ' (지금은 AI가 정함)') : null,
+		help ? h('span', { class: 'help-i' }, help) : null));
+}
+function showVal(v) {
+	if (isWrapper(v)) return v.mode === 'auto' ? 'AI가 정함' : '사용 안 함';
+	if (v === true) return '예';
+	if (v === false) return '아니오';
+	var named_ = { normal: '일반', child: '하위 표', single: '단일 문서' };
+	if (typeof v === 'string' && named_[v]) return named_[v];
+	return String(v).replace(/\n/g, ', ');
+}
+/* read-only summary of framework settings the AI filled in; reviewers rarely need them */
+function devNote(o, keys, hint) {
+	var items = keys.filter(function (k) { return isObj(o) && k[0] in o && !(isWrapper(o[k[0]]) && o[k[0]].mode === 'auto'); });
+	if (!items.length) return null;
+	return h('div', { class: 'dev' }, h('div', { class: 'dev-t' }, '개발 설정', h('span', { class: 'mu' }, ' · ' + (hint || 'Developer가 쓰는 값입니다. 다르게 원하면 설명이나 추가 규칙에 적어 주세요'))),
+		h('div', { class: 'dev-l' }, items.map(function (k) { return h('span', { class: 'dev-i' }, h('span', { class: 'dev-k' }, k[1]), showVal(o[k[0]])); })));
+}
+/* always-visible fields plus optional ones that appear when filled or added */
+function optFields(o, defs, always, scope) {
+	var f = form(''), more = h('div', { class: 'more' });
+	defs.forEach(function (d) {
+		var shown = always.indexOf(d[0]) >= 0 || nonEmpty(o[d[0]]) || expanded[scope + d[0]] === true;
+		if (shown) f.appendChild(field(d[1], txt(o, d[0], { ml: true, rows: 1, ph: d[2] || '' }), { wide: true }));
+		else more.appendChild(btn('+ ' + d[1], function () { expanded[scope + d[0]] = true; renderEditor(); }, 'gh chip-b'));
+	});
+	return [f, more.childNodes.length ? h('div', { class: 'more-w' }, h('span', { class: 'mu' }, '더 적을 내용'), more) : null];
+}
+
+/* ===== shared review helpers ===== */
 function dtDatalist() {
 	var dl = h('datalist', { id: 'dtl' });
 	asArr(spec.doctypes).forEach(function (d) { if (isObj(d) && d.name) dl.appendChild(h('option', { value: d.name })); });
 	return dl;
 }
+function rowCls(it) { return isObj(it) && it.origin === 'suggestion' ? 'sug' + (it.selected === true ? ' on' : '') : isObj(it) && it.origin === 'technical' ? 'tech' : ''; }
+/* where an id lives: returns a navigation target and a short location label */
+function locate(id) {
+	var hit = null;
+	walk(spec, function (d, path) {
+		if (hit || d.id !== id) return;
+		var m = /^(\w+)\[(\d+)\](?:\.fields\[(\d+)\])?/.exec(path) || [];
+		var top = m[1], ti = +m[2];
+		if (top === 'acceptance_criteria') hit = { target: { k: 'acceptance' }, where: '완료 조건' };
+		else if (top === 'open_decisions') hit = { target: { k: 'decisions' }, where: '결정' };
+		else if (BLOCKS.some(function (b) { return b[0] === top; })) {
+			var parent = spec[top][ti];
+			if (m[3] !== undefined || /\.rules\[/.test(path)) {
+				expanded[d.id] = true;
+				hit = { target: { k: 'item', list: top, id: parent.id }, where: (parent.label || parent.name || '') + (m[3] !== undefined ? ' 필드' : ' 규칙') };
+			} else hit = { target: { k: 'item', list: top, id: parent.id }, where: KIND_NAMES[top] || top };
+		} else hit = { target: { k: 'overview' }, where: path };
+	}, '', null);
+	return hit;
+}
+function jump(id, label) {
+	var l = locate(id);
+	return h('button', { type: 'button', class: 'lnk', onclick: function () { if (l) go(l.target); } }, label || id);
+}
+function secH(title, action, desc) {
+	return h('div', { class: 'sec-h row' }, h('div', null, h('h2', null, title), desc ? h('p', null, desc) : null), action || null);
+}
+function editLink(label, target) { return btn(label || '편집', function () { go(target); }, 'gh sm-t'); }
+function para(text, empty) { return nonEmpty(text) ? h('p', { class: 'para' }, text) : h('p', { class: 'para mu' }, empty || '비어 있습니다'); }
+function bullets(list, empty) {
+	var a = asArr(list).filter(nonEmpty);
+	return a.length ? h('ul', { class: 'bul' }, a.map(function (x) { return h('li', null, x); })) : h('p', { class: 'para mu' }, empty || '없음');
+}
+function flowSteps(text) {
+	if (!nonEmpty(text)) return para(text, '업무 흐름이 비어 있습니다');
+	var parts = text.split(/\s*(?:→|->|⇒)\s*/).filter(nonEmpty);
+	if (parts.length < 2) return para(text);
+	var row = h('ol', { class: 'flow' });
+	parts.forEach(function (p, i) { row.appendChild(h('li', null, h('span', { class: 'fn' }, String(i + 1)), h('span', null, p))); });
+	return row;
+}
+function parentsOf(name) {
+	var out = [];
+	asArr(spec.doctypes).forEach(function (d) {
+		asArr(isObj(d) && d.fields).forEach(function (f) {
+			if (isObj(f) && (f.fieldtype === 'Table' || f.fieldtype === 'Table MultiSelect') && f.options === name) out.push({ dt: d, f: f });
+		});
+	});
+	return out;
+}
+function childTables(dt) {
+	return asArr(dt.fields).filter(function (f) { return isObj(f) && (f.fieldtype === 'Table' || f.fieldtype === 'Table MultiSelect') && nonEmpty(f.options); });
+}
+function dtByName(name) { return asArr(spec.doctypes).filter(function (d) { return isObj(d) && d.name === name; })[0]; }
+function fieldCount(dt) { return asArr(dt.fields).filter(function (f) { return isObj(f) && BREAKS.indexOf(f.fieldtype) < 0; }).length; }
+function dtTitle(dt) { return h('span', { class: 'dtt' }, h('b', null, nonEmpty(dt.label) ? dt.label : (dt.name || '(이름 없음)')), nonEmpty(dt.label) ? h('span', { class: 'en' }, dt.name || '') : null); }
+
+/* ===== review screens ===== */
+function reviewStrip() {
+	var groups = suggestionGroups(spec), adopted = groups.filter(function (g) { return g.selected; }).length;
+	var reqOpen = asArr(spec.open_decisions).filter(function (d) { return d && d.required === true && unresolved(d); }).length;
+	var probs = validateSpec(spec).length + conflicts(spec).length;
+	function card(label, value, sub, cls, target) {
+		return h('button', { type: 'button', class: 'rs ' + (cls || ''), onclick: function () { go(target); } }, h('span', { class: 'rs-v' }, value), h('span', { class: 'rs-l' }, label), h('span', { class: 'rs-s' }, sub));
+	}
+	return h('div', { class: 'rstrip' },
+		card('필수 결정', reqOpen ? reqOpen + '개 남음' : '모두 답함', reqOpen ? '답하지 않으면 확정할 수 없습니다' : '필수 결정이 없거나 끝났습니다', reqOpen ? 'need' : 'done', { k: 'decisions' }),
+		card('AI 추가 제안', groups.length ? adopted + ' / ' + groups.length + ' 채택' : '없음', groups.length ? '채택하지 않으면 범위에서 빠집니다' : '요청 범위만 있습니다', groups.length ? 'sugg' : 'done', { k: 'suggestions' }),
+		card('검증', probs ? probs + '건 문제' : '문제 없음', probs ? '확정하기 전에 고쳐야 합니다' : '형식과 충돌 검사를 통과했습니다', probs ? 'need' : 'done', { k: 'verify' }));
+}
+function restoreBox() {
+	if (!restoreOffer) return null;
+	return h('div', { class: 'callout c-wn restore' }, h('span', null, '이 요청서의 브라우저 임시 저장본(' + fmtTime(restoreOffer.saved_at) + ')이 지금 내용과 다릅니다.'),
+		h('span', { class: 'sp' }), btn('임시 저장본 열기', function () { spec = normalize(restoreOffer.spec); restoreOffer = null; lastExport = ''; renderAll(); }, 'sm-t'),
+		btn('무시', function () { restoreOffer = null; renderEditor(); }, 'gh sm-t'));
+}
+function decisionList() {
+	var list = asArr(spec.open_decisions);
+	if (!list.length) return para('', '결정이 필요한 항목이 없습니다');
+	return h('div', { class: 'dlist' }, list.map(function (d) {
+		var un = unresolved(d), req = d.required === true;
+		return h('button', { type: 'button', class: 'dl-i', onclick: function () { go({ k: 'decisions' }); } },
+			chip(un ? (req ? '필수 · 미해결' : '선택 · 미해결') : '해결됨', un ? (req ? 'b-decision' : '') : 'b-request'),
+			h('span', { class: 'dl-q' }, d.question || '(질문 없음)'), un ? null : h('span', { class: 'dl-a' }, '→ ' + d.answer));
+	}));
+}
+function suggestionList(compact) {
+	var groups = suggestionGroups(spec);
+	if (!groups.length) return para('', 'AI 추가 제안이 없습니다');
+	return h('div', { class: 'stack' + (compact ? ' tight' : '') }, groups.map(function (g) { return groupCard(g, compact); }));
+}
+function adoptBtn(g) {
+	return h('button', { type: 'button', class: 'adopt' + (g.selected ? ' on' : ''), 'aria-pressed': g.selected ? 'true' : 'false',
+		onclick: function () { setGroup(g, !g.selected); refresh(); } }, g.selected ? '✓ 채택함' : g.mixed ? '일부만 채택됨 · 모두 채택' : '채택하기');
+}
+function groupCard(g, compact) {
+	var members = g.items.map(function (x) {
+		var l = x.it.id ? locate(x.it.id) : null;
+		return h('li', null, chip(KIND_NAMES[x.list] || '항목', 'kind'), x.it.id ? jump(x.it.id, itemTitle(x.it, x.list)) : h('span', null, itemTitle(x.it, x.list)),
+			l && l.where && x.list === 'fields' ? h('span', { class: 'mu' }, ' · ' + l.where) : null);
+	});
+	return h('div', { class: 'sg' + (g.selected ? ' on' : '') },
+		h('div', { class: 'sg-h' }, h('b', null, g.title || '(제목 없음)'), h('span', { class: 'sp' }), adoptBtn(g)),
+		nonEmpty(g.reason) ? h('p', { class: 'sg-r' }, g.reason) : null,
+		compact && g.items.length === 1 ? null : h('ul', { class: 'sg-m' }, members));
+}
+function relationTree() {
+	var dts = asArr(spec.doctypes).filter(isObj);
+	if (!dts.length) return para('', 'DocType이 없습니다');
+	var childNames = {};
+	dts.forEach(function (d) { childTables(d).forEach(function (f) { childNames[f.options] = 1; }); });
+	function node(dt, depth, via) {
+		var kids = childTables(dt).map(function (f) { var c = dtByName(f.options); return c ? node(c, depth + 1, f) : h('div', { class: 'tn ext', style: 'margin-left:' + (depth + 1) * 22 + 'px' }, chip('Table', 'kind'), h('span', null, f.options), h('span', { class: 'mu' }, ' (이 요청서 밖의 문서)')); });
+		var badge = dt.origin === 'suggestion' ? chip(dt.selected === true ? 'AI 제안 · 채택' : 'AI 제안', 'b-suggestion') : null;
+		return h('div', null, h('button', { type: 'button', class: 'tn' + (depth ? ' child' : ''), style: depth ? 'margin-left:' + depth * 22 + 'px;width:calc(100% - ' + depth * 22 + 'px)' : null, onclick: function () { go({ k: 'item', list: 'doctypes', id: dt.id }); } },
+			depth ? h('span', { class: 'tn-l', 'aria-hidden': 'true' }) : null, dtTitle(dt),
+			via ? h('span', { class: 'mu' }, via.label ? '“' + via.label + '” 표' : '하위 표') : null,
+			h('span', { class: 'sp' }), badge, chip(dt.existing === true ? '기존 수정' : '새로 만듦', dt.existing === true ? 'b-draft' : ''), h('span', { class: 'mu' }, '필드 ' + fieldCount(dt))), kids);
+	}
+	return h('div', { class: 'tree' }, dts.filter(function (d) { return !childNames[d.name]; }).map(function (d) { return node(d, 0, null); }));
+}
+function blockLines() {
+	var out = h('div', { class: 'blines' });
+	[['permissions', '권한', function (p) { var r = Object.keys(isObj(p.rights) ? p.rights : {}).filter(function (k) { return p.rights[k] === true; }); return (p.role || '?') + ' → ' + (p.doctype || '?') + (r.length ? ' : ' + r.join(', ') : ''); }],
+		['workflows', '워크플로', function (w) { return (w.name || w.doctype || '') + (asArr(w.states).length ? ' : ' + asArr(w.states).map(function (s) { return s.name; }).join(' → ') : ''); }],
+		['ui', 'UI', function (u) { return u.target || '(화면)'; }], ['reports', '리포트', function (r) { return r.name || '(리포트)'; }],
+		['business_rules', '업무 규칙', function (r) { return r.name || '(규칙)'; }]].forEach(function (b) {
+		var list = asArr(spec[b[0]]).filter(isObj);
+		if (!list.length) return;
+		out.appendChild(h('div', { class: 'bl' }, h('div', { class: 'bl-k' }, b[1]), h('div', { class: 'bl-v' }, list.map(function (it) {
+			return h('button', { type: 'button', class: 'bl-i', onclick: function () { go({ k: 'item', list: b[0], id: it.id }); } }, h('span', null, b[2](it)),
+				it.origin === 'suggestion' ? chip(it.selected === true ? '제안 · 채택' : '제안', 'b-suggestion') : null);
+		}))));
+	});
+	return out.childNodes.length ? out : null;
+}
+function changeTargets() {
+	var dts = asArr(spec.doctypes).filter(isObj);
+	if (!dts.length) return para('', '바꿀 DocType이 없습니다');
+	var NAMES = { add: '추가', modify: '수정', remove: '삭제' };
+	return h('div', { class: 'stack tight' }, dts.map(function (dt) {
+		var fs = asArr(dt.fields).filter(function (f) { return isObj(f) && BREAKS.indexOf(f.fieldtype) < 0; });
+		var groups = { add: [], modify: [], remove: [], '': [] };
+		fs.forEach(function (f) { groups[dt.existing === true ? (NAMES[f.change] ? f.change : '') : 'add'].push(f); });
+		return h('div', { class: 'ct' }, h('div', { class: 'ct-h' }, dtTitle(dt), chip(dt.existing === true ? '기존 DocType' : '새 DocType', dt.existing === true ? 'b-draft' : ''),
+			h('span', { class: 'sp' }), editLink('열기', { k: 'item', list: 'doctypes', id: dt.id })),
+			h('div', { class: 'ct-g' }, ['add', 'modify', 'remove', ''].filter(function (k) { return groups[k].length; }).map(function (k) {
+				return h('div', { class: 'ct-r' }, chip(NAMES[k] || '변경 표시 없음', 'chg-' + (k || 'none')), h('span', null, groups[k].map(function (f) { return (f.label || f.fieldname || '?') + (f.fieldname && f.label ? ' (' + f.fieldname + ')' : ''); }).join(', ')));
+			})));
+	}));
+}
+function overviewEditor() {
+	var t = spec.type, out = [h('div', { class: 'ov-top' }, restoreBox(), reviewStrip())];
+	var req = h('div', { class: 'two' },
+		h('div', { class: 'qbox' }, h('div', { class: 'cap2' }, '사용자 원본 요청'), nonEmpty(spec.original_request) ? h('blockquote', null, spec.original_request) : h('p', { class: 'para mu' }, '원본 요청이 없습니다')),
+		h('div', { class: 'qbox ai' }, h('div', { class: 'cap2' }, t === 'bug' ? 'AI가 추정한 원인과 수정 방향' : 'AI가 이해한 내용과 구현 방향'), para(spec.approach, '비어 있습니다')));
+	out.push(h('section', { class: 'sec' }, secH(t === 'bug' ? '요청과 대상' : '요청과 AI의 이해', editLink('편집', { k: 'basics' })), req,
+		t !== 'feature' && nonEmpty(spec.target) ? h('p', { class: 'para tgt' }, h('b', null, '대상 '), spec.target) : null,
+		t === 'feature' && (nonEmpty(spec.purpose) || nonEmpty(spec.users)) ? h('div', { class: 'kv2' }, nonEmpty(spec.purpose) ? h('div', null, h('span', { class: 'k' }, '목적'), h('span', null, spec.purpose)) : null,
+			nonEmpty(spec.users) ? h('div', null, h('span', { class: 'k' }, '사용자'), h('span', null, spec.users)) : null) : null));
+	if (t === 'feature') {
+		out.push(h('section', { class: 'sec' }, secH('업무 흐름', editLink('편집', { k: 'basics' })), flowSteps(spec.flow)));
+		out.push(h('section', { class: 'sec' }, secH('DocType과 구성 요소', null, '하위 표(Child Table)는 부모 DocType 아래에 표시합니다'), relationTree(), blockLines()));
+		out.push(h('section', { class: 'sec' }, secH('개발 범위', editLink('편집', { k: 'basics' })),
+			h('div', { class: 'two' }, h('div', null, h('div', { class: 'cap2' }, '포함'), para(spec.scope, '범위가 비어 있습니다')), h('div', null, h('div', { class: 'cap2' }, '제외'), bullets(spec.out_of_scope, '제외 범위가 없습니다')))));
+	} else if (t === 'change') {
+		out.push(h('section', { class: 'sec' }, secH('변경 전과 후', editLink('편집', { k: 'basics' })),
+			h('div', { class: 'two cmp' }, h('div', { class: 'cmp-b' }, h('div', { class: 'cap2' }, '지금'), para(spec.current_behavior)), h('div', { class: 'cmp-a' }, h('div', { class: 'cap2' }, '바뀐 뒤'), para(spec.desired_behavior)))));
+		out.push(h('section', { class: 'sec' }, secH('바뀌는 대상', null, '필드마다 추가·수정·삭제를 표시합니다'), changeTargets(), blockLines()));
+		out.push(h('section', { class: 'sec' }, secH('지킬 것', editLink('편집', { k: 'basics' })),
+			h('div', { class: 'two' }, h('div', null, h('div', { class: 'cap2' }, '유지할 동작'), bullets(spec.preserve, '적힌 것이 없습니다')),
+				h('div', null, h('div', { class: 'cap2' }, '기존 데이터 처리'), para(spec.data_handling, '적힌 것이 없습니다'))),
+			asArr(spec.out_of_scope).length ? h('div', { class: 'mt' }, h('div', { class: 'cap2' }, '제외 범위'), bullets(spec.out_of_scope)) : null));
+	} else {
+		out.push(h('section', { class: 'sec' }, secH('현상과 기대 동작', editLink('편집', { k: 'basics' })),
+			h('div', { class: 'two cmp' }, h('div', { class: 'cmp-b' }, h('div', { class: 'cap2' }, '지금 일어나는 일'), para(spec.actual)), h('div', { class: 'cmp-a' }, h('div', { class: 'cap2' }, '기대 동작'), para(spec.expected)))));
+		var steps = (spec.reproduction || '').split('\n').map(function (s) { return s.replace(/^\s*\d+[.)]\s*/, ''); }).filter(nonEmpty);
+		out.push(h('section', { class: 'sec' }, secH('재현 방법과 증거', editLink('편집', { k: 'basics' })),
+			steps.length ? h('ol', { class: 'steps' }, steps.map(function (s) { return h('li', null, s); })) : para('', '재현 방법이 없습니다'),
+			nonEmpty(spec.evidence) ? h('div', { class: 'mt' }, h('div', { class: 'cap2' }, '증거'), h('pre', { class: 'ev' }, spec.evidence)) : null));
+	}
+	if (t !== 'feature' || asArr(spec.acceptance_criteria).length) {
+		var ac = asArr(spec.acceptance_criteria).filter(isObj);
+		out.push(h('section', { class: 'sec' }, secH('완료 조건', editLink('편집', { k: 'acceptance' })),
+			ac.length ? h('ol', { class: 'steps' }, ac.map(function (c) { return h('li', { class: c.origin === 'suggestion' && c.selected !== true ? 'dim' : '' }, c.text || '', c.origin === 'suggestion' ? chip(c.selected === true ? '제안 · 채택' : '제안', 'b-suggestion') : null); })) : para('', '완료 조건이 없습니다')));
+	}
+	out.push(h('section', { class: 'sec' }, secH('결정이 필요한 것', editLink('답하기', { k: 'decisions' })), decisionList()));
+	out.push(h('section', { class: 'sec' }, secH('AI 추가 제안', editLink('모아 보기', { k: 'suggestions' }), '요청에 없던 아이디어입니다. 채택한 것만 개발 범위에 들어갑니다'), suggestionList(true)));
+	return out;
+}
+function suggestionsEditor() {
+	return [sec(null, '같은 제안에 속한 필드, DocType, 규칙, 완료 조건은 함께 채택되거나 함께 빠집니다. 채택하지 않은 제안은 확정할 때 제외됩니다', suggestionList(false))];
+}
+
+/* ===== editing screens (each returns a list of sections) ===== */
+function advBox(key, title, build) {
+	var open = expanded[key] === true;
+	var t = h('button', { type: 'button', class: 'adv-t', 'aria-expanded': open ? 'true' : 'false', onclick: function () { expanded[key] = !open; renderEditor(); } },
+		h('span', { class: 'chev' + (open ? ' open' : ''), 'aria-hidden': 'true' }), title);
+	return h('div', { class: 'adv' + (open ? ' open' : '') }, t, open ? h('div', { class: 'adv-b' }, build()) : null);
+}
 
 function basicsEditor() {
-	var f = form('', field('ID (slug)', txt(spec, 'id', { ph: 'measuring-equipment' })));
+	var f = form('', field('사용자 원본 요청', txt(spec, 'original_request', { ml: true, rows: 2, ph: '사용자가 처음 요청한 말 그대로' }), { wide: true }),
+		field(spec.type === 'bug' ? 'AI가 추정한 원인과 수정 방향' : 'AI가 이해한 내용과 구현 방향', txt(spec, 'approach', { ml: true, rows: 2 }), { wide: true }));
 	(BASIC[spec.type] || BASIC.feature).forEach(function (b) {
-		var ctl = b[2] === 'list' ? linesCtl(spec, b[0]) : txt(spec, b[0], { ml: b[2] === 'ml' });
-		var label = b[1].replace(' (줄마다 하나)', '');
-		f.appendChild(field(label, ctl, { wide: !!b[2], help: b[2] === 'list' ? '줄마다 하나씩 적습니다' : null }));
+		if (b[2] === 'list') f.appendChild(field(b[1], listCtl(spec, b[0], { label: b[1], add: b[1] + ' 추가' }), { wide: true }));
+		else f.appendChild(field(b[1], txt(spec, b[0], { ml: b[2] === 'ml', rows: 1 }), { wide: !!b[2] || b[0] === 'name' }));
 	});
 	var out = [sec(null, null, f)];
 	if (spec.type !== 'bug') {
@@ -742,211 +1248,327 @@ function basicsEditor() {
 			t.tBodies[0].appendChild(h('tr', null, h('td', null, named(txt(r, 'path', { ph: 'docs/screen.png' }), '경로')),
 				h('td', null, named(txt(r, 'description', { ph: '무엇을 참고하는지' }), '설명')), h('td', { class: 'acts' }, rowBtns(refs, i))));
 		});
-		if (!refs.length) emptyRow(t, 3, '참고 자료가 없습니다');
-		out.push(sec('참고 자료', '기존 화면, 문서, 이미지 경로', t, addBtn('참고 자료', function () { ensure(spec, 'references').push({}); refresh(); })));
+		out.push(sec('참고 자료', '기존 화면, 문서, 이미지 경로', refs.length ? t : null, addBtn('참고 자료', function () { ensure(spec, 'references').push({}); refresh(); })));
 	}
+	out.push(sec('문서 ID', null, form('', field('ID', txt(spec, 'id', { ph: 'measuring-equipment' }), { help: '영문 소문자와 - 로 씁니다. 내보낼 파일 이름이 됩니다' }))));
 	return out;
 }
 
-function doctypeEditor(list, i) {
-	var dt = list[i];
-	var settings = form('',
-		field('이름 (DocType name)', txt(dt, 'name', { list: 'dtl', ph: 'Measuring Equipment' })), field('표시명', txt(dt, 'label')),
-		field('Module', txt(dt, 'module')), field('기존 DocType', triBool(dt, 'existing')),
-		field('종류', triSel(dt, 'kind', [['normal', '일반'], ['child', 'Child Table'], ['single', 'Single']], { auto: true })),
-		field('Naming', triText(dt, 'naming', { ph: 'field:equipment_no / 시리즈 등', none: false })),
-		field('Submittable', triBool(dt, 'submittable', { auto: true })), field('Track Changes', triBool(dt, 'track_changes', { auto: true })),
-		field('목적', txt(dt, 'purpose', { ml: true }), { wide: true }));
-	var fields = asArr(dt.fields);
-	var t = tbl([['No.', '44px'], ['Label'], ['Field Type', '156px'], ['Required', '104px'], ['Options', '28%'], ['출처', '140px'], ['', '120px']]);
-	fields.forEach(function (f, j) { fieldRows(t.tBodies[0], fields, j); });
-	if (!fields.length) emptyRow(t, 7, '필드가 없습니다');
-	function addF(type, label) {
-		return btn(label, function () {
-			var f = { id: genId(spec, 'f') };
-			if (type) f.fieldtype = type;
-			ensure(dt, 'fields').push(f); refresh();
-		}, type ? 'gh' : 'add');
+function typeCtl(f) {
+	var types = FIELD_TYPES.filter(function (x) { return BREAKS.indexOf(x) < 0; });
+	return named(triSel(f, 'fieldtype', types.map(function (x) { return [x, x]; }), { auto: true, rerender: true }), 'Type');
+}
+/* Select options are stored as "a\nb"; edited comma separated in the table */
+function contentCtl(f) {
+	var ft = f.fieldtype;
+	if (ft === 'Select') {
+		var el = h('input', { type: 'text', placeholder: '항목을 쉼표로 구분', 'aria-label': 'Options' });
+		el.value = typeof f.options === 'string' ? f.options.split('\n').filter(nonEmpty).join(', ') : '';
+		el.addEventListener('input', function () {
+			var a = el.value.split(',').map(function (s) { return s.trim(); }).filter(nonEmpty);
+			if (a.length) f.options = a.join('\n'); else delete f.options;
+			changed();
+		});
+		return el;
 	}
-	var rules = asArr(dt.rules), rt = tbl([['No.', '44px'], ['규칙'], ['출처', '150px'], ['', '96px']]);
+	if (ft === 'Link' || ft === 'Table' || ft === 'Table MultiSelect' || ft === 'Dynamic Link') {
+		if (isWrapper(f.options)) return named(triText(f, 'options', { list: 'dtl', none: false }), 'Options');
+		return named(txt(f, 'options', { list: ft === 'Dynamic Link' ? null : 'dtl', ph: ft === 'Dynamic Link' ? 'DocType을 담는 필드' : '대상 DocType' }), 'Options');
+	}
+	if (f.options !== undefined) return named(triText(f, 'options', { none: true }), 'Options');
+	return h('span', { class: 'mu' }, '—');
+}
+function changeCtl(f) {
+	var s = h('select', { class: 'chg', 'aria-label': '변경' }, [['', '—'], ['add', '추가'], ['modify', '수정'], ['remove', '삭제']].map(function (p) { return h('option', { value: p[0], selected: f.change === p[0] }, p[1]); }));
+	s.value = ['add', 'modify', 'remove'].indexOf(f.change) >= 0 ? f.change : '';
+	s.addEventListener('change', function () { if (s.value) f.change = s.value; else delete f.change; refresh(); });
+	return s;
+}
+
+function doctypeEditor(list, i) {
+	var dt = list[i], fields = asArr(dt.fields), isChange = spec.type === 'change' && dt.existing === true;
+	var parents = parentsOf(dt.name), kids = childTables(dt);
+	var rel = parents.length || kids.length ? h('div', { class: 'rel' },
+		parents.map(function (p) { return h('div', null, chip('하위 표', 'kind'), '이 DocType은 ', p.dt.id ? jump(p.dt.id, p.dt.label || p.dt.name) : (p.dt.name || '?'), '의 “' + (p.f.label || p.f.fieldname || '') + '” 표로 쓰입니다.'); }),
+		kids.map(function (f) { var c = dtByName(f.options); return h('div', null, chip('Table', 'kind'), '“' + (f.label || f.fieldname || '') + '” 필드의 행은 ', c && c.id ? jump(c.id, (c.label ? c.label + ' · ' : '') + c.name) : f.options, '입니다.'); })) : null;
+	var about = form('',
+		field('표시 이름', txt(dt, 'label', { ph: '화면에 보일 이름' })),
+		field('DocType', txt(dt, 'name', { list: 'dtl', ph: 'Measuring Equipment' })),
+		field('목적', txt(dt, 'purpose', { ml: true, rows: 1, ph: '이 문서로 무엇을 기록하나요' }), { wide: true }),
+		h('div', { class: 'wide opts' },
+			h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: dt.existing === true, onchange: function (e) { dt.existing = e.target.checked; refresh(); } }),
+				h('span', null, '기존 DocType을 바꿉니다'))));
+	var adv = advBox('adv:' + dt.id, '고급 설정 · Module, 종류, Naming, Is Submittable, Track Changes', function () {
+		return form('c3', field('Module', txt(dt, 'module')),
+			field('종류', triSel(dt, 'kind', [['normal', 'Normal'], ['child', 'Child Table'], ['single', 'Single']], { auto: true })),
+			field('Naming', triText(dt, 'naming', { ph: 'field:equipment_no, naming series 등', none: false })),
+			field('Is Submittable', triBool(dt, 'submittable', { auto: true })), field('Track Changes', triBool(dt, 'track_changes', { auto: true })));
+	});
+	var visible = [], breaks = 0;
+	fields.forEach(function (f, j) { if (isObj(f) && BREAKS.indexOf(f.fieldtype) >= 0) breaks++; else visible.push(j); });
+	var heads = [['No.', '40px']].concat(isChange ? [['변경', '76px']] : [], [['Label'], ['Fieldname', '15%'], ['Type', '132px'], ['Reqd', '104px'], ['Options', '20%'], ['', '124px'], ['', '108px']]);
+	var t = tbl(heads);
+	visible.forEach(function (j, n) { fieldRows(t.tBodies[0], fields, j, n, visible, heads.length, isChange); });
+	if (!visible.length) emptyRow(t, heads.length, '필드가 없습니다');
+	var rules = asArr(dt.rules), rt = tbl([['No.', '40px'], ['규칙'], ['', '128px'], ['', '96px']]);
 	rules.forEach(function (r, j) {
 		if (!isObj(r)) { r = rules[j] = { id: genId(spec, 'r'), text: String(r) }; }
-		rt.tBodies[0].appendChild(h('tr', { class: r.origin === 'suggestion' ? 'sug' : '' }, h('td', { class: 'idx' }, String(j + 1)),
+		rt.tBodies[0].appendChild(h('tr', { class: rowCls(r) }, h('td', { class: 'idx' }, String(j + 1)),
 			h('td', null, named(txt(r, 'text', { ml: true, rows: 1 }), '규칙')), h('td', null, originCtl(r)), h('td', { class: 'acts' }, rowBtns(rules, j))));
 	});
-	if (!rules.length) emptyRow(rt, 4, '추가 규칙이 없습니다');
 	return [
-		sec('설정', null, settings),
-		sec('필드', '행을 펼쳐 Fieldname, Default, Depends On 같은 세부 속성을 설정합니다', t,
-			h('div', { class: 'bar' }, addF(null, '+ 필드 추가'), addF('Section Break', '+ Section'), addF('Column Break', '+ Column'), addF('Tab Break', '+ Tab'))),
-		sec('추가 규칙', '필드만으로 표현되지 않는 검증·계산 규칙', rt, addBtn('규칙 추가', function () { ensure(dt, 'rules').push({ id: genId(spec, 'r'), text: '' }); refresh(); }))
+		sec(null, null, rel, about, adv),
+		sec(isChange ? '바꿀 필드' : '필드', isChange ? '추가·수정·삭제할 필드만 적고, 변경 열에 무엇을 하는지 고릅니다' : '행 끝의 › 를 누르면 고급 설정(Default, Depends On 등)을 고칠 수 있습니다', t,
+			breaks ? h('p', { class: 'mu' }, 'Section Break · Column Break · Tab Break ' + breaks + '개는 화면 배치용이라 표에서 숨겼습니다. 내용은 그대로 유지됩니다.') : null,
+			addBtn('필드 추가', function () { var f = { id: genId(spec, 'f') }; if (isChange) f.change = 'add'; ensure(dt, 'fields').push(f); refresh(); })),
+		sec('추가 규칙', '필드만으로 표현되지 않는 검증·계산 규칙', rules.length ? rt : null,
+			addBtn('규칙 추가', function () { ensure(dt, 'rules').push({ id: genId(spec, 'r'), text: '' }); refresh(); }))
 	];
 }
 
-function optionsCtl(f) {
-	var ft = f.fieldtype;
-	if (ft === 'Select') return triText(f, 'options', { ml: true, ph: '선택 항목 (줄마다 하나)', none: true });
-	var ph = { 'Link': '대상 DocType', 'Table': 'Child DocType', 'Table MultiSelect': 'Child DocType', 'Dynamic Link': 'DocType을 담는 필드명' }[ft];
-	return triText(f, 'options', { ph: ph || '(선택)', list: ph && ft !== 'Dynamic Link' ? 'dtl' : null });
-}
-
-function fieldRows(tb, fields, j) {
-	var f = fields[j], isBreak = BREAKS.indexOf(f.fieldtype) >= 0, key = f.id || 'f#' + j, open = expanded[key] === true;
-	var tog = ib(open ? '▾' : '▸', open ? '상세 접기' : '상세 설정', function () { expanded[key] = !open; renderEditor(); });
+/* rows skip layout breaks; moves swap with the neighbouring visible field */
+function fieldRows(tb, fields, j, n, visible, cols, isChange) {
+	var f = fields[j], key = f.id || 'f#' + j, open = expanded[key] === true;
+	var tog = ib(h('span', { class: 'chev' + (open ? ' open' : '') }), open ? '고급 설정 접기' : '고급 설정', function () { expanded[key] = !open; renderEditor(); });
 	tog.setAttribute('aria-expanded', open ? 'true' : 'false');
 	tog.classList.add('tog');
-	tb.appendChild(h('tr', { class: (isBreak ? 'brk' : f.origin === 'suggestion' ? 'sug' : '') + (open ? ' open' : '') },
-		h('td', { class: 'idx' }, String(j + 1)),
-		h('td', null, named(txt(f, 'label', { ph: isBreak ? '구역 제목 (선택)' : '표시 라벨' }), 'Label')),
-		h('td', null, named(triSel(f, 'fieldtype', FIELD_TYPES.map(function (x) { return [x, x]; }), { auto: true, rerender: true }), 'Field Type')),
-		h('td', null, isBreak ? null : named(triBool(f, 'required', { auto: true }), 'Required')),
-		h('td', null, isBreak ? null : named(optionsCtl(f), 'Options')),
+	function mv(d) { var k = visible[n + d]; var t = fields[j]; fields[j] = fields[k]; fields[k] = t; refresh(); }
+	var req = named(triBool(f, 'required', { auto: true }), 'Reqd');
+	if (f.required === undefined && nonEmpty(f.mandatory_depends_on)) req = h('span', { class: 'badge cond', title: 'Mandatory Depends On: ' + f.mandatory_depends_on }, '조건부 필수');
+	var fname = txt(f, 'fieldname', { ph: '(자동)' });
+	fname.classList.add('mono-in');
+	tb.appendChild(h('tr', { class: rowCls(f) + (open ? ' open' : '') + (f.change === 'remove' ? ' rm' : '') },
+		h('td', { class: 'idx' }, String(n + 1)),
+		isChange ? h('td', null, changeCtl(f)) : null,
+		h('td', null, named(txt(f, 'label', { ph: 'Label' }), 'Label')),
+		h('td', null, named(fname, 'Fieldname')),
+		h('td', null, typeCtl(f)),
+		h('td', null, req),
+		h('td', null, contentCtl(f)),
 		h('td', null, originCtl(f)),
-		h('td', { class: 'acts' }, rowBtns(fields, j), tog)));
+		h('td', { class: 'acts' }, h('span', { class: 'rb' }, ib('↑', '위로', function () { mv(-1); }, n === 0), ib('↓', '아래로', function () { mv(1); }, n === visible.length - 1),
+			ib('×', '삭제', function () { fields.splice(j, 1); refresh(); })), tog)));
 	if (!open) return;
-	var inner = isBreak ? form('c4', field('Fieldname', txt(f, 'fieldname')), field('Depends On', txt(f, 'depends_on')), field('설명', txt(f, 'description'), { wide: true }))
-		: form('c4',
-			field('Fieldname', txt(f, 'fieldname', { ph: 'Auto' })), field('Default', triText(f, 'default')),
-			field('Unique', triBool(f, 'unique', { auto: true })), field('Read Only', triBool(f, 'read_only', { auto: true })),
-			field('Hidden', triBool(f, 'hidden', { auto: true })), field('In List View', triBool(f, 'in_list_view', { auto: true })),
-			field('In Standard Filter', triBool(f, 'in_standard_filter', { auto: true })), field('Fetch From', txt(f, 'fetch_from')),
-			field('Depends On', txt(f, 'depends_on')), field('조건부 필수', txt(f, 'mandatory_depends_on')),
-			field('조건부 읽기 전용', txt(f, 'read_only_depends_on')), field('설명', txt(f, 'description')));
-	tb.appendChild(h('tr', { class: 'det' }, h('td', { colspan: 7 },
-		h('div', { class: 'det-h' }, '행 ' + (j + 1) + ' 상세 설정', f.id ? h('span', { class: 'mu' }, ' · ' + f.id) : null), inner)));
+	tb.appendChild(h('tr', { class: 'det' }, h('td', { colspan: cols },
+		h('div', { class: 'det-h' }, '고급 설정 · ' + (f.label || f.fieldname || '필드')),
+		form('c4', field('Description', txt(f, 'description', { ml: true, rows: 1 }), { wide: true }),
+			field('Default', triText(f, 'default', { ph: '0, Today …' })),
+			field('Unique', triBool(f, 'unique', { auto: true })), field('Read Only', triBool(f, 'read_only', { auto: true })), field('Hidden', triBool(f, 'hidden', { auto: true })),
+			field('In List View', triBool(f, 'in_list_view', { auto: true })), field('In Standard Filter', triBool(f, 'in_standard_filter', { auto: true })),
+			field('Fetch From', txt(f, 'fetch_from', { ph: 'link_field.fieldname' })), field('Depends On', txt(f, 'depends_on', { ph: 'eval:doc.status==\'Open\'' })),
+			field('Mandatory Depends On', txt(f, 'mandatory_depends_on')), field('Read Only Depends On', txt(f, 'read_only_depends_on'))))));
 }
 
+var RIGHT_LABELS = { read: '조회', write: '수정', create: '생성', delete: '삭제', submit: '제출', cancel: '취소', amend: '정정', report: '리포트', export: '내보내기', print: '인쇄', email: '이메일', share: '공유' };
 function permissionEditor(list, i) {
 	var p = list[i];
 	if (!isObj(p.rights)) p.rights = {};
 	return [
-		sec('대상', null, form('c3', field('DocType', txt(p, 'doctype', { list: 'dtl' })), field('Role', txt(p, 'role')),
-			field('소유자 한정 (if_owner)', triBool(p, 'if_owner')))),
-		sec('권한', '미지정은 Developer가 기존 설정을 유지합니다', form('c4', RIGHTS.map(function (r) { return field(r, triBool(p.rights, r)); }))),
-		sec('추가 규칙', null, form('', field('부서·필드 수준 등', txt(p, 'rules', { ml: true }), { wide: true })))
+		sec(null, null, form('c3', field('Role', txt(p, 'role', { ph: 'Quality Manager' })), field('DocType', txt(p, 'doctype', { list: 'dtl' })),
+			field('If Owner (자기 문서만)', triBool(p, 'if_owner')))),
+		sec('권한', '미지정은 기존 설정을 유지합니다. 아니오는 명시적으로 막습니다',
+			form('c6', RIGHTS.map(function (r) { return field(r + ' · ' + (RIGHT_LABELS[r] || ''), triBool(p.rights, r)); }))),
+		sec('추가 규칙', null, form('', field('부서·필드 수준 등', txt(p, 'rules', { ml: true, rows: 1, ph: '예: 자기 부서 문서만 수정' }), { wide: true })))
 	];
 }
 
 function workflowEditor(list, i) {
 	var w = list[i];
-	var DS = [[0, '0 (임시)'], [1, '1 (제출)'], [2, '2 (취소)']];
-	var states = asArr(w.states), st = tbl([['No.', '44px'], ['상태'], ['docstatus', '170px'], ['수정 가능 역할'], ['', '96px']]);
+	var DS = [[0, '0 Draft'], [1, '1 Submitted'], [2, '2 Cancelled']];
+	var showDs = expanded['ds:' + w.id] === true;
+	var states = asArr(w.states), st = tbl([['No.', '40px'], ['State'], ['수정할 수 있는 Role']].concat(showDs ? [['docstatus', '150px']] : [], [['', '96px']]));
 	states.forEach(function (s, j) {
-		st.tBodies[0].appendChild(h('tr', null, h('td', { class: 'idx' }, String(j + 1)), h('td', null, named(txt(s, 'name'), '상태')),
-			h('td', null, named(triSel(s, 'docstatus', DS, { auto: true, none: true }), 'docstatus')),
-			h('td', null, named(txt(s, 'editable_by'), '수정 가능 역할')), h('td', { class: 'acts' }, rowBtns(states, j))));
+		st.tBodies[0].appendChild(h('tr', null, h('td', { class: 'idx' }, String(j + 1)), h('td', null, named(txt(s, 'name', { ph: '예: 검토 중' }), 'State')),
+			h('td', null, named(txt(s, 'editable_by'), 'Role')), showDs ? h('td', null, named(triSel(s, 'docstatus', DS, { auto: true, none: true }), 'docstatus')) : null,
+			h('td', { class: 'acts' }, rowBtns(states, j))));
 	});
-	if (!states.length) emptyRow(st, 5, '상태가 없습니다');
-	var tr = asArr(w.transitions), tt = tbl([['No.', '44px'], ['Action'], ['출발'], ['도착'], ['역할'], ['조건'], ['', '96px']]);
+	var tr = asArr(w.transitions), tt = tbl([['No.', '40px'], ['Action'], ['From'], ['To'], ['Role'], ['Condition'], ['', '96px']]);
 	tr.forEach(function (x, j) {
 		tt.tBodies[0].appendChild(h('tr', null, h('td', { class: 'idx' }, String(j + 1)),
-			[['action', 'Action'], ['from', '출발'], ['to', '도착'], ['role', '역할'], ['condition', '조건']].map(function (k) { return h('td', null, named(txt(x, k[0]), k[1])); }),
+			['action', 'from', 'to', 'role', 'condition'].map(function (k) { return h('td', null, named(txt(x, k), k)); }),
 			h('td', { class: 'acts' }, rowBtns(tr, j))));
 	});
-	if (!tr.length) emptyRow(tt, 7, '전이가 없습니다');
 	return [
-		sec('대상', null, form('', field('DocType', txt(w, 'doctype', { list: 'dtl' })), field('워크플로 이름', txt(w, 'name')))),
-		sec('상태', null, st, addBtn('상태 추가', function () { ensure(w, 'states').push({}); refresh(); })),
-		sec('전이', null, tt, addBtn('전이 추가', function () { ensure(w, 'transitions').push({}); refresh(); })),
-		sec('docstatus 의미', null, form('', field('설명', triText(w, 'docstatus_meaning', { ml: true, rows: 2 }), { wide: true })))
+		sec(null, null, form('', field('DocType', txt(w, 'doctype', { list: 'dtl' })), field('Workflow 이름', txt(w, 'name')))),
+		sec('States', '문서가 거치는 단계', states.length ? st : null, h('div', { class: 'bar' }, addBtn('State 추가', function () { ensure(w, 'states').push({}); refresh(); }),
+			h('span', { class: 'sp' }), btn(showDs ? 'docstatus 숨기기' : 'docstatus 보기', function () { expanded['ds:' + w.id] = !showDs; renderEditor(); }, 'gh sm-t'))),
+		sec('Transitions', '어떤 Action으로 누가 다음 State로 넘기는지', tr.length ? tt : null, addBtn('Transition 추가', function () { ensure(w, 'transitions').push({}); refresh(); }),
+			advBox('wfadv:' + w.id, '고급 설정 · docstatus 의미', function () { return form('', field('docstatus 의미', triText(w, 'docstatus_meaning', { ml: true, rows: 2 }), { wide: true })); }))
 	];
 }
 
 function uiEditor(list, i) {
-	var u = list[i];
-	var f = form('', field('대상', txt(u, 'target', { ph: 'Form / List / Workspace / Page' })),
-		field('방식', triSel(u, 'mode', [['standard_desk', 'Standard Desk'], ['custom', 'Custom UI']], { auto: true })));
-	[['layout', '레이아웃'], ['events', '이벤트'], ['buttons', '버튼'], ['display_conditions', '표시 조건'], ['filters', '필터'], ['sort', '정렬'], ['flow', '사용 흐름']]
-		.forEach(function (p) { f.appendChild(field(p[1], txt(u, p[0], { ml: true }), { wide: p[0] === 'layout' || p[0] === 'flow' })); });
-	return [sec(null, null, f), sec('참고 이미지', null, form('', field('경로', linesCtl(u, 'reference_images'), { wide: true, help: '줄마다 하나씩 적습니다' })))];
+	var u = list[i], scope = 'ui:' + u.id + ':';
+	var o = optFields(u, [['flow', '사용 흐름', '사용자가 이 화면에서 무엇을 하는지'], ['layout', '배치'], ['buttons', '버튼'], ['display_conditions', '표시 조건'],
+		['filters', '필터'], ['sort', '정렬'], ['events', '이벤트']], ['flow'], scope);
+	o[0].insertBefore(field('화면', txt(u, 'target', { ph: '예: Measuring Equipment List, Form' }), { wide: true }), o[0].firstChild);
+	return [sec(null, null, o[0], o[1], advBox('uiadv:' + u.id, '고급 설정 · 구현 방식', function () {
+		return form('', field('구현 방식', triSel(u, 'mode', [['standard_desk', 'Standard Desk'], ['custom', 'Custom UI']], { auto: true })));
+	})), sec('참고 이미지', '화면 캡처나 스케치 경로', listCtl(u, 'reference_images', { ph: 'docs/screen.png', add: '이미지 경로 추가', label: '이미지' }))];
 }
 
 function reportEditor(list, i) {
-	var r = list[i];
-	var f = form('', field('이름', txt(r, 'name')),
-		field('종류', triSel(r, 'report_type', [['Report Builder', 'Report Builder'], ['Query Report', 'Query Report'], ['Script Report', 'Script Report']], { auto: true })));
-	[['purpose', '목적'], ['source', '데이터 출처'], ['columns', '컬럼'], ['filters', '필터'], ['sort', '정렬'], ['aggregation', '집계'], ['permission', '권한']]
-		.forEach(function (p) { f.appendChild(field(p[1], txt(r, p[0], { ml: true }), { wide: p[0] === 'purpose' })); });
-	return [sec(null, null, f)];
+	var r = list[i], scope = 'rp:' + r.id + ':';
+	var o = optFields(r, [['purpose', '목적', '누가 무엇을 보려고 하나요'], ['columns', 'Columns'], ['filters', 'Filters'], ['sort', '정렬'],
+		['aggregation', '집계'], ['source', '데이터 출처'], ['permission', '볼 수 있는 사람']], ['purpose', 'columns'], scope);
+	o[0].insertBefore(field('리포트 이름', txt(r, 'name')), o[0].firstChild);
+	return [sec(null, null, o[0], o[1], advBox('rpadv:' + r.id, '고급 설정 · Report Type', function () {
+		return form('', field('Report Type', triSel(r, 'report_type', [['Report Builder', 'Report Builder'], ['Query Report', 'Query Report'], ['Script Report', 'Script Report']], { auto: true })));
+	}))];
 }
 
 function ruleEditor(list, i) {
-	var r = list[i];
-	var f = form('', field('이름', txt(r, 'name'), { wide: true }));
-	[['condition', '실행 조건'], ['input', '입력'], ['rule', '처리'], ['output', '출력'], ['exceptions', '예외'], ['expected', '기대 결과']]
-		.forEach(function (p) { f.appendChild(field(p[1], txt(r, p[0], { ml: true }))); });
-	return [sec(null, null, f),
-		sec('API인 경우', '화이트리스트 API로 노출할 때만 적습니다', form('', field('호출 주체', nestedTxt(r, 'api', 'caller')), field('권한', nestedTxt(r, 'api', 'permission')),
-			field('오류 정책', nestedTxt(r, 'api', 'error_policy', true), { wide: true })))];
+	var r = list[i], scope = 'br:' + r.id + ':';
+	var o = optFields(r, [['condition', '언제', '예: 교정 이력을 저장할 때'], ['rule', '무엇을', '처리 내용'], ['expected', '예시·기대 결과', '입력과 결과 예'],
+		['input', '입력'], ['output', '결과'], ['exceptions', '예외']], ['condition', 'rule', 'expected'], scope);
+	o[0].insertBefore(field('규칙 이름', txt(r, 'name')), o[0].firstChild);
+	var out = [sec(null, null, o[0], o[1])];
+	if (isObj(r.api) || expanded[scope + 'api']) {
+		out.push(sec('API (whitelisted method)', '외부에서 호출하는 경우', form('', field('호출 주체', nestedTxt(r, 'api', 'caller')), field('권한', nestedTxt(r, 'api', 'permission')),
+			field('오류 처리', nestedTxt(r, 'api', 'error_policy', true), { wide: true }))));
+	} else out[0].appendChild(h('div', { class: 'more-w' }, btn('+ API로 제공하는 경우', function () { expanded[scope + 'api'] = true; renderEditor(); }, 'gh chip-b')));
+	return out;
 }
 
 function acceptanceEditor() {
-	var list = asArr(spec.acceptance_criteria), t = tbl([['No.', '44px'], ['완료 조건'], ['출처', '150px'], ['', '96px']]);
+	var list = asArr(spec.acceptance_criteria), t = tbl([['No.', '40px'], ['완료 조건'], ['', '150px'], ['', '96px']]);
 	list.forEach(function (c, i) {
-		t.tBodies[0].appendChild(h('tr', { class: c.origin === 'suggestion' ? 'sug' : '' }, h('td', { class: 'idx' }, String(i + 1)),
+		t.tBodies[0].appendChild(h('tr', { class: rowCls(c) }, h('td', { class: 'idx' }, String(i + 1)),
 			h('td', null, named(txt(c, 'text', { ml: true, rows: 1 }), '완료 조건')), h('td', null, originCtl(c)), h('td', { class: 'acts' }, rowBtns(list, i))));
 	});
 	if (!list.length) emptyRow(t, 4, '완료 조건이 없습니다. 확정하려면 1개 이상 필요합니다');
-	return [sec(null, '테스트로 확인할 수 있는 정상·실패 조건을 한 줄씩 적습니다', t,
+	return [sec(null, '확인할 수 있는 정상·실패 조건. 하나에 한 가지만 적습니다', t,
 		addBtn('완료 조건 추가', function () { ensure(spec, 'acceptance_criteria').push({ id: genId(spec, 'ac'), text: '' }); refresh(); }))];
 }
 
+/* ===== decisions ===== */
+function answerCtl(d, i) {
+	var opts = asArr(d.options).filter(function (o) { return nonEmpty(optVal(o)); }), name = 'ans-' + i, ans = d.answer;
+	var values = opts.map(optVal);
+	var custom = !unresolved(d) && values.indexOf(String(ans)) < 0;
+	var other = h('input', { type: 'text', placeholder: '직접 입력', 'aria-label': '직접 입력한 답변' });
+	other.value = custom ? String(ans) : '';
+	other.disabled = !custom;
+	function pick(v) { if (v === undefined) delete d.answer; else d.answer = v; refresh(); }
+	var ids = allIds(spec);
+	function names(list) { return asArr(list).map(function (id) { var x = ids[id]; return x ? itemTitle(x.d, x.list) : id; }).join(', '); }
+	var list = h('div', { class: 'choices' + (opts.some(isObj) ? ' rich' : ''), role: 'radiogroup', 'aria-label': '답변' }, opts.map(function (o) {
+		var v = optVal(o), rec = d.recommendation === v;
+		return h('label', { class: 'choice' + (ans === v ? ' on' : '') + (rec ? ' rec' : '') },
+			h('input', { type: 'radio', name: name, checked: ans === v, onchange: function () { pick(v); } }),
+			h('span', { class: 'ch-b' }, h('span', { class: 'ch-v' }, v, rec ? chip('AI 추천', 'b-rec') : null),
+				isObj(o) && nonEmpty(o.impact) ? h('span', { class: 'ch-i' }, o.impact) : null,
+				isObj(o) && (asArr(o.affects).length || asArr(o.excludes).length) ? h('span', { class: 'ch-x' },
+					asArr(o.excludes).length ? '범위에서 빠짐: ' + names(o.excludes) : null, asArr(o.excludes).length && asArr(o.affects).length ? ' · ' : null,
+					asArr(o.affects).length ? 'Main이 고칠 항목: ' + names(o.affects) : null) : null));
+	}));
+	var oth = h('label', { class: 'choice other' + (custom ? ' on' : '') },
+		h('input', { type: 'radio', name: name, checked: custom, onchange: function () { other.disabled = false; other.focus(); } }), h('span', null, '직접 입력'), other);
+	other.addEventListener('input', function () { if (other.value.trim() === '') delete d.answer; else d.answer = other.value; changed(); });
+	other.addEventListener('change', function () { renderEditor(); });
+	list.appendChild(oth);
+	var clearBtn = unresolved(d) ? null : btn('답변 지우기', function () { pick(undefined); }, 'gh sm-t');
+	return h('div', null, list, clearBtn);
+}
+function decisionEffects(d) {
+	var o = chosenOption(d);
+	if (!o) return null;
+	var inScope = scopeIds(spec), ids = allIds(spec);
+	var clash = asArr(o.excludes).filter(function (id) { return inScope[id]; });
+	var aff = asArr(o.affects).filter(function (id) { return ids[id]; });
+	if (!clash.length && !aff.length) return null;
+	return h('div', { class: 'callout ' + (clash.length ? 'c-er' : 'c-info') + ' eff' },
+		clash.length ? h('div', null, h('b', null, '충돌 '), '이 답이면 범위에서 빠져야 할 항목이 아직 남아 있습니다: ', clash.map(function (id, k) { return [k ? ', ' : '', jump(id, itemTitle(ids[id].d, ids[id].list))]; }),
+			'. 해당 제안을 채택하지 않거나, 확정하지 말고 JSON을 내보내 Main이 정리하게 하세요.') : null,
+		aff.length ? h('div', null, 'Main이 이 답에 맞춰 고칠 항목: ', aff.map(function (id, k) { return [k ? ', ' : '', jump(id, itemTitle(ids[id].d, ids[id].list))]; }), '. 업무 범위가 크게 바뀌면 Main이 다시 확인을 요청합니다.') : null);
+}
+function optionEditor(d) {
+	var opts = ensure(d, 'options'), box = h('div', { class: 'oped' });
+	opts.forEach(function (o, k) {
+		var v = h('input', { type: 'text', placeholder: '선택지', 'aria-label': '선택지 ' + (k + 1) });
+		var im = h('input', { type: 'text', placeholder: '차이와 영향 (선택)', 'aria-label': '영향 ' + (k + 1) });
+		v.value = optVal(o) || ''; im.value = isObj(o) ? o.impact || '' : '';
+		function upd() {
+			var cur = opts[k];
+			if (im.value.trim() === '' && !(isObj(cur) && (cur.affects || cur.excludes))) opts[k] = v.value;
+			else { var n = isObj(cur) ? cur : {}; n.value = v.value; if (im.value.trim() === '') delete n.impact; else n.impact = im.value; opts[k] = n; }
+			changed();
+		}
+		v.addEventListener('input', upd); im.addEventListener('input', upd);
+		box.appendChild(h('div', { class: 'oped-r' }, v, im, ib('×', '삭제', function () { opts.splice(k, 1); if (!opts.length) delete d.options; refresh(); })));
+	});
+	box.appendChild(btn('+ 선택지 추가', function () { opts.push(''); renderEditor(); }, 'gh lst-add'));
+	var rec = h('select', { 'aria-label': 'AI 추천' }, [h('option', { value: '' }, '추천 없음')].concat(opts.map(function (o) { var v = optVal(o); return h('option', { value: v, selected: d.recommendation === v }, v); })));
+	rec.value = d.recommendation || '';
+	rec.addEventListener('change', function () { if (rec.value) d.recommendation = rec.value; else { delete d.recommendation; delete d.recommendation_reason; } refresh(); });
+	return h('div', { class: 'fld' }, h('div', { class: 'fl' }, '선택지와 영향'), box,
+		form('', field('AI 추천', rec), d.recommendation ? field('추천 이유', txt(d, 'recommendation_reason', { ml: true, rows: 1 })) : null));
+}
 function decisionsEditor() {
 	var list = asArr(spec.open_decisions), cards = h('div', { class: 'stack' });
 	list.forEach(function (d, i) {
-		var un = unresolved(d), req = d.required === true;
-		var opts = asArr(d.options), dlid = 'dl-' + i;
-		var dl = h('datalist', { id: dlid }, opts.map(function (o) { return h('option', { value: o }); }));
-		cards.appendChild(h('div', { class: 'box' + (req && un ? ' need' : '') },
-			h('div', { class: 'box-h' }, chip(req ? '필수' : '선택', req ? 'b-decision' : ''), chip(un ? '미해결' : '해결됨', un ? (req ? 'b-draft' : '') : 'b-request'),
-				h('span', { class: 'mu' }, d.id || ''), h('span', { class: 'sp' }), rowBtns(list, i)),
-			form('', field('질문', txt(d, 'question', { ml: true, rows: 1 }), { wide: true }),
-				field('답변', txt(d, 'answer', { list: dlid, ph: '선택지에서 고르거나 직접 입력' }), { help: '비워 두면 미해결입니다' }),
-				field('선택지', linesCtl(d, 'options'), { help: '줄마다 하나씩 적습니다' }),
-				field('메모', txt(d, 'note', { ml: true, rows: 1 }), { wide: true }),
-				h('label', { class: 'check wide' }, h('input', { type: 'checkbox', checked: req, onchange: function (e) {
-					d.required = e.target.checked; refresh();
-				} }), '필수 결정 (미해결이면 확정할 수 없습니다)')), dl));
+		var un = unresolved(d), req = d.required === true, key = 'opts:' + (d.id || i), editOpts = expanded[key] === true;
+		var q = txt(d, 'question', { ml: true, rows: 1, ph: '사용자가 정해야 할 질문' });
+		q.classList.add('q');
+		named(q, '질문');
+		q.addEventListener('change', function () { renderNav(); });
+		var rec = nonEmpty(d.recommendation) ? h('div', { class: 'recbox' }, chip('AI 추천', 'b-rec'), h('b', null, d.recommendation),
+			nonEmpty(d.recommendation_reason) ? h('span', null, ' — ' + d.recommendation_reason) : null,
+			req ? h('span', { class: 'mu' }, ' (필수 결정은 자동으로 정하지 않습니다)') : null) : null;
+		cards.appendChild(h('div', { class: 'box dec' + (req && un ? ' need' : '') + (un ? '' : ' done') },
+			h('div', { class: 'box-h' }, chip(req ? '필수' : '선택', req ? 'b-decision' : ''),
+				chip(un ? '미해결' : '해결됨', un ? (req ? 'b-draft dot' : 'dot') : 'b-request dot'),
+				h('span', { class: 'sp' }), rowBtns(list, i)),
+			q, rec,
+			h('div', { class: 'dec-a' }, h('div', { class: 'fl' }, '답변'), answerCtl(d, i)),
+			decisionEffects(d),
+			editOpts || !asArr(d.options).length ? optionEditor(d) : null,
+			field('메모', txt(d, 'note', { ml: true, rows: 1, ph: '판단에 필요한 배경 (선택)' }), { wide: true }),
+			h('div', { class: 'dec-f' },
+				h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: req, onchange: function (e) { d.required = e.target.checked; refresh(); } }),
+					'필수 결정 (답하지 않으면 확정할 수 없습니다)'),
+				h('span', { class: 'sp' }),
+				asArr(d.options).length ? btn(editOpts ? '선택지 편집 완료' : '선택지 편집', function () { expanded[key] = !editOpts; renderEditor(); }, editOpts ? 'sm-t' : 'gh sm-t') : null)));
 	});
 	if (!list.length) cards.appendChild(h('div', { class: 'blank' }, '결정이 필요한 항목이 없습니다'));
-	var out = [sec(null, '데이터 보존, 핵심 권한, 충돌 시 동작처럼 사용자가 정해야 하는 것', cards,
+	var out = [sec(null, '선택지마다 차이와 영향을 보고 고릅니다. AI 추천은 참고용이며 필수 결정은 직접 골라야 합니다. 답에 따른 명세 정리는 Main이 합니다', cards,
 		addBtn('결정 항목 추가', function () { ensure(spec, 'open_decisions').push({ id: genId(spec, 'od'), question: '', options: [], required: true }); refresh(); }))];
 	var done = asArr(spec.decisions);
 	if (done.length) {
-		var t = tbl([['No.', '44px'], ['질문'], ['답변', '34%'], ['', '96px']]);
+		var t = tbl([['No.', '40px'], ['질문'], ['답변', '34%'], ['', '96px']]);
 		done.forEach(function (d, i) {
 			t.tBodies[0].appendChild(h('tr', null, h('td', { class: 'idx' }, String(i + 1)), h('td', null, named(txt(d, 'question', { ml: true, rows: 1 }), '질문')),
 				h('td', null, named(txt(d, 'answer'), '답변')), h('td', { class: 'acts' }, rowBtns(done, i))));
 		});
-		out.push(sec('확정된 결정', null, t));
+		out.push(sec('확정된 결정', '이전에 확정된 결정입니다', t));
 	}
 	return out;
 }
 
 function stat(label, value, cls) { return h('div', { class: 'stat' }, h('div', { class: 'sv' + (cls ? ' ' + cls : '') }, String(value)), h('div', { class: 'sl' }, label)); }
 function verifyEditor() {
-	var probs = validateSpec(spec), res = confirmSpec(spec, approved), sug = 0, sugSel = 0;
-	walk(spec, function (d) { if (d.origin === 'suggestion') { sug++; if (d.selected === true) sugSel++; } }, '', null);
+	var probs = validateSpec(spec), cf = conflicts(spec), res = confirmSpec(spec, approved), groups = suggestionGroups(spec);
 	var reqOpen = asArr(spec.open_decisions).filter(function (d) { return d && d.required === true && unresolved(d); }).length;
 	var stats = h('div', { class: 'stats' });
 	if (spec.type !== 'bug') BLOCKS.forEach(function (b) { var n = asArr(spec[b[0]]).length; if (n) stats.appendChild(stat(b[1], n)); });
 	stats.appendChild(stat('완료 조건', asArr(spec.acceptance_criteria).length));
-	stats.appendChild(stat('AI 제안 채택', sugSel + ' / ' + sug));
+	stats.appendChild(stat('AI 제안 채택', groups.filter(function (g) { return g.selected; }).length + ' / ' + groups.length));
 	stats.appendChild(stat('필수 결정 미해결', reqOpen, reqOpen ? 'er' : 'ok'));
-	var check = probs.length
-		? h('div', { class: 'callout c-er' }, h('b', null, '검증 문제 ' + probs.length + '건'), h('ul', null, probs.map(function (m) { return h('li', null, m); })))
-		: h('div', { class: 'callout c-ok' }, '스키마와 값 형식에 문제가 없습니다.');
+	var all = probs.concat(cf);
+	var check = all.length
+		? h('div', { class: 'callout c-er' }, h('b', null, '검증 문제 ' + all.length + '건'), h('ul', null, all.map(function (m) { return h('li', null, m); })))
+		: h('div', { class: 'callout c-ok' }, '형식, 제안 묶음, 결정과 명세의 충돌 검사를 모두 통과했습니다.');
 	var blockers = res.reasons.filter(function (m) { return m.indexOf('승인합니다') < 0; });
-	var go = btn('확정', doConfirm, 'pri lg');
-	if (!res.ok) go.disabled = true;
+	var goBtn = btn('확정', doConfirm, 'pri lg');
+	if (!res.ok) goBtn.disabled = true;
 	var confirmSec = spec.status === 'confirmed'
 		? sec('확정', null, h('div', { class: 'callout c-ok' }, '확정된 요청서입니다. JSON을 내보내 개발을 요청하세요.'), h('div', { class: 'bar' }, btn('JSON 내보내기', exportJson, 'pri')))
 		: sec('확정', null,
-			blockers.length ? h('div', { class: 'callout c-wn' }, h('b', null, '확정 전에 해결할 것'), h('ul', null, blockers.map(function (m) { return h('li', null, m); }))) : null,
-			h('div', { class: 'note' }, '확정하면 채택하지 않은 AI 제안은 빠지고, 채택한 제안은 요청 항목이 되며, 해결된 결정은 확정된 결정으로 옮겨집니다. JSON 내보내기만으로는 확정되지 않습니다.'),
+			blockers.length ? h('div', { class: 'callout c-wn' }, h('b', null, '확정 전에 해결할 것 ' + blockers.length + '건'), h('ul', null, blockers.map(function (m) { return h('li', null, m); }))) : null,
+			h('div', { class: 'note' }, '확정하면 채택하지 않은 AI 제안이 빠지고, 채택한 제안은 요청 항목이 되며, 답한 결정은 확정된 결정으로 옮겨집니다. 확정 JSON에는 승인된 범위만 남습니다.'),
 			h('div', { class: 'confirm-row' },
 				h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: approved, onchange: function (e) { approved = e.target.checked; renderEditor(); } }),
-					'이 내용으로 개발을 승인합니다'), h('span', { class: 'sp' }), go));
+					'이 내용으로 개발을 승인합니다'), h('span', { class: 'sp' }), goBtn));
 	return [sec('요약', null, stats), sec('검증', null, check), confirmSec];
 }
 function doConfirm() {
@@ -972,7 +1594,7 @@ function previewEditor() {
 }
 
 function ioEditor() {
-	var ta = h('textarea', { rows: 10, placeholder: '여기에 요청서 JSON을 붙여넣으세요', class: 'mono' });
+	var ta = h('textarea', { rows: 8, placeholder: '여기에 요청서 JSON을 붙여넣으세요', class: 'mono' });
 	var file = h('input', { type: 'file', accept: '.json,application/json' });
 	file.addEventListener('change', function () {
 		var f = file.files[0];
@@ -981,26 +1603,38 @@ function ioEditor() {
 		r.onload = function () { importText(String(r.result)); };
 		r.readAsText(f);
 	});
-	var restore = null;
-	try { if (localStorage.getItem(LS_KEY)) restore = btn('브라우저 임시 저장본 복원', function () { importText(localStorage.getItem(LS_KEY)); }, 'gh'); } catch (e) { /* no storage */ }
 	return [
 		sec('파일에서 불러오기', null, h('label', { class: 'drop' }, h('span', { class: 'drop-t' }, '요청서 JSON 파일 선택'), h('span', { class: 'mu' }, '.json'), file)),
 		sec('붙여넣기', null, form('', field('JSON', ta, { wide: true })),
-			h('div', { class: 'bar' }, btn('불러오기', function () { importText(ta.value); }, 'pri'), restore, h('span', { class: 'sp' }),
+			h('div', { class: 'bar' }, btn('불러오기', function () { importText(ta.value); }, 'pri'), h('span', { class: 'sp' }),
 				spec ? btn('현재 요청서 JSON 내보내기', exportJson) : null)),
-		h('div', { class: 'note' }, '브라우저 임시 저장은 보조 수단입니다. 반드시 JSON으로 내보내 보관하세요.')
+		h('div', { class: 'note' }, '브라우저 임시 저장은 요청서마다 따로 보관하는 보조 수단입니다. 반드시 JSON으로 내보내 보관하세요.')
 	];
 }
 
+function draftsSec() {
+	var list = drafts();
+	if (!list.length) return null;
+	var t = tbl([['요청서'], ['유형', '120px'], ['상태', '90px'], ['저장 시각', '150px'], ['', '150px']]);
+	list.forEach(function (x) {
+		var s = x.spec, cur = x.key === draftKey && spec;
+		t.tBodies[0].appendChild(h('tr', null, h('td', { class: 'tcell' }, h('b', null, s.name || s.target || s.id || '(이름 없음)'), cur ? chip('열려 있음', 'b-request') : null),
+			h('td', { class: 'tcell' }, TYPE_NAMES[s.type] || s.type), h('td', { class: 'tcell' }, s.status === 'confirmed' ? '확정됨' : '초안'),
+			h('td', { class: 'tcell mu' }, fmtTime(x.saved_at)),
+			h('td', { class: 'acts' }, cur ? null : btn('열기', function () { openDraft(x); }, 'sm-t'),
+				btn('삭제', function () { if (window.confirm('"' + (s.name || s.id || '요청서') + '" 임시 저장본을 지울까요?')) { try { localStorage.removeItem(x.key); } catch (e) { /* ignore */ } renderEditor(); } }, 'gh sm-t'))));
+	});
+	return sec('브라우저에 임시 저장된 요청서', '요청서마다 따로 저장됩니다', t);
+}
 function startEditor() {
 	var types = [['feature', '새 기능', '새 DocType, 화면, 권한, 업무 규칙을 함께 정의합니다'],
-		['change', '기존 기능 변경', '현재 동작, 바꿀 동작, 유지할 동작을 정리합니다'],
-		['bug', '버그', '현상, 재현 방법, 기대 동작을 정리합니다']];
+		['change', '기존 기능 변경', '변경 전과 후, 바뀌는 대상, 유지할 동작을 정리합니다'],
+		['bug', '버그', '현상과 기대 동작, 재현 방법, 증거를 정리합니다']];
 	var cur = spec ? sec('작성 중인 요청서', null, h('div', { class: 'resume' },
 		h('div', { class: 'resume-t' }, h('span', { class: 'badge' }, TYPE_NAMES[spec.type] || spec.type), h('b', null, nonEmpty(spec.name) ? spec.name : '(이름 없음)'),
 			chip(spec.status === 'confirmed' ? '확정됨' : '초안', spec.status === 'confirmed' ? 'b-request dot' : 'b-draft dot')),
-		h('span', { class: 'sp' }), btn('JSON 내보내기', exportJson), btn('이어서 작성', function () { go({ k: 'basics' }); }, 'pri'))) : null;
-	return [cur, sec('새 요청서', '무엇을 요청할지 고르세요', h('div', { class: 'types' }, types.map(function (t) {
+		h('span', { class: 'sp' }), btn('JSON 내보내기', exportJson), btn('이어서 검토', function () { go({ k: 'overview' }); }, 'pri'))) : null;
+	return [cur, draftsSec(), sec('새 요청서', '보통은 AI가 만든 초안을 불러와 검토합니다. 직접 만들 때만 고르세요', h('div', { class: 'types' }, types.map(function (t) {
 		return h('button', { type: 'button', class: 'tcard', onclick: function () { newSpec(t[0]); } },
 			h('span', { class: 'tk' }, t[0]), h('span', { class: 'tt' }, t[1]), h('span', { class: 'td' }, t[2]));
 	})))].concat(ioEditor());
@@ -1008,21 +1642,21 @@ function startEditor() {
 
 /* ===== chrome ===== */
 var collapsed = {};
-var TITLES = { basics: '기본 정보', acceptance: '완료 조건', decisions: '결정', verify: '검증 · 확정', preview: 'Markdown 미리보기', io: 'JSON 불러오기 · 내보내기', start: '작업 요청서' };
+var TITLES = { overview: '설계 개요', suggestions: 'AI 추가 제안', basics: '기본 정보', acceptance: '완료 조건', decisions: '결정', verify: '검증 · 확정', preview: 'Markdown 미리보기', io: 'JSON 불러오기 · 내보내기', start: '작업 요청서' };
 var TYPE_NAMES = { feature: '새 기능', change: '기존 기능 변경', bug: '버그' };
 function itemLabel(key, it) {
 	if (!isObj(it)) return '(비정상 항목)';
 	var l = key === 'permissions' ? (it.doctype || '') + (it.role ? ' / ' + it.role : '') : key === 'ui' ? it.target
-		: key === 'workflows' ? (it.name || it.doctype) : key === 'doctypes' ? (it.name || it.label) : it.name;
+		: key === 'workflows' ? (it.name || it.doctype) : key === 'doctypes' ? (it.label || it.name) : it.name;
 	return l || '(이름 없음)';
 }
 function same(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
 function go(target) { notice = ''; sel = target; renderAll(); var ed = $('editor'); if (ed) ed.scrollTop = 0; }
-function navItem(label, target, extra, acts, cls) {
+function navItem(label, target, extra, acts, cls, sub) {
 	var on = same(sel, target);
 	return h('div', { class: 'nr' + (on ? ' on' : '') + (cls ? ' ' + cls : '') },
-		h('button', { type: 'button', class: 'ni', 'aria-current': on ? 'page' : null, title: label, onclick: function () { go(target); } },
-			h('span', { class: 'nl' }, label), extra), acts || null);
+		h('button', { type: 'button', class: 'ni', 'aria-current': on ? 'page' : null, title: label + (sub ? ' · ' + sub : ''), onclick: function () { go(target); } },
+			h('span', { class: 'nl' }, label, sub ? h('span', { class: 'ns' }, sub) : null), extra), acts || null);
 }
 function count(n) { return h('span', { class: 'cnt' }, String(n)); }
 function renderNav() {
@@ -1032,15 +1666,18 @@ function renderNav() {
 	nav.appendChild(body); nav.appendChild(foot);
 	if (!spec) {
 		body.appendChild(h('div', { class: 'cap' }, '시작'));
-		body.appendChild(navItem('새 요청서 만들기', { k: 'start' }));
-		body.appendChild(navItem('JSON 불러오기', { k: 'io' }));
+		body.appendChild(navItem('새 요청서 · 불러오기', { k: 'start' }));
 		return;
 	}
 	var openN = asArr(spec.open_decisions).filter(function (d) { return d && d.required === true && unresolved(d); }).length;
+	var groups = suggestionGroups(spec), unAd = groups.filter(function (g) { return !g.selected; }).length;
+	body.appendChild(h('div', { class: 'cap' }, '검토'));
+	body.appendChild(navItem('설계 개요', { k: 'overview' }));
+	body.appendChild(navItem('결정', { k: 'decisions' }, openN ? chip('필요 ' + openN, 'b-decision') : count(asArr(spec.open_decisions).length)));
+	body.appendChild(navItem('AI 추가 제안', { k: 'suggestions' }, groups.length ? chip(unAd ? '검토 ' + unAd : '채택 ' + groups.length, unAd ? 'b-suggestion' : 'b-request') : count(0)));
 	body.appendChild(h('div', { class: 'cap' }, '요청서'));
 	body.appendChild(navItem('기본 정보', { k: 'basics' }));
 	body.appendChild(navItem('완료 조건', { k: 'acceptance' }, count(asArr(spec.acceptance_criteria).length)));
-	body.appendChild(navItem('결정', { k: 'decisions' }, openN ? chip('필요 ' + openN, 'b-decision') : count(asArr(spec.open_decisions).length)));
 	if (spec.type !== 'bug') {
 		body.appendChild(h('div', { class: 'cap' }, '구성'));
 		BLOCKS.forEach(function (b) {
@@ -1055,8 +1692,10 @@ function renderNav() {
 			add.classList.add('add-i');
 			var head = h('div', { class: 'nh' },
 				h('button', { type: 'button', class: 'nh-t', 'aria-expanded': open ? 'true' : 'false', onclick: function () { collapsed[b[0]] = open; renderNav(); } },
-					h('span', { class: 'chev', 'aria-hidden': 'true' }, open ? '▾' : '▸'), h('span', null, b[1]), count(list.length)), add);
-			var grp = h('div', { class: 'ng' }, head);
+					h('span', { class: 'chev' + (open ? ' open' : ''), 'aria-hidden': 'true' }), h('span', { class: 'nh-l' }, b[1]), count(list.length)), add);
+			if (!list.length) head.classList.add('empty');
+			var grp = h('div', { class: 'ng' }, head), kids = h('div', { class: 'ng-items' });
+			if (open && list.length) grp.appendChild(kids);
 			if (open) list.forEach(function (it, i) {
 				if (!isObj(it)) return;
 				var name = itemLabel(b[0], it);
@@ -1064,16 +1703,24 @@ function renderNav() {
 					ib('↓', '아래로', function () { move(list, i, 1); }, i === list.length - 1),
 					ib('×', '삭제', function () { if (window.confirm('"' + name + '" 항목을 삭제할까요?')) del(list, i); }));
 				var dim = it.origin === 'suggestion' && it.selected !== true;
-				grp.appendChild(navItem(name, { k: 'item', list: b[0], id: it.id }, badgeFor(it), acts, 'sub' + (dim ? ' dim' : '')));
+				var child = b[0] === 'doctypes' && (it.kind === 'child' || parentsOf(it.name).length);
+				kids.appendChild(navItem(name, { k: 'item', list: b[0], id: it.id }, badgeFor(it), acts, 'sub' + (dim ? ' dim' : '') + (child ? ' child' : ''),
+					b[0] === 'doctypes' && nonEmpty(it.label) ? it.name : null));
 			});
 			body.appendChild(grp);
 		});
 	}
-	var n = validateSpec(spec).length;
+	var n = validateSpec(spec).length + conflicts(spec).length;
 	foot.appendChild(navItem('검증 · 확정', { k: 'verify' }, n ? chip(String(n), 'b-decision') : spec.status === 'confirmed' ? chip('확정됨', 'b-request') : null, null, 'tool'));
 	foot.appendChild(navItem('Markdown 미리보기', { k: 'preview' }, null, null, 'tool'));
 	foot.appendChild(navItem('JSON 불러오기 · 내보내기', { k: 'io' }, null, null, 'tool'));
 	foot.appendChild(navItem('처음 화면 · 다른 요청서', { k: 'start' }, null, null, 'tool'));
+}
+function fmtTime(iso) {
+	var d = iso instanceof Date ? iso : new Date(iso);
+	if (isNaN(d)) return '-';
+	function p(n) { return (n < 10 ? '0' : '') + n; }
+	return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
 }
 function renderTop() {
 	var top = $('top');
@@ -1081,7 +1728,7 @@ function renderTop() {
 	top.appendChild(h('button', { type: 'button', class: 'home', title: '처음 화면으로', onclick: function () { go({ k: 'start' }); } },
 		h('span', { class: 'logo', 'aria-hidden': 'true' }), h('span', { class: 'app' }, '작업 요청서')));
 	if (spec) {
-		var n = validateSpec(spec).length;
+		var n = validateSpec(spec).length + conflicts(spec).length;
 		top.appendChild(h('span', { class: 'sep', 'aria-hidden': 'true' }, '/'));
 		top.appendChild(h('span', { class: 'kind' }, TYPE_NAMES[spec.type] || spec.type));
 		top.appendChild(h('span', { class: 'sep', 'aria-hidden': 'true' }, '/'));
@@ -1092,14 +1739,17 @@ function renderTop() {
 	top.appendChild(h('span', { class: 'sp' }));
 	if (notice) top.appendChild(h('span', { class: 'notice', role: 'status' }, notice));
 	if (spec) {
-		top.appendChild(h('span', { class: 'saved' + (saveOK ? '' : ' no') }, saveOK ? '자동 저장됨' : '자동 저장 불가'));
+		var dirty = JSON.stringify(spec) !== lastExport;
+		top.appendChild(h('span', { class: 'saved' + (saveOK ? '' : ' no'), title: draftKey ? '브라우저 저장 위치: ' + draftKey : '' },
+			!saveOK ? '브라우저 저장 실패' : savedAt ? '브라우저 저장 ' + fmtTime(savedAt) : '변경 없음'));
+		if (dirty) top.appendChild(h('span', { class: 'dirty', title: '마지막으로 내보내거나 불러온 뒤 바뀐 내용이 있습니다' }, '내보내지 않은 변경'));
 		top.appendChild(btn('JSON 내보내기', exportJson));
 		top.appendChild(btn('확정…', function () { go({ k: 'verify' }); }, 'pri'));
 	}
 }
-function pageHead(eyebrow, title, meta) {
+function pageHead(eyebrow, title, meta, sub) {
 	return h('div', { class: 'ph' }, eyebrow ? h('div', { class: 'eyebrow' }, eyebrow) : null,
-		h('div', { class: 'ph-t' }, h('h1', null, title), meta));
+		h('div', { class: 'ph-t' }, h('h1', null, title), sub ? h('span', { class: 'ph-en' }, sub) : null, meta));
 }
 function renderEditor() {
 	var ed = $('editor'), head, body;
@@ -1111,24 +1761,26 @@ function renderEditor() {
 	}
 	else if (sel.k === 'item') {
 		var list = asArr(spec[sel.list]), i = list.findIndex(function (x) { return isObj(x) && x.id === sel.id; });
-		if (i < 0) { sel = { k: 'basics' }; renderNav(); }
+		if (i < 0) { sel = { k: 'overview' }; renderNav(); }
 		else {
 			var fn = { doctypes: doctypeEditor, permissions: permissionEditor, workflows: workflowEditor, ui: uiEditor, reports: reportEditor, business_rules: ruleEditor }[sel.list];
 			var it = list[i], blk = BLOCKS.filter(function (b) { return b[0] === sel.list; })[0];
-			head = pageHead(blk ? blk[1] : '', itemLabel(sel.list, it), h('span', { class: 'ph-m' }, originCtl(it), it.id ? h('span', { class: 'idchip' }, it.id) : null));
+			head = h('div', null, pageHead(blk ? blk[1] : '', itemLabel(sel.list, it), h('span', { class: 'ph-m' }, originCtl(it)),
+				sel.list === 'doctypes' && nonEmpty(it.label) ? it.name : null), originLegend(it));
 			if (it.origin === 'technical' && !expanded['blk:' + it.id]) {
-				body = [sec(null, null, h('div', { class: 'callout' }, '기술 결정 항목입니다. 보통은 Developer가 정하므로 검토만 하면 됩니다.'),
+				body = [sec(null, null, h('div', { class: 'callout' }, '요청에 없어서 AI가 정한 항목입니다. 생각과 다르면 펼쳐서 고치세요.'),
 					h('div', { class: 'bar' }, btn('펼쳐서 편집', function () { expanded['blk:' + it.id] = true; renderEditor(); })))];
 			} else body = fn(list, i);
 		}
 	}
 	if (spec && !body) {
-		var k = sel.k in TITLES ? sel.k : 'basics';
+		var k = sel.k in TITLES ? sel.k : 'overview';
 		if (k !== sel.k) sel = { k: k };
-		head = pageHead(null, TITLES[k]);
-		body = { basics: basicsEditor, acceptance: acceptanceEditor, decisions: decisionsEditor, verify: verifyEditor, preview: previewEditor, io: ioEditor }[k]();
+		head = pageHead(null, k === 'overview' ? (spec.name || spec.target || TITLES.overview) : TITLES[k], null, k === 'overview' ? TITLES.overview + ' · ' + (TYPE_NAMES[spec.type] || '') : null);
+		if (k === 'acceptance') head = h('div', null, head, originLegend(spec.acceptance_criteria || []));
+		body = { overview: overviewEditor, suggestions: suggestionsEditor, basics: basicsEditor, acceptance: acceptanceEditor, decisions: decisionsEditor, verify: verifyEditor, preview: previewEditor, io: ioEditor }[k]();
 	}
-	ed.appendChild(h('div', { class: 'wrap' }, head, h('div', { class: 'card' }, spec ? dtDatalist() : null, body)));
+	ed.appendChild(h('div', { class: 'wrap' + (sel.k === 'overview' ? ' ov' : '') }, head, h('div', { class: 'card' }, spec ? dtDatalist() : null, body)));
 	[].forEach.call(ed.querySelectorAll('textarea'), fit);
 }
 function fit(el) {
@@ -1139,10 +1791,30 @@ function fit(el) {
 document.addEventListener('input', function (e) { if (e.target && e.target.tagName === 'TEXTAREA') fit(e.target); });
 function renderAll() { renderTop(); renderNav(); renderEditor(); }
 
+/* ===== per-spec browser drafts ===== */
+function keyFor(s) { return LS_PREFIX + (nonEmpty(s.id) ? s.id : (s.type || 'spec') + '-' + Date.now()); }
+function drafts() {
+	var out = [];
+	try {
+		for (var i = 0; i < localStorage.length; i++) {
+			var k = localStorage.key(i);
+			if (k.indexOf(LS_PREFIX) !== 0) continue;
+			try { var x = JSON.parse(localStorage.getItem(k)); if (isObj(x) && isObj(x.spec)) out.push({ key: k, spec: x.spec, saved_at: x.saved_at }); } catch (e) { /* skip broken */ }
+		}
+	} catch (e) { /* no storage */ }
+	return out.sort(function (a, b) { return String(b.saved_at).localeCompare(String(a.saved_at)); });
+}
+function readDraft(k) { try { var x = JSON.parse(localStorage.getItem(k)); return isObj(x) && isObj(x.spec) ? x : null; } catch (e) { return null; } }
+function openDraft(x) {
+	spec = normalize(x.spec); draftKey = x.key; savedAt = new Date(x.saved_at); saveOK = true;
+	lastExport = ''; restoreOffer = null; approved = false; notice = '임시 저장본을 열었습니다.';
+	sel = { k: 'overview' }; renderAll();
+}
+
 /* ===== import / export ===== */
 function newSpec(type) {
-	if (spec && !window.confirm('작성 중인 요청서를 새 요청서로 바꿉니다. JSON으로 내보내지 않은 내용은 사라집니다. 계속할까요?')) return;
 	spec = { schema_version: '1.0', type: type, status: 'draft' };
+	draftKey = null; lastExport = ''; restoreOffer = null;
 	sel = { k: 'basics' };
 	notice = '';
 	approved = false;
@@ -1152,13 +1824,13 @@ function importText(text) {
 	var data;
 	try { data = JSON.parse(text); } catch (e) { notice = 'JSON 해석 실패: ' + e.message; renderTop(); return; }
 	if (!isObj(data)) { notice = '최상위가 JSON 객체여야 합니다.'; renderTop(); return; }
-	if (spec && !window.confirm('현재 편집 중인 내용을 불러온 JSON으로 바꿉니다. 계속할까요?')) return;
 	spec = normalize(data);
+	draftKey = keyFor(spec); lastExport = JSON.stringify(spec); restoreOffer = null; savedAt = null;
 	if (!BASIC[spec.type]) { notice = 'type이 올바르지 않아 feature로 취급합니다. 검증 패널을 확인하세요.'; }
 	else notice = '불러왔습니다.';
-	sel = { k: 'basics' };
+	sel = { k: 'overview' };
 	approved = false;
-	save(); renderAll();
+	renderAll();
 }
 function exportJson() {
 	var name = String(spec.id || 'spec-' + spec.type).replace(/[^A-Za-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'spec';
@@ -1167,17 +1839,27 @@ function exportJson() {
 	a.href = url; a.download = name + '.json';
 	document.body.appendChild(a); a.click(); document.body.removeChild(a);
 	setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+	lastExport = JSON.stringify(spec);
 	notice = 'JSON을 내보냈습니다 (내보내기는 확정이 아닙니다).';
 	renderTop();
 }
 
 /* ===== boot ===== */
 function boot() {
+	try {
+		var old = localStorage.getItem(LS_KEY);
+		if (old) { var o = JSON.parse(old); if (isObj(o)) localStorage.setItem(keyFor(o), JSON.stringify({ saved_at: new Date().toISOString(), spec: o })); localStorage.removeItem(LS_KEY); }
+	} catch (e) { /* ignore */ }
 	var el = $('spec-data'), raw = el ? el.textContent.trim() : '';
 	if (raw) {
 		try {
 			var data = JSON.parse(raw);
-			if (isObj(data)) { spec = normalize(data); sel = { k: 'basics' }; }
+			if (isObj(data)) {
+				spec = normalize(data); sel = { k: 'overview' };
+				draftKey = keyFor(spec); lastExport = JSON.stringify(spec);
+				var st = readDraft(draftKey);
+				if (st && JSON.stringify(normalize(st.spec)) !== lastExport) restoreOffer = st;
+			}
 		} catch (e) { notice = '내장된 요청서 JSON을 해석하지 못했습니다.'; }
 	}
 	renderAll();
