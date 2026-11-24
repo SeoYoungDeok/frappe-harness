@@ -1,6 +1,6 @@
 {
-  "name": "frappe-harness-local",
-  "owner": { "name": "local" },
+  "name": "frappe-harness",
+  "owner": { "name": "SeoYoungDeok" },
   "plugins": [
     { "name": "frappe-harness", "source": "./", "description": "Frappe app development harness" }
   ]

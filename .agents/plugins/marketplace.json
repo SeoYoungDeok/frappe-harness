@@ -1,6 +1,6 @@
 {
-  "name": "frappe-harness-local",
-  "interface": { "displayName": "Frappe Harness (local)" },
+  "name": "frappe-harness",
+  "interface": { "displayName": "Frappe Harness" },
   "plugins": [
     {
       "name": "frappe-harness",

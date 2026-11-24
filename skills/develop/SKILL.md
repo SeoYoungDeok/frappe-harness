@@ -1,89 +1,68 @@
 ---
 name: develop
-description: REQUIRED first step for ANY request that changes a Frappe app or site in a project using Frappe Harness — code, DocType JSON, metadata, even tiny UI tweaks like field order or labels — and for upgrades or investigations. Picks a playbook, decides whether to grill, and delegates implementation to the implementer agent and verification to the tester agent. Main must not edit production code itself.
+description: REQUIRED first step for ANY request that changes a Frappe app or site in a project using Frappe Harness — code, DocType JSON, metadata, even tiny UI tweaks like field order or labels — and for upgrades or investigations. The single common flow for Main - decide whether a spec is needed, then delegate to frappe-harness:developer and frappe-harness:tester. Main must not implement or test itself.
 ---
 
-# develop — Playbook 선택과 위임 (Main 전용)
+# develop — the one flow (Main only)
 
-너는 Main이다. 직접 프로덕션 코드를 고치거나 최종 검증하지 않는다. 구현은 `implementer`, 테스트 코드·최종 검증은 `tester` 에이전트에 위임한다.
+You are Main. You understand, ask, plan, instruct and judge. You never edit app code, run feature checks or tests yourself. You may: write spec JSON, call `render_spec.py`, read `.frappe-harness.toml` and small diffs, plan, and write `.harness/` records. The SessionStart context line `Frappe Harness v1.0 scripts: <dir>` gives the script directory; pass absolute script paths to workers.
 
-## 1. 시작 전
-1. 프로젝트 루트의 `.frappe-harness.toml`에서 Bench 경로, Dev/Test 사이트, 결정 문서(`context_doc`)를 읽는다. 경로가 상대 경로면 이 파일이 있는 폴더 기준이다(기기마다 Bench 위치가 다를 수 있음). 없으면 사용자에게 묻는다.
-2. 요청과 관련된 코드·DocType JSON·프로젝트 결정 문서(`.frappe-harness.toml`의 `context_doc`)만 읽는다. 코드로 답할 수 있는 것은 묻지 않는다.
-3. 시작 시각을 기록한다: `date -u +%Y-%m-%dT%H:%M:%SZ`.
-4. `task_id`를 정한다: 오늘 날짜 + 3자리 번호. `.frappe-harness/tasks.jsonl`과 `.frappe-harness/evidence/`에 이미 있는 같은 날짜의 가장 큰 번호 다음을 쓴다(재사용 금지, 증거 폴더 이름과 같다).
-   ```bash
-   d=$(date +%F); n=$( { grep -ho "\"$d-[0-9]\{3\}\"" .frappe-harness/tasks.jsonl 2>/dev/null | tr -d '"'; ls .frappe-harness/evidence 2>/dev/null; } | grep -o "^$d-[0-9]\{3\}$" | sort | tail -1 | cut -c12-); printf '%s-%03d\n' "$d" $((10#${n:-0}+1))
-   ```
+## Flow
+1. **Understand.** Read the request, `.frappe-harness.toml` (bench, app, sites, policy), `.harness/project.md`/`decisions.md` and existing specs if present. Do not ask what code or config can answer.
+2. **Ask** only important missing business/data/permission decisions, in one batch. Never ask about fieldnames, layout or technical details (Developer decides; `Auto` items are reported back).
+3. **Spec or direct.** Complex/important features, new DocTypes, permission/workflow/data changes: draft a spec (`spec.md`) and wait for the user's exported confirmed JSON. Simple clear requests (label, icon, column order, obvious bug) go straight on.
+4. **Baseline.** Choose a run id (`date +%Y%m%d-%H%M%S`). Run `python3 <scripts>/analyze_diff.py baseline --run-id <id> --repo <app repo>` before any worker changes files.
+5. **Developer** → returns `READY_FOR_TEST` or `BLOCKED`.
+6. **Tester** (a new worker, never the Developer) → `PASS` / `FAIL` / `BLOCKED`.
+7. **Judge.** Check that the report matches the request and evidence exists. Then complete, rework or ask the user.
 
-## 2. Playbook 선택
-| 요청의 주목적 | Playbook | 경계 |
-|---|---|---|
-| 핵심 구조/규칙/권한 변화 없는 UI·UX 수정 | `playbooks/small-change.md` | 필드 추가·타입·Link·저장/계산 규칙·권한·Workflow가 바뀌면 Feature |
-| 신규 기능, 업무 동작 변경 | `playbooks/feature.md` | 작아도 업무 로직이 바뀌면 Feature |
-| 의도와 실제 동작의 차이 | `playbooks/bug-fix.md` | 요구사항이 바뀌면 Feature |
-| 외부 동작 보존, 내부 구조 개선 | `playbooks/refactoring.md` | 발견한 버그는 별도 Bug Fix |
-| Frappe/앱/의존성 버전 변경 | `playbooks/upgrade.md` | 판정만 요청하면 적용하지 않는다 |
-| 사실·원인·대안 조사(변경 없음) | `playbooks/investigation.md` | 변경은 별도 작업 |
+## Workers and models
+- Use only `frappe-harness:developer` and `frappe-harness:tester` (Claude Code Agent tool). Never pass a `model` other than `sonnet` (best: omit it; the agent file sets sonnet). Never use fork, general-purpose or built-in agents to implement or test.
+- The model of every worker is recorded automatically in `<app repo>/.harness/runs/metrics.jsonl`. If a worker reports `model mismatch` (guard), stop and tell the user. Never upgrade the model on your own.
+- **Codex:** spawn with `fork_turns: "none"` and `agent_type` `developer`/`tester`. The model must be the verified Terra id configured in `.codex/agents/*.toml`; if it is not configured/verified, say BLOCKED and ask the user — never invent an id.
+- Max 3 concurrent workers; workers never spawn workers; no git worktrees by default. Parallelize only independent files/DocTypes. Serialize edits to the same file/DocType/shared config and any migrate/build/cache/restart on the same site (one owner).
 
-유형이 바뀌면 이유를 한 줄로 남긴다.
-
-**Grilling:** 신규/모호/구조 변경이면 `grill` Skill을 먼저 따른다. 명확한 Small Change는 생략한다.
-
-## 3. 위임 규칙
-- Implementer와 Tester는 **항상 서로 다른 에이전트 호출**이다. 같은 에이전트에게 구현과 검증을 함께 맡기지 않는다.
-- **Tester에게는 Implementer의 계획·자기평가·diff 설명을 넘기지 않는다.** 원래 요구사항, 확정 결정, 대상 Test 사이트, 변경된 파일 경로(내용 설명 없이)만 넘긴다.
-- **Codex:** Tester는 `spawn_agent`에 `agent_type: "tester"`, `fork_turns: "none"`으로 띄운다(기본 `all`은 Main 대화 전체를 상속해 독립성이 깨진다). Implementer도 `fork_turns: "none"`을 권장한다.
-  - 서브 에이전트가 권한 승인을 기다리는 동안에는 그 에이전트를 중단하거나 같은 역할을 새로 띄우지 않는다. 사용자에게 "승인 대기 중: <thread>"라고 알리고 기다린다.
-- **Claude Code:** `frappe-harness:implementer` / `frappe-harness:tester` 서브 에이전트를 쓴다(프롬프트만 전달됨).
-- 위임 메시지는 아래 템플릿에서 필요한 항목만 채운다. 별도 Contract 파일을 만들지 않는다.
-
-```markdown
-[Implementer 작업]
-- Playbook / 목표:
-- 변경 대상(앱/Dev 사이트/모듈):
-- 사용자와 확정한 핵심 결정:
-- 유지할 규칙·변경 금지:
-- 관련 코드와 프로젝트 결정 문서:
-- 성공 기준 / 보고할 증거:
-- Main에게 보고해야 하는 설계 충돌/데이터 손실 위험:
+## Delegation contracts (fill only what applies)
+```text
+[Developer] task name | app repo + Dev site | original request or confirmed spec path + your scope
+ | other workers' files / dependencies | behaviour to keep, risk limits | done criteria + self-checks needed
+ | run id, absolute script dir
+[Tester]    run id + baseline | original request or confirmed spec path (NOT the Developer's reasoning)
+ | actual changed scope + environment (sites, port) | approved risk scope
+ | must-check business/permission/data rules | evidence requirement (<repo>/.harness/runs/<run-id>/) | script dir
 ```
+Developer replies: status, summary, changed files, Auto-name mapping, site state and key command results, self-checks. Tester replies: status, checks and results, risk level, repro (expected/actual/files/log), evidence paths, skipped/unverified scope. Do not forward long logs; reference files.
 
-```markdown
-[Tester 작업]
-- Playbook / 원래 사용자 요청:
-- 확정 요구사항·기대 동작:
-- 대상 Test 사이트 / 변경된 파일 경로:
-- 검증할 정상/예외/회귀 조건:
-- UI 변경이면 브라우저 확인과 스크린샷(frappe-testing Skill 참고)
-- 증거 저장 위치: .frappe-harness/evidence/<task_id>/
-```
+## Rework
+Max 2 automatic fix rounds: Developer fixes (same worker if useful), Tester re-verifies only the failed checks plus impact. Still failing, repeated, or wider than expected: stop, re-plan, ask the user.
 
-## 4. 코드 동결과 스냅샷 (검증 전·후 동일해야 함)
-Implementer 완료 후, Tester 호출 직전과 Tester 보고 직후에 앱 저장소에서 같은 명령으로 **프로덕션 코드 지문**을 만든다. 테스트 파일은 Tester 소유라 제외한다(미커밋·미추적 파일 포함).
+| Failure cause | Action |
+|---|---|
+| implementation error / spec gap | Developer fixes, Tester re-verifies |
+| defect in the test itself | Tester fixes it with stated evidence (no weakened assertions) |
+| spec contradiction / scope change | ask the user |
+| environment / dependency problem | BLOCKED; handle only the safe part |
+| safety constraint violated | stop and tell the user |
 
-```bash
-P=(-- . ':(exclude,glob)**/test_*.py' ':(exclude,glob)**/tests/**' ':(exclude,glob)**/*.spec.*' ':(exclude,glob)**/*.test.*')
-{ git status --porcelain=v1 --untracked-files=all "${P[@]}"; git diff HEAD "${P[@]}"; git ls-files -o --exclude-standard -z "${P[@]}" | xargs -0 shasum 2>/dev/null; } | shasum | cut -c1-12
-```
+## Environments and approvals
+- **Dev site** is the default. **Test site** (optional) for DB-writing tests and risky data. A separate bench for framework/dependency changes. **Production: blocked.** Take site names from config only; never guess from a name; ambiguous → stop and ask.
+- Approval is for a specific action, environment and scope; widen the scope → ask again.
 
-- 두 값이 다르면 그 검증은 무효다. 이유를 붙여 PASS로 바꾸지 말고 재검증한다. 검증 중에는 Implementer를 다시 부르지 않는다.
-- Tester가 바꾼 테스트 파일은 `git status`로 따로 확인해 보고에 적는다. 기존 테스트의 단정을 바꿨다면 무엇을 왜 바꿨는지 사용자에게 보인다.
+| Action | Policy |
+|---|---|
+| add field, safe schema sync on Dev | allowed after checking target and pending risky changes |
+| remove field / type change / possible rename | check existing data; approval, backup/isolation |
+| bulk data change, data migration | approval, backup, verify on Test site, compare before/after |
+| drop-site / reinstall / reset, DB drop/truncate | blocked without explicit approval |
+| Frappe core / bench dependencies | forbidden by default; separate approval, isolated bench |
+| Production | blocked |
 
-## 5. 판정과 보고
-- Tester 결과가 PASS이고 스냅샷이 일치할 때만 "완료"라고 보고한다. 그 외에는 FAIL / UNVERIFIED와 이유를 그대로 보고한다.
-- 보고에는 실행 명령, 대상 사이트, CLI 이름·버전, 증거 경로, 미검증 범위를 넣는다.
-- 사용자와 합의했거나 Tester가 검증한 중요 결정만 프로젝트 결정 문서(`.frappe-harness.toml`의 `context_doc`)에 상태와 함께 적는다.
+The guard may ask or deny; never work around it — tell the user what was attempted.
+Upgrades and investigations use this same flow plus approval, backup and isolation for risky steps. An investigation may end without code changes; changes found necessary are a separate task.
 
-## 6. 작업 기록 (작업당 정확히 1줄)
-종료 시 `.frappe-harness/tasks.jsonl`에 한 줄 append. 판정·계획·조사만 하고 코드를 바꾸지 않은 작업, 사용자 질문으로 멈춘 작업도 포함한다(`outcome`에 `PLANNED`·`ANSWERED`·`WAITING_USER` 사용 가능). 측정하지 못한 값은 추정하지 말고 `null`.
-
-```json
-{"task_id":"YYYY-MM-DD-NNN","cli":"claude-code|codex","playbook":"small-change","started_at":"...","ended_at":"...","elapsed_seconds":0,"outcome":"PASS|FAIL|UNVERIFIED","test_mode":"sequential|parallel","token_input":null,"token_output":null,"token_source":null,"token_status":"unavailable","notes":""}
-```
-
-## 7. 공통 실행 원칙 (승인 기준)
-- 자율: 코드 수정, DocType 변경, 정상 `bench migrate`, 빌드, Test 데이터 생성·정리, 자동 검사, 합의된 기능 구현.
-- **사용자 승인 필요:** `drop-site`/`reinstall`/DB 재생성, 영구 데이터 대량 삭제·복구 어려운 변환, DB를 덮어쓰는 복원, 복구용 백업 삭제, 승인된 파괴 작업의 대상·범위 변경.
-- Test 사이트에서 이번 테스트가 만든 데이터만 정리하는 것은 자율.
-- guard Hook(`scripts/guard.py`)이 묻거나 막으면 명령을 바꿔 우회하지 않는다. 무엇을 왜 실행하려 했는지 사용자에게 알리고 결정을 받는다. Hook은 보조 장치일 뿐이라 걸리지 않았다고 승인 대상이 아닌 것은 아니다.
+## Completion
+Say "done" only when the Tester returned PASS with evidence. Report: changed files, site, evidence path, skipped/unverified scope, CLI and worker models. BLOCKED/FAIL are reported as they are.
+- After success save/update the confirmed spec in `<app repo>/.harness/specs/` (only when the change touches what the spec defines).
+- Record important agreed decisions in `.harness/decisions.md` and verified project facts in `.harness/project.md` — only when real content exists.
+- Append one line to `<app repo>/.harness/runs/metrics.jsonl` (`runs/.gitignore` is created by the scripts):
+  `{"kind":"run","run_id":"…","request_type":"feature|change|bug|upgrade|investigation","level":"L0-L3|null","workers":N,"retries":N,"outcome":"PASS|FAIL|BLOCKED|WAITING_USER","started":"ISO","ended":"ISO","wall_seconds":N}` — unknown values are `null`, never estimated.

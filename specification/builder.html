@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:">
+<title>Frappe Harness 명세 빌더</title>
+<style>
+:root{--bg:#f8f8f8;--pn:#fff;--ctl:#f3f3f3;--ln:#ededed;--bd:#e2e2e2;--bd2:#c7c7c7;--tx:#171717;--tx2:#525252;--mu:#666;--ok:#1e6b40;--wn:#a3410a;--er:#b42318;--lk:#0b5ca8}
+*{box-sizing:border-box}
+body{margin:0;font:13px/1.45 Inter,system-ui,-apple-system,"Segoe UI","Malgun Gothic","Apple SD Gothic Neo","Noto Sans CJK KR",sans-serif;color:var(--tx);background:var(--bg)}
+header{display:flex;gap:10px;align-items:center;min-height:48px;padding:6px 20px;background:var(--pn);border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.logo{width:24px;height:24px;border-radius:6px;background:var(--tx);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none}
+.crumb{color:var(--tx2);font-size:14px}.crumb.cur{color:var(--tx);font-weight:600}.sep{color:var(--bd2)}
+.sp{flex:1}
+.saved{font-size:12px;color:var(--mu);display:inline-flex;align-items:center;gap:6px}
+.saved::before{content:"";width:6px;height:6px;border-radius:3px;background:var(--ok)}
+.saved.no::before{background:var(--wn)}
+#main{display:flex;height:calc(100vh - 49px)}
+#nav{width:260px;flex:none;overflow:auto;padding:16px 12px;display:flex;flex-direction:column;gap:2px}
+#editor{flex:1;min-width:0;overflow:auto;padding:20px 28px 48px 12px}
+button,select,input,textarea{font:inherit;color:inherit}
+button{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:28px;padding:0 10px;border:0;border-radius:6px;background:var(--ctl);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}
+button:hover{background:var(--ln)}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--bd2);outline-offset:1px}
+button.pri{background:var(--tx);color:#fff}
+button.pri:hover{background:#383838}
+button.gh{background:transparent}button.gh:hover{background:var(--ctl)}
+button.sm{height:24px;min-width:24px;padding:0 6px;background:transparent;color:var(--tx2);font-weight:400}
+button.sm:hover{background:var(--ln);color:var(--tx)}
+input[type=text],select,textarea{border:1px solid transparent;border-radius:6px;padding:0 8px;height:28px;background:var(--ctl);max-width:100%;font-size:13px}
+input[type=text]:hover,select:hover,textarea:hover{border-color:var(--bd)}
+input[type=text]:focus,select:focus,textarea:focus{outline:none;background:#fff;border-color:var(--bd2);box-shadow:0 0 0 2px var(--bd)}
+input[type=text],textarea{width:100%}
+textarea{resize:vertical;height:auto;min-height:28px;padding:5px 8px;display:block;line-height:1.5}
+input[type=checkbox],input[type=radio]{accent-color:var(--tx);width:14px;height:14px;margin:0;vertical-align:-2px}
+input[type=file]{font-size:12px}
+::placeholder{color:#8f8f8f}
+select.t{width:100%}
+textarea+select,select+input,select+textarea{margin-top:4px}
+.nh{display:flex;justify-content:space-between;align-items:center;min-height:24px;margin-top:12px;padding:0 8px;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--mu)}
+.nh button{height:22px;min-width:22px;padding:0;background:transparent;color:var(--mu);font-size:15px}
+.nh button:hover{background:var(--ln);color:var(--tx)}
+.ni{display:flex;justify-content:space-between;align-items:center;gap:6px;width:100%;min-height:30px;height:auto;text-align:left;padding:4px 8px;background:none;font-weight:400;color:#383838;white-space:normal}
+.ni>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ni:hover{background:var(--ln)}
+.ni.on{background:var(--pn);box-shadow:0 0 0 1px var(--bd),0 1px 2px rgba(0,0,0,.05);color:var(--tx);font-weight:500}
+.card{background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:20px 24px;max-width:1180px}
+.card h3{margin:24px -24px 14px;padding:20px 24px 0;border-top:1px solid var(--ln);font-size:14px;font-weight:600}
+.card>div>h3:first-child,.card>div>datalist+h3{margin-top:0;padding-top:0;border-top:0;font-size:18px}
+.row{display:grid;grid-template-columns:170px 1fr;gap:4px 16px;margin:10px 0;align-items:start}
+.row>label{color:var(--mu);font-size:12px;padding-top:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px 24px;margin:8px 0 12px}
+.grid label{display:block;color:var(--mu);font-size:12px;margin-bottom:4px}
+table{border-collapse:separate;border-spacing:0;width:100%;margin:6px 0 12px;border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+th,td{border-top:1px solid var(--ln);padding:5px 8px;vertical-align:middle;text-align:left;background:var(--pn)}
+tr:first-child>th,tr:first-child>td{border-top:0}
+th{background:#f8f8f8;font-size:12px;font-weight:500;color:var(--mu);height:34px}
+td input[type=text],td select,td textarea{background:transparent}
+td input[type=text]:hover,td select:hover,td textarea:hover{background:#f8f8f8}
+td input[type=text]:focus,td select:focus,td textarea:focus{background:#fff}
+tr.brk td{background:#fafafa}
+tr.sug td{background:#fffbeb}
+tr.brk td input[type=text]{font-weight:600}
+td details{margin:0}
+td details[open]{background:#f8f8f8;margin:-5px -8px;padding:10px 16px 12px}
+td details[open] input[type=text],td details[open] select,td details[open] textarea{background:#fff;border-color:var(--bd)}
+details{margin:4px 0}
+summary{cursor:pointer;color:var(--mu);font-size:12px;padding:2px 0}
+summary:hover{color:var(--tx)}
+h3{margin:8px 0 10px;font-size:14px;font-weight:600}
+.badge{display:inline-flex;align-items:center;height:22px;padding:0 10px;border-radius:11px;font-size:12px;font-weight:500;border:0;white-space:nowrap;background:var(--ctl);color:var(--tx2)}
+select.badge{height:24px;padding:0 6px;width:auto;cursor:pointer}
+label.badge{gap:4px;cursor:pointer}
+.ni .badge{height:20px;padding:0 8px;font-size:11px;flex:none}
+.b-suggestion{background:#fff3c4;color:#7a4b00}
+.b-technical{background:#efebff;color:#4b32a8}
+.b-request{background:#e6f7ec;color:var(--ok)}
+.b-decision{background:#ffeded;color:var(--er)}
+.b-draft{background:#fff1e5;color:var(--wn)}
+.er{color:var(--er)}.ok{color:var(--ok)}.wn{color:var(--wn)}.mu{color:var(--mu);font-size:12px}
+header .er,header .ok,header .wn{font-size:12px;font-weight:500}
+pre{background:#f8f8f8;border:1px solid var(--bd);border-radius:8px;padding:10px;white-space:pre-wrap;overflow:auto}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.card>div>.bar:first-of-type b{font-size:18px;font-weight:600;margin-right:4px}
+.box{border:1px solid var(--bd);background:var(--pn);padding:14px 16px;margin:10px 0;border-radius:10px}
+.box ul{margin:8px 0 0;padding-left:18px}.box li{margin:4px 0}
+@media (max-width:760px){#main{display:block;height:auto}#nav{width:auto}#editor{padding:12px}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header id="top"></header>
+<div id="main"><nav id="nav"></nav><section id="editor"></section></div>
+<script id="spec-data" type="application/json"></script>
+<script>
+(function () {
+'use strict';
+/* ===== constants ===== */
+var FIELD_TYPES = ['Data', 'Int', 'Float', 'Currency', 'Check', 'Select', 'Link', 'Dynamic Link', 'Table', 'Table MultiSelect',
+	'Date', 'Datetime', 'Time', 'Text', 'Small Text', 'Long Text', 'Text Editor', 'Attach', 'Attach Image', 'Percent', 'Rating',
+	'Color', 'JSON', 'Section Break', 'Column Break', 'Tab Break'];
+var BREAKS = ['Section Break', 'Column Break', 'Tab Break'];
+var RIGHTS = ['read', 'write', 'create', 'delete', 'submit', 'cancel', 'amend', 'report', 'export', 'print', 'email', 'share'];
+var ORIGINS = [['request', '요청 반영'], ['suggestion', 'AI 제안'], ['technical', '기술 결정']];
+var YESNO = [[true, '예'], [false, '아니오']];
+var LS_KEY = 'frappe-harness-spec-draft';
+var BLOCKS = [['doctypes', 'DocType', 'dt'], ['permissions', '권한', 'perm'], ['workflows', '워크플로', 'wf'],
+	['ui', 'UI/UX', 'ui'], ['reports', '리포트', 'rp'], ['business_rules', '업무 규칙/API', 'br']];
+var BASIC = {
+	feature: [['name', '기능 이름'], ['app', '대상 App'], ['module', 'Module'], ['purpose', '목적', 'ml'], ['users', '실제 사용자', 'ml'],
+		['flow', '업무 흐름', 'ml'], ['scope', '구현 범위', 'ml'], ['out_of_scope', '제외 범위 (줄마다 하나)', 'list']],
+	change: [['name', '변경 이름'], ['app', '대상 App'], ['module', 'Module'], ['target', '대상 (기능/DocType/화면)'],
+		['current_behavior', '현재 동작', 'ml'], ['desired_behavior', '바꿀 동작', 'ml'], ['preserve', '유지할 동작 (줄마다 하나)', 'list'],
+		['data_handling', '기존 데이터 처리', 'ml'], ['out_of_scope', '제외 범위 (줄마다 하나)', 'list']],
+	bug: [['name', '버그 이름'], ['app', '대상 App'], ['module', 'Module'], ['target', '대상'], ['actual', '실제 현상', 'ml'],
+		['reproduction', '재현 조건/방법', 'ml'], ['expected', '기대 동작', 'ml'], ['evidence', '오류 메시지/증거', 'ml']]
+};
+var TRI = { // tri-value properties checked by the validator, per block kind
+	doctypes: ['naming', 'kind', 'submittable', 'track_changes'],
+	fields: ['fieldtype', 'required', 'unique', 'options', 'default', 'read_only', 'hidden', 'in_list_view', 'in_standard_filter'],
+	rights: RIGHTS, workflows: ['docstatus_meaning'], states: ['docstatus'], ui: ['mode'], reports: ['report_type'], permissions: ['if_owner']
+};
+
+/* ===== pure logic (no DOM) ===== */
+function isObj(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
+function clone(v) { return JSON.parse(JSON.stringify(v)); }
+function nonEmpty(v) { return typeof v === 'string' && v.trim() !== ''; }
+function isWrapper(v) { return isObj(v) && Object.keys(v).length === 1 && (v.mode === 'auto' || v.mode === 'none'); }
+function wrap(mode) { return { mode: mode }; }
+function unresolved(d) { return !isObj(d) || d.answer === undefined || d.answer === null || (typeof d.answer === 'string' && d.answer.trim() === ''); }
+function asArr(v) { return Array.isArray(v) ? v : []; }
+
+function walk(n, fn, path, listName) {
+	if (Array.isArray(n)) {
+		var nm = (path || '').split('.').pop().split('[')[0];
+		n.forEach(function (x, i) { walk(x, fn, path + '[' + i + ']', nm); });
+	} else if (isObj(n)) {
+		fn(n, path, listName);
+		Object.keys(n).forEach(function (k) { walk(n[k], fn, path ? path + '.' + k : k, null); });
+	}
+}
+
+function genId(spec, prefix) {
+	var used = {}, n = 1;
+	walk(spec, function (d) { if (typeof d.id === 'string') used[d.id] = 1; }, '', null);
+	while (used[prefix + n]) n++;
+	return prefix + n;
+}
+
+/* Adds missing ids; turns plain-string acceptance/rules into {id,text}. Nothing else changes. */
+function normalize(spec) {
+	function fix(list, prefix, textual) {
+		list.forEach(function (it, i) {
+			if (textual && typeof it === 'string') { list[i] = it = { text: it }; }
+			if (isObj(it) && typeof it.id !== 'string') it.id = genId(spec, prefix);
+		});
+	}
+	if (Array.isArray(spec.acceptance_criteria)) fix(spec.acceptance_criteria, 'ac', true);
+	[['open_decisions', 'od'], ['decisions', 'dc'], ['doctypes', 'dt'], ['permissions', 'perm'], ['workflows', 'wf'],
+		['ui', 'ui'], ['reports', 'rp'], ['business_rules', 'br']].forEach(function (p) {
+		if (Array.isArray(spec[p[0]])) fix(spec[p[0]], p[1], false);
+	});
+	asArr(spec.doctypes).forEach(function (dt) {
+		if (!isObj(dt)) return;
+		if (Array.isArray(dt.fields)) fix(dt.fields, 'f', false);
+		if (Array.isArray(dt.rules)) fix(dt.rules, 'r', true);
+	});
+	return spec;
+}
+
+/* Remove unselected suggestions anywhere; selected ones become requests. Returns a new tree. */
+function strip(n) {
+	if (Array.isArray(n)) {
+		var out = [];
+		n.forEach(function (x) {
+			if (isObj(x) && x.origin === 'suggestion') {
+				if (x.selected !== true) return;
+				var y = strip(x);
+				delete y.selected;
+				y.origin = 'request';
+				y.adopted_from_suggestion = true;
+				out.push(y);
+			} else out.push(strip(x));
+		});
+		return out;
+	}
+	if (isObj(n)) {
+		var o = {};
+		Object.keys(n).forEach(function (k) { o[k] = strip(n[k]); });
+		return o;
+	}
+	return n;
+}
+
+function basicsMissing(spec) {
+	var need = { feature: ['name', 'app', 'purpose'], change: ['target', 'desired_behavior'], bug: ['target', 'actual', 'expected'] }[spec.type] || [];
+	var miss = need.filter(function (k) { return !nonEmpty(spec[k]); });
+	if (spec.type === 'feature' || spec.type === 'change') {
+		var n = asArr(spec.acceptance_criteria).filter(function (c) { return nonEmpty(c) || (isObj(c) && nonEmpty(c.text)); }).length;
+		if (!n) miss.push('acceptance_criteria');
+	}
+	return miss;
+}
+
+/* Confirm: returns {ok, reasons, spec}. Nothing is mutated; the caller swaps in `spec` when ok. */
+function confirmSpec(spec, approved) {
+	var reasons = [];
+	if (!approved) reasons.push('"이 내용으로 개발을 승인합니다"에 체크해야 합니다.');
+	var out = strip(spec);
+	asArr(out.open_decisions).forEach(function (d) {
+		if (isObj(d) && d.required === true && unresolved(d)) reasons.push('필수 결정이 미해결입니다: ' + (d.question || d.id || '?'));
+	});
+	basicsMissing(out).forEach(function (k) {
+		reasons.push('필수 기본 정보가 비어 있습니다: ' + (k === 'acceptance_criteria' ? '완료 조건 1개 이상' : k));
+	});
+	if (Array.isArray(out.open_decisions) || Array.isArray(out.decisions)) {
+		var moved = asArr(out.open_decisions).filter(function (d) { return isObj(d) && !unresolved(d); })
+			.map(function (d) { return { id: d.id, question: d.question, answer: d.answer }; });
+		out.decisions = asArr(out.decisions).concat(moved);
+		if ('open_decisions' in out) out.open_decisions = [];
+	}
+	out.status = 'confirmed';
+	out.confirmed_at = new Date().toISOString();
+	return { ok: reasons.length === 0, reasons: reasons, spec: out };
+}
+
+function triProblem(v, where) {
+	if (v === null) return where + ': null은 허용되지 않습니다.';
+	if (Array.isArray(v)) return where + ': 배열은 허용되지 않습니다.';
+	if (isObj(v) && !isWrapper(v)) return where + ': {"mode":"auto"} 또는 {"mode":"none"}만 허용됩니다.';
+	return null;
+}
+
+function validateSpec(spec) {
+	var p = [], seen = {};
+	if (spec.schema_version !== '1.0') p.push('schema_version은 "1.0"이어야 합니다.');
+	if (['feature', 'change', 'bug'].indexOf(spec.type) < 0) p.push('type은 feature/change/bug 중 하나여야 합니다.');
+	if (['draft', 'confirmed'].indexOf(spec.status) < 0) p.push('status는 draft/confirmed 중 하나여야 합니다.');
+	var confirmed = spec.status === 'confirmed';
+	walk(spec, function (d, path, list) {
+		if (typeof d.id === 'string') {
+			if (seen[d.id]) p.push('중복 id "' + d.id + '": ' + path + ' / ' + seen[d.id]); else seen[d.id] = path;
+		}
+		if (confirmed) {
+			if (d.origin === 'suggestion') p.push(path + ': 확정 명세에 제안이 남아 있습니다.');
+			if ('selected' in d) p.push(path + ': 확정 명세에 selected가 남아 있습니다.');
+		}
+	}, '', null);
+	function tri(obj, keys, path) {
+		if (!isObj(obj)) return;
+		keys.forEach(function (k) {
+			if (k in obj) { var m = triProblem(obj[k], path + '.' + k); if (m) p.push(m); }
+		});
+	}
+	asArr(spec.doctypes).forEach(function (dt, i) {
+		tri(dt, TRI.doctypes, 'doctypes[' + i + ']');
+		asArr(isObj(dt) && dt.fields).forEach(function (f, j) { tri(f, TRI.fields, 'doctypes[' + i + '].fields[' + j + ']'); });
+	});
+	asArr(spec.permissions).forEach(function (x, i) {
+		tri(x, TRI.permissions, 'permissions[' + i + ']');
+		tri(isObj(x) ? x.rights : null, TRI.rights, 'permissions[' + i + '].rights');
+	});
+	asArr(spec.workflows).forEach(function (x, i) {
+		tri(x, TRI.workflows, 'workflows[' + i + ']');
+		asArr(isObj(x) && x.states).forEach(function (s, j) { tri(s, TRI.states, 'workflows[' + i + '].states[' + j + ']'); });
+	});
+	asArr(spec.ui).forEach(function (x, i) { tri(x, TRI.ui, 'ui[' + i + ']'); });
+	asArr(spec.reports).forEach(function (x, i) { tri(x, TRI.reports, 'reports[' + i + ']'); });
+	if (confirmed) {
+		asArr(spec.open_decisions).forEach(function (d) {
+			if (isObj(d) && d.required === true && unresolved(d)) p.push('필수 결정 미해결: ' + (d.question || d.id));
+		});
+		basicsMissing(spec).forEach(function (k) { p.push('확정 명세의 기본 정보 누락: ' + k); });
+	}
+	return p;
+}
+
+/* ----- markdown (mirrors scripts/render_spec.py markdown) ----- */
+function fmt(v) {
+	if (v === undefined || v === null) return '(미지정)';
+	if (isObj(v) && v.mode === 'auto') return 'Auto';
+	if (isObj(v) && v.mode === 'none') return '사용 안 함';
+	if (v === true) return '예';
+	if (v === false) return '아니오';
+	if (v === '') return '""';
+	return String(v);
+}
+function one(v) { return fmt(v).replace(/\r/g, '').replace(/\n/g, ' / '); }
+function cellMd(v) { return one(v).replace(/\|/g, '\\|'); }
+function tag(it) {
+	if (!isObj(it)) return '';
+	if (it.origin === 'suggestion') return ' `[AI 제안: ' + (it.selected === true ? '채택' : '미채택') + ']`';
+	if (it.origin === 'technical') return ' `[기술 결정]`';
+	if (it.adopted_from_suggestion) return ' `[제안 채택]`';
+	return '';
+}
+function kv(d, keys) {
+	var L = [];
+	keys.forEach(function (k) { if (k[0] in d) L.push('- ' + k[1] + ': ' + one(d[k[0]])); });
+	return L;
+}
+function textOf(x) { return isObj(x) ? (x.text === undefined ? '' : x.text) : String(x); }
+function has(o, k) { return isObj(o) && k in o; }
+function g(o, k, dflt) { return isObj(o) && k in o ? o[k] : dflt; }
+
+function toMarkdown(spec) {
+	var L = ['# ' + (spec.name || spec.target || spec.id || '(이름 없음)'),
+		'_type: ' + spec.type + ', status: ' + spec.status + ', schema ' + spec.schema_version + '_', ''];
+	L = L.concat(kv(spec, [['id', 'ID'], ['app', 'App'], ['module', 'Module'], ['purpose', '목적'], ['users', '사용자'],
+		['flow', '업무 흐름'], ['scope', '구현 범위'], ['target', '대상'], ['current_behavior', '현재 동작'],
+		['desired_behavior', '바꿀 동작'], ['data_handling', '기존 데이터 처리'], ['actual', '실제 현상'],
+		['reproduction', '재현'], ['expected', '기대 동작'], ['evidence', '증거'], ['confirmed_at', '확정 시각']]));
+	[['out_of_scope', '제외 범위'], ['preserve', '유지할 동작']].forEach(function (p) {
+		if (asArr(spec[p[0]]).length) L = L.concat(['', '## ' + p[1]], spec[p[0]].map(function (x) { return '- ' + one(x); }));
+	});
+	if (asArr(spec.references).length) {
+		L.push('', '## 참고 자료');
+		spec.references.forEach(function (r) { L.push('- ' + one(g(r, 'path', '')) + ': ' + one(g(r, 'description', ''))); });
+	}
+	asArr(spec.doctypes).forEach(function (it) {
+		L.push('', '### DocType: ' + g(it, 'name', '?') + tag(it));
+		L = L.concat(kv(it, [['label', '표시명'], ['purpose', '목적'], ['module', 'Module'], ['existing', '기존 DocType'],
+			['kind', '종류'], ['naming', 'Naming'], ['submittable', 'Submittable'], ['track_changes', 'Track Changes']]));
+		var fields = asArr(it.fields);
+		if (fields.length) L.push('', '| Label | Fieldname | Type | Required | Options | 기타 |', '|---|---|---|---|---|---|');
+		fields.forEach(function (f) {
+			var extra = ['unique', 'default', 'read_only', 'hidden', 'in_list_view', 'in_standard_filter', 'depends_on',
+				'mandatory_depends_on', 'read_only_depends_on', 'fetch_from', 'description']
+				.filter(function (k) { return k in f; }).map(function (k) { return k + '=' + one(f[k]); }).join('; ');
+			L.push('| ' + [cellMd(g(f, 'label', '')) + tag(f), cellMd(g(f, 'fieldname', '')),
+				'fieldtype' in f ? cellMd(f.fieldtype) : '', 'required' in f ? cellMd(f.required) : '',
+				'options' in f ? cellMd(f.options) : '', extra ? cellMd(extra) : ''].join(' | ') + ' |');
+		});
+		asArr(it.rules).forEach(function (r) { L.push('- 규칙: ' + one(textOf(r)) + tag(r)); });
+	});
+	asArr(spec.permissions).forEach(function (it) {
+		var rights = Object.keys(g(it, 'rights', {})).map(function (k) { return k + '=' + one(it.rights[k]); }).join(', ');
+		L.push('', '### 권한: ' + g(it, 'doctype', '?') + ' / ' + g(it, 'role', '?') + tag(it));
+		if (rights) L.push('- rights: ' + rights);
+		L = L.concat(kv(it, [['if_owner', '소유자 한정'], ['rules', '추가 규칙']]));
+	});
+	asArr(spec.workflows).forEach(function (it) {
+		L.push('', '### 워크플로: ' + g(it, 'name', g(it, 'doctype', '?')) + tag(it));
+		L = L.concat(kv(it, [['doctype', 'DocType'], ['docstatus_meaning', 'docstatus 의미']]));
+		asArr(it.states).forEach(function (s) {
+			L.push('- 상태 ' + one(g(s, 'name', '')) + ' (docstatus=' + ('docstatus' in s ? one(s.docstatus) : '미지정') + ', 수정: ' + one(g(s, 'editable_by', '')) + ')');
+		});
+		asArr(it.transitions).forEach(function (t) {
+			L.push(('- 전이 ' + one(g(t, 'action', '')) + ': ' + one(g(t, 'from', '')) + ' -> ' + one(g(t, 'to', '')) +
+				' [' + one(g(t, 'role', '')) + '] ' + one(g(t, 'condition', ''))).replace(/\s+$/, ''));
+		});
+	});
+	asArr(spec.ui).forEach(function (it) {
+		L.push('', '### UI: ' + g(it, 'target', '?') + tag(it));
+		L = L.concat(kv(it, [['mode', '방식'], ['layout', '레이아웃'], ['events', '이벤트'], ['buttons', '버튼'],
+			['display_conditions', '표시 조건'], ['filters', '필터'], ['sort', '정렬'], ['flow', '사용 흐름']]));
+		asArr(it.reference_images).forEach(function (p) { L.push('- 참고 이미지: ' + p); });
+	});
+	asArr(spec.reports).forEach(function (it) {
+		L.push('', '### 리포트: ' + g(it, 'name', '?') + tag(it));
+		L = L.concat(kv(it, [['purpose', '목적'], ['source', '데이터 출처'], ['columns', '컬럼'], ['filters', '필터'],
+			['sort', '정렬'], ['aggregation', '집계'], ['permission', '권한'], ['report_type', '종류']]));
+	});
+	asArr(spec.business_rules).forEach(function (it) {
+		L.push('', '### 업무 규칙: ' + g(it, 'name', '?') + tag(it));
+		L = L.concat(kv(it, [['condition', '조건'], ['input', '입력'], ['rule', '처리'], ['output', '출력'],
+			['exceptions', '예외'], ['expected', '기대 결과']]));
+		if (isObj(it.api)) L = L.concat(kv(it.api, [['caller', 'API 호출 주체'], ['permission', 'API 권한'], ['error_policy', 'API 오류 정책']]));
+	});
+	if (asArr(spec.acceptance_criteria).length) {
+		L.push('', '## 완료 조건');
+		spec.acceptance_criteria.forEach(function (c) { L.push('- ' + one(textOf(c)) + tag(c)); });
+	}
+	if (asArr(spec.open_decisions).length) {
+		L.push('', '## 결정 필요');
+		spec.open_decisions.forEach(function (d) {
+			L.push('- [' + (g(d, 'required', false) === true ? '필수' : '선택') + '] ' + one(g(d, 'question', '')) +
+				' (' + asArr(d.options).join(' / ') + ') -> ' + (unresolved(d) ? '미해결' : '해결: ' + one(d.answer)));
+		});
+	}
+	if (asArr(spec.decisions).length) {
+		L.push('', '## 확정된 결정');
+		spec.decisions.forEach(function (d) { L.push('- ' + one(g(d, 'question', '')) + ' -> ' + one(g(d, 'answer', ''))); });
+	}
+	return L.join('\n').replace(/\n\n\n/g, '\n\n') + '\n';
+}
+
+/* ===== state ===== */
+var spec = null, sel = { k: 'start' }, approved = false, notice = '', expanded = {}, saveOK = true;
+function $(id) { return document.getElementById(id); }
+
+/* ===== DOM helpers (all user text goes through text nodes / .value) ===== */
+function h(tag, attrs) {
+	var e = document.createElement(tag);
+	Object.keys(attrs || {}).forEach(function (k) {
+		var v = attrs[k];
+		if (v === undefined || v === null || v === false) return;
+		if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), v);
+		else if (k === 'class') e.className = v;
+		else if (k === 'value') e.value = v;
+		else if (k === 'checked' || k === 'open' || k === 'disabled' || k === 'selected') e[k] = true;
+		else e.setAttribute(k, v === true ? '' : v);
+	});
+	function add(c) {
+		if (c === undefined || c === null || c === false) return;
+		if (Array.isArray(c)) c.forEach(add);
+		else e.appendChild(typeof c === 'object' ? c : document.createTextNode(String(c)));
+	}
+	for (var i = 2; i < arguments.length; i++) add(arguments[i]);
+	return e;
+}
+function clear(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+function btn(label, fn, cls, title) { return h('button', { type: 'button', class: cls || '', title: title, onclick: fn }, label); }
+
+function changed() {
+	if (spec && spec.status === 'confirmed') {
+		spec.status = 'draft';
+		delete spec.confirmed_at;
+		notice = '확정된 명세를 수정하여 초안(draft)으로 되돌렸습니다. 다시 확정해야 합니다.';
+	}
+	approved = false;
+	save();
+	renderTop();
+	renderNav();
+}
+function refresh() { changed(); renderEditor(); }
+function save() {
+	try { localStorage.setItem(LS_KEY, JSON.stringify(spec)); saveOK = true; } catch (e) { saveOK = false; }
+}
+
+/* ----- controls ----- */
+function txt(o, key, opt) {
+	opt = opt || {};
+	var el = opt.ml ? h('textarea', { rows: opt.rows || 2 }) : h('input', { type: 'text' });
+	if (opt.ph) el.setAttribute('placeholder', opt.ph);
+	if (opt.list) el.setAttribute('list', opt.list);
+	if (opt.readonly) el.readOnly = true;
+	el.value = o[key] === undefined ? '' : String(o[key]);
+	el.addEventListener('input', function () {
+		if (el.value === '') delete o[key]; else o[key] = el.value;
+		changed();
+	});
+	return el;
+}
+function linesCtl(o, key) {
+	var el = h('textarea', { rows: 3 });
+	el.value = asArr(o[key]).join('\n');
+	el.addEventListener('input', function () {
+		var a = el.value.split('\n').filter(function (s) { return s.trim() !== ''; });
+		if (a.length) o[key] = a; else delete o[key];
+		changed();
+	});
+	return el;
+}
+function nestedTxt(o, pk, key, ml) {
+	var el = ml ? h('textarea', { rows: 2 }) : h('input', { type: 'text' });
+	el.value = isObj(o[pk]) && o[pk][key] !== undefined ? String(o[pk][key]) : '';
+	el.addEventListener('input', function () {
+		if (!isObj(o[pk])) o[pk] = {};
+		if (el.value === '') delete o[pk][key]; else o[pk][key] = el.value;
+		if (!Object.keys(o[pk]).length) delete o[pk];
+		changed();
+	});
+	return el;
+}
+/* tri-value select: 미지정 deletes the key; Auto/사용 안 함 write wrappers; others write explicit values (false stays false). */
+function triSel(o, key, choices, opt) {
+	opt = opt || {};
+	var v = o[key], cur = '', opts = [['', '미지정']];
+	choices.forEach(function (c, i) { opts.push(['v' + i, c[1]]); });
+	if (v !== undefined) {
+		if (isWrapper(v)) cur = v.mode;
+		else { var i = choices.findIndex(function (c) { return c[0] === v; }); cur = i >= 0 ? 'v' + i : 'x'; }
+	}
+	if (opt.auto || cur === 'auto') opts.push(['auto', 'Auto']);
+	if (opt.none || cur === 'none') opts.push(['none', '사용 안 함']);
+	if (cur === 'x') opts.push(['x', typeof v === 'string' ? v : JSON.stringify(v)]);
+	var s = h('select', { class: 't' }, opts.map(function (p) { return h('option', { value: p[0], selected: p[0] === cur }, p[1]); }));
+	s.value = cur;
+	s.addEventListener('change', function () {
+		var x = s.value;
+		if (x === 'x') return;
+		if (x === '') delete o[key];
+		else if (x === 'auto' || x === 'none') o[key] = wrap(x);
+		else o[key] = choices[+x.slice(1)][0];
+		if (opt.rerender) refresh(); else changed();
+	});
+	return s;
+}
+function triBool(o, key, opt) { return triSel(o, key, YESNO, opt || { auto: false }); }
+/* tri-value text: 미지정 / 값 입력 (empty string is an explicit value) / Auto / 사용 안 함 */
+function triText(o, key, opt) {
+	opt = opt || {};
+	var v = o[key], cur = v === undefined ? '' : (isWrapper(v) ? v.mode : 'val');
+	var inp = opt.ml ? h('textarea', { rows: opt.rows || 3 }) : h('input', { type: 'text' });
+	if (opt.ph) inp.setAttribute('placeholder', opt.ph);
+	if (opt.list) inp.setAttribute('list', opt.list);
+	inp.value = cur === 'val' ? String(v) : '';
+	var opts = [['', '미지정'], ['val', '값 입력'], ['auto', 'Auto']];
+	if (opt.none !== false) opts.push(['none', '사용 안 함']);
+	var s = h('select', { class: 't' }, opts.map(function (p) { return h('option', { value: p[0], selected: p[0] === cur }, p[1]); }));
+	s.value = cur;
+	function show() { inp.style.display = s.value === 'val' ? '' : 'none'; }
+	s.addEventListener('change', function () {
+		if (s.value === '') delete o[key];
+		else if (s.value === 'val') o[key] = inp.value;
+		else o[key] = wrap(s.value);
+		show();
+		changed();
+	});
+	inp.addEventListener('input', function () { o[key] = inp.value; changed(); });
+	show();
+	return h('div', null, s, inp);
+}
+function row(label, ctl) { return h('div', { class: 'row' }, h('label', null, label), h('div', null, ctl)); }
+function cellLabel(label, ctl) { return h('div', null, h('label', null, label), ctl); }
+
+function originCtl(it) {
+	var o = it.origin || 'request';
+	var s = h('select', { class: 'badge b-' + o, title: '출처' }, ORIGINS.map(function (p) { return h('option', { value: p[0], selected: p[0] === o }, p[1]); }));
+	s.value = o;
+	s.addEventListener('change', function () {
+		if (s.value === 'request') delete it.origin; else it.origin = s.value;
+		if (s.value === 'suggestion') { if (typeof it.selected !== 'boolean') it.selected = false; } else delete it.selected;
+		refresh();
+	});
+	var cb = null;
+	if (o === 'suggestion') {
+		cb = h('label', { class: 'badge b-suggestion' }, h('input', { type: 'checkbox', checked: it.selected === true, onchange: function (e) {
+			it.selected = e.target.checked; changed();
+		} }), ' 채택');
+	}
+	return h('span', null, s, ' ', cb);
+}
+function badgeFor(it) {
+	var o = isObj(it) && it.origin || 'request';
+	var t = o === 'suggestion' ? 'AI 제안' + (it.selected === true ? '(채택)' : '') : o === 'technical' ? '기술 결정' : null;
+	return t ? h('span', { class: 'badge b-' + o }, t) : null;
+}
+
+/* ----- list helpers ----- */
+function move(arr, i, d) {
+	var j = i + d;
+	if (j < 0 || j >= arr.length) return;
+	var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+	refresh();
+}
+function del(arr, i) { arr.splice(i, 1); refresh(); }
+function rowBtns(arr, i) {
+	function b(label, fn, t) { var e = btn(label, fn, 'sm', t); e.setAttribute('aria-label', t); return e; }
+	return h('span', { style: 'white-space:nowrap' }, b('↑', function () { move(arr, i, -1); }, '위로'),
+		b('↓', function () { move(arr, i, 1); }, '아래로'), b('×', function () { del(arr, i); }, '삭제'));
+}
+function ensure(o, k) { if (!Array.isArray(o[k])) o[k] = []; return o[k]; }
+
+/* ===== editors ===== */
+function dtDatalist() {
+	var dl = h('datalist', { id: 'dtl' });
+	asArr(spec.doctypes).forEach(function (d) { if (isObj(d) && d.name) dl.appendChild(h('option', { value: d.name })); });
+	return dl;
+}
+
+function basicsEditor() {
+	var box = h('div', null, h('h3', null, '기본 정보'));
+	box.appendChild(row('ID (slug)', txt(spec, 'id', { ph: 'measuring-equipment' })));
+	(BASIC[spec.type] || BASIC.feature).forEach(function (b) {
+		box.appendChild(row(b[1], b[2] === 'list' ? linesCtl(spec, b[0]) : txt(spec, b[0], { ml: b[2] === 'ml' })));
+	});
+	if (spec.type !== 'bug') {
+		box.appendChild(h('h3', null, '참고 자료 (경로/설명)'));
+		var refs = asArr(spec.references);
+		var t = h('table', null);
+		refs.forEach(function (r, i) {
+			t.appendChild(h('tr', null, h('td', null, txt(r, 'path', { ph: '경로' })), h('td', null, txt(r, 'description', { ph: '설명' })), h('td', null, rowBtns(refs, i))));
+		});
+		box.appendChild(t);
+		box.appendChild(btn('+ 참고 자료', function () { ensure(spec, 'references').push({}); refresh(); }));
+	}
+	return box;
+}
+
+function itemHeader(list, i, it, title) {
+	return h('div', { class: 'bar' }, h('b', null, title), originCtl(it), rowBtns(list, i),
+		h('span', { class: 'mu' }, 'id: ' + (it.id || '-')));
+}
+
+function doctypeEditor(list, i) {
+	var dt = list[i], box = h('div', null, itemHeader(list, i, dt, 'DocType'));
+	var g1 = h('div', { class: 'grid' },
+		cellLabel('이름 (DocType name)', txt(dt, 'name', { list: 'dtl' })), cellLabel('표시명', txt(dt, 'label')),
+		cellLabel('Module', txt(dt, 'module')), cellLabel('기존 DocType', triBool(dt, 'existing')),
+		cellLabel('종류', triSel(dt, 'kind', [['normal', '일반'], ['child', 'Child Table'], ['single', 'Single']], { auto: true })),
+		cellLabel('Naming', triText(dt, 'naming', { ph: 'field:equipment_no / 시리즈 등', none: false })),
+		cellLabel('Submittable', triBool(dt, 'submittable', { auto: true })), cellLabel('Track Changes', triBool(dt, 'track_changes', { auto: true })));
+	box.appendChild(g1);
+	box.appendChild(row('목적', txt(dt, 'purpose', { ml: true })));
+	box.appendChild(h('h3', null, '필드'));
+	var fields = asArr(dt.fields);
+	var t = h('table', null, h('tr', null, h('th', null, ''), h('th', null, 'Label'), h('th', { style: 'width:150px' }, 'Field Type'),
+		h('th', { style: 'width:90px' }, 'Required'), h('th', { style: 'width:230px' }, 'Options'), h('th', null, '출처')));
+	fields.forEach(function (f, j) { fieldRows(t, fields, j); });
+	box.appendChild(t);
+	function addF(type, label) {
+		return btn(label, function () {
+			var f = { id: genId(spec, 'f') };
+			if (type) f.fieldtype = type;
+			ensure(dt, 'fields').push(f); refresh();
+		});
+	}
+	box.appendChild(h('div', { class: 'bar' }, addF(null, '+ 필드'), addF('Section Break', '+ Section'), addF('Column Break', '+ Column'), addF('Tab Break', '+ Tab')));
+	box.appendChild(h('h3', null, '추가 규칙'));
+	var rules = asArr(dt.rules);
+	var rt = h('table', null);
+	rules.forEach(function (r, j) {
+		if (!isObj(r)) { r = rules[j] = { id: genId(spec, 'r'), text: String(r) }; }
+		rt.appendChild(h('tr', null, h('td', null, txt(r, 'text', { ml: true })), h('td', null, originCtl(r)), h('td', null, rowBtns(rules, j))));
+	});
+	box.appendChild(rt);
+	box.appendChild(btn('+ 규칙', function () { ensure(dt, 'rules').push({ id: genId(spec, 'r'), text: '' }); refresh(); }));
+	return box;
+}
+
+function optionsCtl(f) {
+	var ft = f.fieldtype;
+	if (ft === 'Select') return triText(f, 'options', { ml: true, ph: '선택 항목 (줄마다 하나)', none: true });
+	var ph = { 'Link': '대상 DocType', 'Table': 'Child DocType', 'Table MultiSelect': 'Child DocType', 'Dynamic Link': 'DocType을 담는 필드명' }[ft];
+	return triText(f, 'options', { ph: ph || '(선택)', list: ph && ft !== 'Dynamic Link' ? 'dtl' : null });
+}
+
+function fieldRows(t, fields, j) {
+	var f = fields[j], isBreak = BREAKS.indexOf(f.fieldtype) >= 0;
+	t.appendChild(h('tr', { class: isBreak ? 'brk' : f.origin === 'suggestion' ? 'sug' : '' },
+		h('td', null, rowBtns(fields, j)),
+		h('td', null, txt(f, 'label', { ph: isBreak ? '구역 제목(선택)' : '표시 라벨' })),
+		h('td', null, triSel(f, 'fieldtype', FIELD_TYPES.map(function (x) { return [x, x]; }), { auto: true, rerender: true })),
+		h('td', null, isBreak ? null : triBool(f, 'required', { auto: true })),
+		h('td', null, isBreak ? null : optionsCtl(f)),
+		h('td', null, originCtl(f))));
+	var inner = isBreak ? h('div', { class: 'grid' }, cellLabel('Fieldname', txt(f, 'fieldname')), cellLabel('Depends On', txt(f, 'depends_on')), cellLabel('설명', txt(f, 'description')))
+		: h('div', { class: 'grid' },
+			cellLabel('Fieldname', txt(f, 'fieldname')), cellLabel('Default', triText(f, 'default')),
+			cellLabel('Unique', triBool(f, 'unique', { auto: true })), cellLabel('Read Only', triBool(f, 'read_only', { auto: true })),
+			cellLabel('Hidden', triBool(f, 'hidden', { auto: true })), cellLabel('In List View', triBool(f, 'in_list_view', { auto: true })),
+			cellLabel('In Standard Filter', triBool(f, 'in_standard_filter', { auto: true })),
+			cellLabel('Depends On', txt(f, 'depends_on')), cellLabel('조건부 필수', txt(f, 'mandatory_depends_on')),
+			cellLabel('조건부 읽기 전용', txt(f, 'read_only_depends_on')), cellLabel('Fetch From', txt(f, 'fetch_from')),
+			cellLabel('설명', txt(f, 'description')));
+	var open = expanded[f.id] === true;
+	var det = h('details', { open: open }, h('summary', null, '상세 설정' + (f.id ? ' (' + f.id + ')' : '')), inner);
+	det.addEventListener('toggle', function () { expanded[f.id] = det.open; });
+	t.appendChild(h('tr', { class: isBreak ? 'brk' : '' }, h('td', { colspan: 6 }, det)));
+}
+
+function permissionEditor(list, i) {
+	var p = list[i], box = h('div', null, itemHeader(list, i, p, '권한'));
+	box.appendChild(h('div', { class: 'grid' }, cellLabel('대상 DocType', txt(p, 'doctype', { list: 'dtl' })), cellLabel('Role', txt(p, 'role')),
+		cellLabel('소유자 한정 (if_owner)', triBool(p, 'if_owner'))));
+	if (!isObj(p.rights)) p.rights = {};
+	box.appendChild(h('h3', null, '권한 (미지정 / 예 / 아니오)'));
+	box.appendChild(h('div', { class: 'grid' }, RIGHTS.map(function (r) { return cellLabel(r, triBool(p.rights, r)); })));
+	box.appendChild(row('추가 규칙 (부서/필드 수준 등)', txt(p, 'rules', { ml: true })));
+	return box;
+}
+
+function workflowEditor(list, i) {
+	var w = list[i], box = h('div', null, itemHeader(list, i, w, '워크플로'));
+	box.appendChild(h('div', { class: 'grid' }, cellLabel('대상 DocType', txt(w, 'doctype', { list: 'dtl' })), cellLabel('이름', txt(w, 'name'))));
+	box.appendChild(h('h3', null, '상태'));
+	var states = asArr(w.states), st = h('table', null, h('tr', null, h('th', null, '상태'), h('th', null, 'docstatus'), h('th', null, '수정 가능 역할'), h('th', null, '')));
+	var DS = [[0, '0 (임시)'], [1, '1 (제출)'], [2, '2 (취소)']];
+	states.forEach(function (s, j) {
+		st.appendChild(h('tr', null, h('td', null, txt(s, 'name')), h('td', null, triSel(s, 'docstatus', DS, { auto: true, none: true })),
+			h('td', null, txt(s, 'editable_by')), h('td', null, rowBtns(states, j))));
+	});
+	box.appendChild(st);
+	box.appendChild(btn('+ 상태', function () { ensure(w, 'states').push({}); refresh(); }));
+	box.appendChild(h('h3', null, '전이'));
+	var tr = asArr(w.transitions), tt = h('table', null, h('tr', null, ['Action', '출발', '도착', '역할', '조건', ''].map(function (x) { return h('th', null, x); })));
+	tr.forEach(function (x, j) {
+		tt.appendChild(h('tr', null, ['action', 'from', 'to', 'role', 'condition'].map(function (k) { return h('td', null, txt(x, k)); }), h('td', null, rowBtns(tr, j))));
+	});
+	box.appendChild(tt);
+	box.appendChild(btn('+ 전이', function () { ensure(w, 'transitions').push({}); refresh(); }));
+	box.appendChild(row('docstatus 의미', triText(w, 'docstatus_meaning', { ml: true, rows: 2 })));
+	return box;
+}
+
+function uiEditor(list, i) {
+	var u = list[i], box = h('div', null, itemHeader(list, i, u, 'UI/UX'));
+	box.appendChild(row('대상 (Form/List/Workspace/Page)', txt(u, 'target')));
+	box.appendChild(row('방식', triSel(u, 'mode', [['standard_desk', 'Standard Desk'], ['custom', 'Custom UI']], { auto: true })));
+	[['layout', '레이아웃'], ['events', '이벤트'], ['buttons', '버튼'], ['display_conditions', '표시 조건'], ['filters', '필터'], ['sort', '정렬'], ['flow', '사용 흐름']]
+		.forEach(function (p) { box.appendChild(row(p[1], txt(u, p[0], { ml: true }))); });
+	box.appendChild(row('참고 이미지 경로 (줄마다 하나)', linesCtl(u, 'reference_images')));
+	return box;
+}
+
+function reportEditor(list, i) {
+	var r = list[i], box = h('div', null, itemHeader(list, i, r, '리포트'));
+	box.appendChild(row('이름', txt(r, 'name')));
+	box.appendChild(row('종류', triSel(r, 'report_type', [['Report Builder', 'Report Builder'], ['Query Report', 'Query Report'], ['Script Report', 'Script Report']], { auto: true })));
+	[['purpose', '목적'], ['source', '데이터 출처'], ['columns', '컬럼'], ['filters', '필터'], ['sort', '정렬'], ['aggregation', '집계'], ['permission', '권한']]
+		.forEach(function (p) { box.appendChild(row(p[1], txt(r, p[0], { ml: true }))); });
+	return box;
+}
+
+function ruleEditor(list, i) {
+	var r = list[i], box = h('div', null, itemHeader(list, i, r, '업무 규칙/API'));
+	box.appendChild(row('이름', txt(r, 'name')));
+	[['condition', '실행 조건'], ['input', '입력'], ['rule', '처리'], ['output', '출력'], ['exceptions', '예외'], ['expected', '기대 결과']]
+		.forEach(function (p) { box.appendChild(row(p[1], txt(r, p[0], { ml: true }))); });
+	box.appendChild(h('h3', null, 'API인 경우'));
+	box.appendChild(row('호출 주체', nestedTxt(r, 'api', 'caller')));
+	box.appendChild(row('권한', nestedTxt(r, 'api', 'permission')));
+	box.appendChild(row('오류 정책', nestedTxt(r, 'api', 'error_policy', true)));
+	return box;
+}
+
+function acceptanceEditor() {
+	var list = asArr(spec.acceptance_criteria), box = h('div', null, h('h3', null, '완료 조건 (확인 가능한 정상/실패 조건)'));
+	var t = h('table', null);
+	list.forEach(function (c, i) {
+		t.appendChild(h('tr', null, h('td', null, txt(c, 'text', { ml: true })), h('td', null, originCtl(c)), h('td', null, rowBtns(list, i))));
+	});
+	box.appendChild(t);
+	box.appendChild(btn('+ 완료 조건', function () { ensure(spec, 'acceptance_criteria').push({ id: genId(spec, 'ac'), text: '' }); refresh(); }));
+	return box;
+}
+
+function decisionsEditor() {
+	var list = asArr(spec.open_decisions), box = h('div', null, h('h3', null, '결정 필요 (필수 결정이 미해결이면 확정 불가)'));
+	list.forEach(function (d, i) {
+		var un = unresolved(d);
+		var opts = asArr(d.options), dlid = 'dl-' + i;
+		var dl = h('datalist', { id: dlid }, opts.map(function (o) { return h('option', { value: o }); }));
+		box.appendChild(h('div', { class: 'box' },
+			h('div', { class: 'bar' }, h('span', { class: d.required === true ? 'badge b-decision' : 'badge' }, d.required === true ? '필수' : '선택'),
+				h('span', { class: 'badge ' + (un ? (d.required === true ? 'b-draft' : '') : 'b-request') }, un ? '미해결' : '해결됨'),
+				h('span', { class: 'mu' }, 'id: ' + (d.id || '-')), rowBtns(list, i)),
+			row('질문', txt(d, 'question', { ml: true })),
+			row('선택지 (줄마다 하나)', linesCtl(d, 'options')),
+			row('필수', h('label', null, h('input', { type: 'checkbox', checked: d.required === true, onchange: function (e) {
+				d.required = e.target.checked; refresh();
+			} }), ' 필수 결정')),
+			row('답변', txt(d, 'answer', { list: dlid, ph: '선택지에서 고르거나 직접 입력 (비우면 미해결)' })),
+			row('메모', txt(d, 'note', { ml: true })), dl));
+	});
+	box.appendChild(btn('+ 결정 필요 항목', function () { ensure(spec, 'open_decisions').push({ id: genId(spec, 'od'), question: '', options: [], required: true }); refresh(); }));
+	var done = asArr(spec.decisions);
+	if (done.length) {
+		box.appendChild(h('h3', null, '확정된 결정'));
+		done.forEach(function (d, i) {
+			box.appendChild(h('div', { class: 'box' }, row('질문', txt(d, 'question', { ml: true })), row('답변', txt(d, 'answer')), h('div', { class: 'bar' }, rowBtns(done, i))));
+		});
+	}
+	return box;
+}
+
+function verifyEditor() {
+	var box = h('div', null, h('h3', null, '검증 및 확정'));
+	var probs = validateSpec(spec);
+	box.appendChild(probs.length ? h('div', { class: 'box' }, h('b', { class: 'er' }, '검증 문제 ' + probs.length + '건'), h('ul', null, probs.map(function (m) { return h('li', null, m); })))
+		: h('div', { class: 'box ok' }, '검증 문제 없음'));
+	var res = confirmSpec(spec, approved);
+	box.appendChild(h('div', { class: 'box' },
+		h('label', null, h('input', { type: 'checkbox', checked: approved, onchange: function (e) { approved = e.target.checked; renderEditor(); } }),
+			' 이 내용으로 개발을 승인합니다'),
+		res.reasons.length ? h('ul', { class: 'er' }, res.reasons.map(function (m) { return h('li', null, m); })) : h('div', { class: 'ok' }, '확정할 수 있습니다.'),
+		h('div', { class: 'mu' }, '확정하면 미채택 AI 제안은 제거되고, 채택한 제안은 요청으로 전환되며, 해결된 결정은 decisions로 이동합니다. JSON 내보내기만으로는 확정되지 않습니다.'),
+		h('div', { class: 'bar' }, btn('확정', doConfirm, 'pri'))));
+	return box;
+}
+function doConfirm() {
+	var res = confirmSpec(spec, approved);
+	if (!res.ok) { sel = { k: 'verify' }; renderEditor(); return; }
+	spec = res.spec;
+	approved = false;
+	notice = '확정되었습니다. 이제 JSON을 내보내 개발을 요청하세요.';
+	save(); sel = { k: 'verify' }; renderAll();
+}
+
+function previewEditor() {
+	var md = toMarkdown(spec), ta = h('textarea', { rows: 28, readonly: true });
+	ta.value = md;
+	return h('div', null, h('h3', null, 'Markdown 미리보기 (JSON이 원본, 이 내용은 파생)'),
+		h('div', { class: 'bar' }, btn('복사', function () {
+			ta.select();
+			var ok = false;
+			try { ok = document.execCommand('copy'); } catch (e) { /* ignore */ }
+			if (navigator.clipboard) navigator.clipboard.writeText(md).catch(function () {});
+			notice = ok ? '복사했습니다.' : '선택된 텍스트를 직접 복사하세요 (Ctrl+C).';
+			renderTop();
+		})), ta);
+}
+
+function ioEditor() {
+	var ta = h('textarea', { rows: 14, placeholder: '여기에 명세 JSON을 붙여넣으세요' });
+	var file = h('input', { type: 'file', accept: '.json,application/json' });
+	file.addEventListener('change', function () {
+		var f = file.files[0];
+		if (!f) return;
+		var r = new FileReader();
+		r.onload = function () { importText(String(r.result)); };
+		r.readAsText(f);
+	});
+	var restore = null;
+	try { if (localStorage.getItem(LS_KEY)) restore = btn('브라우저 임시 저장본 복원', function () { importText(localStorage.getItem(LS_KEY)); }); } catch (e) { /* no storage */ }
+	return h('div', null, h('h3', null, 'JSON 불러오기/내보내기'),
+		row('파일 선택', file), row('붙여넣기', ta),
+		h('div', { class: 'bar' }, btn('붙여넣은 JSON 불러오기', function () { importText(ta.value); }, 'pri'), restore,
+			spec ? btn('JSON 내보내기', exportJson) : null),
+		h('div', { class: 'mu' }, '브라우저 임시 저장은 보조 수단입니다. 반드시 JSON으로 내보내 보관하세요.'));
+}
+
+function startEditor() {
+	return h('div', null, h('h3', null, '새 명세 시작'),
+		h('div', { class: 'bar' }, ['feature', 'change', 'bug'].map(function (t) {
+			return btn({ feature: '새 Feature', change: '새 Change', bug: '새 Bug' }[t], function () { newSpec(t); });
+		})), ioEditor());
+}
+
+/* ===== chrome ===== */
+function itemLabel(key, it) {
+	if (!isObj(it)) return '(비정상 항목)';
+	var l = key === 'permissions' ? (it.doctype || '') + (it.role ? ' / ' + it.role : '') : key === 'ui' ? it.target
+		: key === 'workflows' ? (it.name || it.doctype) : key === 'doctypes' ? (it.name || it.label) : it.name;
+	return l || '(이름 없음)';
+}
+function navBtn(label, target, extra) {
+	var on = JSON.stringify(sel) === JSON.stringify(target);
+	return h('button', { type: 'button', class: 'ni' + (on ? ' on' : ''), onclick: function () { notice = ''; sel = target; renderAll(); } }, h('span', null, label), extra);
+}
+function renderNav() {
+	var nav = $('nav');
+	clear(nav);
+	if (!spec) { nav.appendChild(navBtn('시작', { k: 'start' })); return; }
+	nav.appendChild(navBtn('기본 정보', { k: 'basics' }));
+	if (spec.type !== 'bug') {
+		BLOCKS.forEach(function (b) {
+			var list = asArr(spec[b[0]]);
+			nav.appendChild(h('div', { class: 'nh' }, h('span', null, b[1] + ' · ' + list.length), btn('+', function () {
+				var arr = ensure(spec, b[0]);
+				var it = { id: genId(spec, b[2]) };
+				arr.push(it);
+				sel = { k: 'item', list: b[0], id: it.id };
+				changed(); renderNav(); renderEditor();
+			}, 'sm', b[1] + ' 추가')));
+			list.forEach(function (it) {
+				if (isObj(it)) nav.appendChild(navBtn(itemLabel(b[0], it), { k: 'item', list: b[0], id: it.id }, badgeFor(it)));
+			});
+		});
+	}
+	nav.appendChild(h('div', { class: 'nh' }, '완료 · 결정'));
+	nav.appendChild(navBtn('완료 조건', { k: 'acceptance' }, h('span', { class: 'mu' }, String(asArr(spec.acceptance_criteria).length))));
+	var openN = asArr(spec.open_decisions).filter(function (d) { return d && d.required === true && unresolved(d); }).length;
+	nav.appendChild(navBtn('결정', { k: 'decisions' }, openN ? h('span', { class: 'badge b-decision' }, '필요 ' + openN) : h('span', { class: 'mu' }, String(asArr(spec.open_decisions).length))));
+	nav.appendChild(h('div', { class: 'nh' }, '도구'));
+	nav.appendChild(navBtn('검증 · 확정', { k: 'verify' }));
+	nav.appendChild(navBtn('Markdown 미리보기', { k: 'preview' }));
+	nav.appendChild(navBtn('JSON 불러오기', { k: 'io' }));
+}
+function renderTop() {
+	var top = $('top');
+	clear(top);
+	top.appendChild(h('span', { class: 'logo', 'aria-hidden': 'true' }, 'H'));
+	top.appendChild(h('span', { class: 'crumb' + (spec ? '' : ' cur') }, 'Frappe Harness 명세'));
+	if (spec) {
+		var n = validateSpec(spec).length;
+		top.appendChild(h('span', { class: 'sep', 'aria-hidden': 'true' }, '/'));
+		top.appendChild(h('span', { class: 'crumb cur' }, nonEmpty(spec.name) ? spec.name : '(이름 없음)'));
+		top.appendChild(h('span', { class: 'badge ' + (spec.status === 'confirmed' ? 'b-request' : 'b-draft') }, spec.status === 'confirmed' ? '확정됨' : '초안'));
+		top.appendChild(h('span', { class: 'badge' }, spec.type));
+		top.appendChild(h('span', { class: 'badge ' + (n ? 'b-decision' : 'b-request') }, n ? '검증 문제 ' + n + '건' : '검증 OK'));
+	}
+	if (notice) top.appendChild(h('span', { class: 'wn' }, notice));
+	top.appendChild(h('span', { class: 'sp' }));
+	if (spec) {
+		top.appendChild(h('span', { class: 'saved' + (saveOK ? '' : ' no') }, saveOK ? '브라우저에 자동 저장됨' : '자동 저장 불가: JSON을 내보내 보관하세요'));
+		top.appendChild(btn('불러오기', function () { sel = { k: 'io' }; renderNav(); renderEditor(); }, 'gh'));
+		top.appendChild(btn('JSON 내보내기', exportJson));
+		top.appendChild(btn('확정…', function () { sel = { k: 'verify' }; renderNav(); renderEditor(); }, 'pri'));
+	}
+}
+function renderEditor() {
+	var ed = $('editor'), body;
+	clear(ed);
+	if (!spec) body = startEditor();
+	else if (sel.k === 'basics') body = basicsEditor();
+	else if (sel.k === 'acceptance') body = acceptanceEditor();
+	else if (sel.k === 'decisions') body = decisionsEditor();
+	else if (sel.k === 'verify') body = verifyEditor();
+	else if (sel.k === 'preview') body = previewEditor();
+	else if (sel.k === 'io' || sel.k === 'start') body = ioEditor();
+	else if (sel.k === 'item') {
+		var list = asArr(spec[sel.list]), i = list.findIndex(function (x) { return isObj(x) && x.id === sel.id; });
+		if (i < 0) { sel = { k: 'basics' }; renderNav(); body = basicsEditor(); }
+		else {
+			var fn = { doctypes: doctypeEditor, permissions: permissionEditor, workflows: workflowEditor, ui: uiEditor, reports: reportEditor, business_rules: ruleEditor }[sel.list];
+			var it = list[i];
+			if (it.origin === 'technical' && !expanded['blk:' + it.id]) {
+				body = h('div', { class: 'box' }, h('b', null, '기술 결정: ' + itemLabel(sel.list, it)), ' ', badgeFor(it), ' ',
+					btn('펼쳐서 편집', function () { expanded['blk:' + it.id] = true; renderEditor(); }));
+			} else body = fn(list, i);
+		}
+	}
+	ed.appendChild(h('div', { class: 'card' }, spec ? dtDatalist() : null, body));
+}
+function renderAll() { renderTop(); renderNav(); renderEditor(); }
+
+/* ===== import / export ===== */
+function newSpec(type) {
+	spec = { schema_version: '1.0', type: type, status: 'draft' };
+	sel = { k: 'basics' };
+	notice = '';
+	approved = false;
+	save(); renderAll();
+}
+function importText(text) {
+	var data;
+	try { data = JSON.parse(text); } catch (e) { notice = 'JSON 해석 실패: ' + e.message; renderTop(); return; }
+	if (!isObj(data)) { notice = '최상위가 JSON 객체여야 합니다.'; renderTop(); return; }
+	if (spec && !window.confirm('현재 편집 중인 내용을 불러온 JSON으로 바꿉니다. 계속할까요?')) return;
+	spec = normalize(data);
+	if (!BASIC[spec.type]) { notice = 'type이 올바르지 않아 feature로 취급합니다. 검증 패널을 확인하세요.'; }
+	else notice = '불러왔습니다.';
+	sel = { k: 'basics' };
+	approved = false;
+	save(); renderAll();
+}
+function exportJson() {
+	var name = String(spec.id || 'spec-' + spec.type).replace(/[^A-Za-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'spec';
+	var blob = new Blob([JSON.stringify(spec, null, 2) + '\n'], { type: 'application/json' });
+	var url = URL.createObjectURL(blob), a = document.createElement('a');
+	a.href = url; a.download = name + '.json';
+	document.body.appendChild(a); a.click(); document.body.removeChild(a);
+	setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+	notice = 'JSON을 내보냈습니다 (내보내기는 확정이 아닙니다).';
+	renderTop();
+}
+
+/* ===== boot ===== */
+function boot() {
+	var el = $('spec-data'), raw = el ? el.textContent.trim() : '';
+	if (raw) {
+		try {
+			var data = JSON.parse(raw);
+			if (isObj(data)) { spec = normalize(data); sel = { k: 'basics' }; }
+		} catch (e) { notice = '내장된 명세 JSON을 해석하지 못했습니다.'; }
+	}
+	renderAll();
+}
+if (typeof module !== 'undefined') module.exports = { strip: strip, confirmSpec: confirmSpec, validateSpec: validateSpec, toMarkdown: toMarkdown, normalize: normalize };
+else boot();
+})();
+</script>
+</body>
+</html>

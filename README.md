@@ -1,109 +1,166 @@
 # Frappe Harness
 
-Frappe 앱 개발용 Claude Code·Codex 공용 플러그인. 요청을 작업 유형(Playbook)으로 나누고, 중요한 설계만 사용자에게 묻고(Grilling), **구현(Implementer)과 테스트·최종 검증(Tester)을 항상 다른 에이전트가** 맡게 한다.
+**한국어** | [English](README.en.md)
 
-## 구성
+Frappe 앱 개발을 위한 Claude Code / Codex 플러그인입니다.
+
+- **역할 분리:** Main은 요청을 이해하고 계획·지시·판단만 합니다. 구현은 Developer가, 검증은 별도의 Tester가 맡습니다.
+- **명세 확정:** 복잡한 기능은 AI가 명세 초안을 쓰고, 사용자가 HTML 화면에서 검토·확정한 뒤 개발합니다.
+- **위험에 맞춘 검증:** 변경 내용을 분석해 필요한 검사만 실행합니다. 라벨 하나 바꾼 변경에는 DB 테스트를 돌리지 않습니다.
+- **안전장치:** Hook이 Worker 모델(Sonnet), 역할별 수정 범위, 운영 사이트 접근, 파괴적 명령을 검사합니다.
+
+## 동작 방식
 
 ```text
-frappe-harness/
-├── plugin.json                      Codex/portable 매니페스트
-├── .claude-plugin/
-│   ├── plugin.json                  Claude Code 매니페스트
-│   └── marketplace.json             Claude 로컬 마켓플레이스
-├── .agents/plugins/marketplace.json Codex 로컬 마켓플레이스
-├── agents/{implementer,tester}.md   역할 원본(Claude Code가 직접 로드)
-├── adapters/codex/agents/*.toml     Codex용 사본(프로젝트 .codex/agents에 복사)
-├── adapters/codex/hooks.json        Codex용 guard 연결(프로젝트 .codex/hooks.json에 복사)
-├── skills/
-│   ├── develop/                     진입점: Playbook 선택·위임·동결·기록
-│   │   └── playbooks/               small-change, feature, bug-fix, refactoring, upgrade, investigation
-│   ├── grill/                       중요한 설계만 질문
-│   └── frappe-{doctype,workflow,permission,backend,ui,testing,migration}/
-├── hooks/hooks.json                 PreToolUse → scripts/guard.py
-├── scripts/guard.py                 명백한 파괴 명령만 감지(보안 경계 아님)
-└── tests/test_guard.py              guard 테스트(독립 Tester 작성)
+요청 → Main: 이해 · 중요한 결정만 질문 · (필요하면) 명세 확정
+     → baseline 기록
+     → Developer: Dev 사이트에서 구현 → READY_FOR_TEST
+     → Tester: 위험도에 맞는 검증 → PASS / FAIL / BLOCKED
+     → Main: 결과 판단 (실패 시 최대 2회 재작업)
 ```
+
+변경은 위험 수준(L0–L3)으로 분류되고, 변경 종류에 맞는 검사만 실행됩니다.
+
+| 수준 | 예시 | 주요 검사 |
+|---|---|---|
+| L0 | 라벨, 설명, 열 순서, 아이콘, 문서, 번역 | 정적 검사, 보이는 변경이면 화면 |
+| L1 | 필드 추가, `depends_on`, 기본값, 클라이언트 스크립트 | + 메타데이터, 관련 단위 테스트 |
+| L2 | 컨트롤러, `hooks.py`, API, 권한, 필수 여부, 이름 규칙 | + 관련 DB 테스트, 역할 확인 |
+| L3 | 필드 삭제·타입 변경·이름 변경, patch, 단일/자식 테이블 전환 | + 데이터 안전 확인, migrate 전 사용자 승인 |
+
+## 요구 사항
+
+- Frappe bench (v16에서 확인)
+- Python 3
+- 선택: Semgrep CE, `chromium` 또는 `google-chrome`(화면 검증)
 
 ## 설치
 
 ### Claude Code
+
 ```bash
-claude plugin marketplace add /path/to/frappe-harness
-claude plugin install frappe-harness@frappe-harness-local
+claude plugin marketplace add SeoYoungDeok/frappe-harness
 ```
-- 저장소 폴더를 직접 읽으므로 수정은 새 세션부터 바로 반영된다.
-- 개발 중 임시로 쓰려면 `claude --plugin-dir /path/to/frappe-harness`.
+
+```bash
+claude plugin install frappe-harness@frappe-harness
+```
+
+업데이트할 때는 마켓플레이스를 먼저 갱신한 뒤 플러그인을 업데이트하고, 설치된 버전을 확인합니다.
+
+```bash
+claude plugin marketplace update frappe-harness
+```
+
+```bash
+claude plugin update frappe-harness@frappe-harness
+```
 
 ### Codex
+
 ```bash
 codex plugin marketplace add /path/to/frappe-harness
-codex plugin add frappe-harness@frappe-harness-local
 ```
-- **설치 시점에 캐시로 복사한다.** 하네스를 고친 뒤 `codex plugin add ...`를 다시 실행해야 반영된다.
-- **플러그인은 에이전트를 등록하지 않는다.** 프로젝트에 `adapters/codex/agents/*.toml`을 `.codex/agents/`로 복사하고, 그 프로젝트를 `~/.codex/config.toml`에서 trusted로 등록한다(git 루트 단위, 상위 폴더 trust는 적용되지 않았다):
-  ```toml
-  [projects."/path/to/frappe-bench/apps/<app>"]
-  trust_level = "trusted"
-  ```
-- **guard Hook은 프로젝트 Hook으로 연결한다.** 이 버전은 플러그인의 `hooks/hooks.json`도, 매니페스트 inline 선언도 인식하지 않았다. 대신 `adapters/codex/hooks.json`을 프로젝트 `.codex/hooks.json`으로 복사하면 동작한다. 이 파일은 설치된 플러그인 캐시의 `scripts/guard.py`를 가리키므로 플러그인 버전(`0.0.2`)이 바뀌면 경로도 고친다.
-- 처음 실행할 때(또는 Hook이 바뀐 뒤) 대화형 Codex가 "Hooks need review"를 띄운다. 명령을 확인하고 신뢰해야 실행된다. 기기마다 한 번씩 필요하다.
 
-### Linux/WSL 화면 검증 준비
-`frappe-testing`은 PATH의 `google-chrome` 또는 `chromium`으로 Test 화면을 캡처한다. 둘 다 없으면 화면 검증은 `UNVERIFIED`가 된다. 기기마다 한 번 준비한다.
-- 브라우저: `google-chrome`을 apt로 설치하거나, sudo 없이 Chrome for Testing의 `chrome-headless-shell`을 받아 PATH의 `chromium`으로 링크한다.
-  ```bash
-  ln -sfn ~/.local/opt/chrome-headless-shell/chrome-headless-shell ~/.local/bin/chromium
-  ```
-- 한글 글꼴: 없으면 한글이 네모로 찍힌다. `fonts-nanum`을 설치하거나 `.ttf`를 `~/.local/share/fonts/`에 넣고 `fc-cache -f`를 실행한다(`fc-list :lang=ko`로 확인).
+```bash
+codex plugin add frappe-harness@frappe-harness
+```
 
-## 프로젝트 설정 (앱 저장소 루트)
+1. `adapters/codex/agents/*.toml`을 프로젝트의 `.codex/agents/`로 복사하고, `model` 줄에 사용할 모델 ID를 직접 적습니다.
+2. `adapters/codex/hooks.json`을 프로젝트의 `.codex/hooks.json`으로 복사합니다. 경로에 플러그인 버전이 들어 있으므로 버전이 바뀌면 함께 고칩니다.
+3. 처음 실행할 때 Hook을 신뢰하도록 승인합니다.
 
-| 파일 | 내용 |
-|---|---|
-| `AGENTS.md` | 프로젝트 규칙 + "변경 요청은 먼저 `develop` Skill" + 승인 필요 작업 3줄 |
-| `CLAUDE.md` | `@AGENTS.md` 한 줄(두 CLI가 같은 규칙을 읽음) |
-| `.frappe-harness.toml` | `bench`(상대 경로 가능), `app`, `context_doc`, `[sites] dev/test`, `[test_server] port` |
-| `.codex/agents/*.toml` | Codex용 Implementer/Tester |
-| `.codex/hooks.json` | Codex용 guard 연결(`adapters/codex/hooks.json` 복사) |
-| `.gitignore` | `.frappe-harness/` (작업 기록·증거는 로컬 전용) |
+Codex에서는 셸 명령 검사만 적용됩니다. 역할·모델 제한은 지시로만 전달됩니다.
 
-예시:
+## 프로젝트 설정
+
+앱 저장소 루트에 세 파일을 둡니다.
+
+- `AGENTS.md`: 프로젝트 규칙과 "변경 요청은 먼저 `develop` Skill을 사용한다"는 문장
+- `CLAUDE.md`: `@AGENTS.md`
+- `.frappe-harness.toml`
+
 ```toml
-bench = "../.."
+bench = "../.."                    # 이 파일 기준 상대 경로
 app = "my_app"
-context_doc = "docs/design.md"
 
 [sites]
-dev = "dev.localhost"
-test = "test.localhost"
+dev = "dev.localhost"              # 기본 작업 사이트
+test = "test.localhost"            # 선택: DB를 쓰는 테스트용
+production = ["erp.example.com"]   # 접근 차단
 
 [test_server]
-port = 8001
+port = 8001                        # Test 사이트를 따로 띄울 때만
+
+[policy]
+run_tests_on_dev = false           # Dev에서 run-tests 실행 시 확인 요청
+
+[tools]
+semgrep_rules = "~/.local/share/frappe-harness/frappe-semgrep-rules"
+semgrep_required = false
+eslint_required = false
+```
+
+작업 기록은 앱 저장소의 `.harness/`에 남습니다.
+
+```text
+.harness/specs/           확정된 명세
+.harness/runs/<run-id>/   검증 결과, 로그, 스크린샷 (git 제외)
+.harness/runs/metrics.jsonl  실행·Worker 기록 (모델, 토큰, 시간)
 ```
 
 ## 사용
-- 평소처럼 요청한다. Main이 `develop` Skill로 Playbook을 고르고, 필요하면 질문하고, Implementer/Tester에 위임한다.
-- 결과 보고에는 실행 명령, 대상 사이트, 증거 경로(`.frappe-harness/evidence/<task_id>/`), 미검증 범위가 들어간다.
-- 작업마다 `.frappe-harness/tasks.jsonl`에 한 줄이 남는다(실측 시간만, 측정 못 한 토큰은 `null`).
-- Test 화면 확인은 Test 전용 서버를 쓴다: `bench --site <test> serve --port <port>`(기본 서버가 `serve_default_site`면 Dev만 보여 준다).
-- 토큰 사용량은 세션 안에서 자동 기록되지 않는다. 필요하면 Claude Code는 `-p --output-format stream-json`의 마지막 `result.usage`, Codex는 `exec --json`의 `turn.completed.usage`에서 확인한다.
 
-## CLI별 차이와 한계 (2026-11-22, Claude Code 2.1.319 / Codex 0.171.0-alpha.13)
+평소처럼 요청하면 됩니다. 라벨, 열 순서, 명확한 버그 같은 간단한 요청은 바로 진행합니다. 복잡한 기능은 명세 초안을 HTML로 열어 검토하고, 확정한 JSON을 Main에게 전달합니다.
+
+명세 도구는 직접 실행할 수도 있습니다.
+
+```bash
+python3 scripts/render_spec.py render draft.json -o draft.html
+```
+
+```bash
+python3 scripts/render_spec.py validate confirmed.json
+```
+
+## 안전장치
 
 | 항목 | Claude Code | Codex |
 |---|---|---|
-| Skill 로드 | 플러그인 설치로 자동 | 플러그인 설치로 자동(캐시 복사) |
-| Implementer/Tester | 플러그인 `agents/`에서 자동 | 프로젝트 `.codex/agents` + trust 필요 |
-| Tester 독립성 | 서브 에이전트는 받은 프롬프트만 봄 | `spawn_agent` 기본이 대화 전체 상속 → `fork_turns: "none"` 필수(develop에 명시). 서브 에이전트끼리 메시지 가능 → 역할 파일로 금지 |
-| 서브 에이전트 권한 제한 | 플러그인 에이전트의 `permissionMode` 무시 | 부모 샌드박스·승인 설정 상속 |
-| Test 화면 스크린샷 | 헤드리스 Chrome 가능 | 샌드박스 안에서 Chrome 실패. 대화형에서 권한 상승 승인 필요, `codex exec`는 UNVERIFIED |
-| guard Hook | 플러그인 Hook. `ask`로 사용자 승인 요청(`-p`에서는 거부), 실호출 확인 | 프로젝트 `.codex/hooks.json` + `/hooks` 신뢰. `ask` 미지원이라 거부(exit 2), 실호출 확인 |
+| Worker 모델은 Sonnet | Hook이 실제 모델을 확인하고, 다르면 차단 | 지시만 |
+| Tester는 테스트 파일만 수정 | Hook | 지시만 |
+| Worker는 확정 명세 수정 불가 | Hook | 지시만 |
+| Main이 앱 코드를 직접 수정 | Hook이 확인 요청 | 지시만 |
+| 운영 사이트, Semgrep Registry | 차단 | 차단 |
+| 파괴적 git·사이트·DB 명령, 위험한 migrate | 확인 요청 또는 차단 | 차단 |
 
-- guard는 문자열 패턴만 본다. 변수로 감춘 명령, 따옴표로 감싼 하위 명령, `find -delete`, 파일에서 읽는 SQL, `DELETE FROM`, 상위 폴더 삭제, CRLF 줄 이음은 놓친다. 명령을 언급만 하는 `echo`·커밋 메시지는 잘못 걸린다. 보호의 기본은 사용자 승인 규칙과 파일·DB 권한이다.
-- `scripts/check.py`와 별도 `verify` Skill은 만들지 않는다(D-24).
+Hook은 명령 문자열을 검사하므로 보안 경계가 아닙니다. `bash -c`, 리다이렉션, 스크립트로 감싼 명령은 걸러내지 못합니다. 완전한 격리가 필요하면 bench나 계정을 분리하세요.
 
-## 개발 이력
-Phase 0~4의 실행 증거는 하네스 저장소의 `.frappe-harness/evidence/phase*/`(git 제외)에 있다.
+## 선택 도구
+
+### Semgrep
+
+로컬 규칙만 사용하며 결과를 외부로 보내지 않습니다(`--metrics=off`).
+
+```bash
+uv tool install semgrep==1.186.0
+```
+
+```bash
+git clone https://github.com/frappe/semgrep-rules ~/.local/share/frappe-harness/frappe-semgrep-rules
+```
+
+```bash
+git -C ~/.local/share/frappe-harness/frappe-semgrep-rules checkout 81a6e3d47a328249e8ddf04c586e493dd5553002
+```
+
+### 화면 검증 (Linux / WSL)
+
+Tester는 PATH의 `google-chrome` 또는 `chromium`으로 화면을 캡처합니다. 둘 다 없으면 화면 검증은 BLOCKED가 됩니다.
+
+- 브라우저: apt로 `google-chrome`을 설치하거나, Chrome for Testing의 `chrome-headless-shell`을 내려받아 `~/.local/bin/chromium`으로 링크합니다.
+- 한글 글꼴: `fonts-nanum`을 설치하거나 `.ttf` 파일을 `~/.local/share/fonts/`에 넣고 `fc-cache -f`를 실행합니다.
 
 ## 라이선스
-[MIT](LICENSE)
+
+[MIT](LICENSE). 외부 구성 요소는 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)를 참고하세요.

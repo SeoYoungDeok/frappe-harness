@@ -1,0 +1,281 @@
+{
+	"schema_version": "1.0",
+	"type": "feature",
+	"status": "draft",
+	"id": "example-measuring-equipment",
+	"name": "[예시] 계측기 관리",
+	"app": "example_app",
+	"module": "Example Quality",
+	"purpose": "예시 명세입니다(실제 요구사항이 아님). 계측기를 등록하고 교정 이력을 관리한다.",
+	"users": "품질 담당자, 현장 작업자",
+	"flow": "계측기 등록 -> 교정 실시 후 교정 이력 기록 -> 차기 교정일 확인",
+	"scope": "계측기 등록, 교정 이력 기록, 차기 교정일 계산",
+	"out_of_scope": [
+		"교정 업체 이메일 발송"
+	],
+	"references": [
+		{
+			"path": "docs/examples/instrument-list.png",
+			"description": "기존 계측기 대장 화면(예시 경로)"
+		}
+	],
+	"doctypes": [
+		{
+			"id": "dt-equipment",
+			"name": "Measuring Equipment",
+			"label": "계측기",
+			"purpose": "계측기 기본 정보",
+			"existing": false,
+			"kind": "normal",
+			"naming": {
+				"mode": "auto"
+			},
+			"submittable": false,
+			"track_changes": true,
+			"fields": [
+				{
+					"id": "f-sec-basic",
+					"label": "기본 정보",
+					"fieldtype": "Section Break"
+				},
+				{
+					"id": "f-equipment-no",
+					"label": "관리번호",
+					"fieldname": "equipment_no",
+					"fieldtype": "Data",
+					"required": true,
+					"unique": true,
+					"in_list_view": true,
+					"in_standard_filter": true
+				},
+				{
+					"id": "f-equipment-name",
+					"label": "계측기명",
+					"fieldname": "equipment_name",
+					"fieldtype": "Data",
+					"required": true,
+					"in_list_view": true
+				},
+				{
+					"id": "f-cycle",
+					"label": "교정 주기(개월)",
+					"fieldname": "calibration_cycle",
+					"fieldtype": "Int",
+					"required": true,
+					"default": 12
+				},
+				{
+					"id": "f-col",
+					"fieldtype": "Column Break"
+				},
+				{
+					"id": "f-last-date",
+					"label": "최근 교정일",
+					"fieldname": "last_calibration_date",
+					"fieldtype": "Date",
+					"read_only": true
+				},
+				{
+					"id": "f-next-date",
+					"label": "차기 교정일",
+					"fieldname": "next_calibration_date",
+					"fieldtype": "Date",
+					"read_only": true,
+					"in_list_view": true,
+					"description": "교정 이력으로부터 계산됨"
+				},
+				{
+					"id": "f-note",
+					"label": "비고",
+					"fieldtype": "Small Text",
+					"required": false,
+					"options": {
+						"mode": "none"
+					}
+				},
+				{
+					"id": "f-photo",
+					"label": "계측기 사진",
+					"fieldname": "photo",
+					"fieldtype": "Attach Image",
+					"origin": "suggestion",
+					"selected": false
+				}
+			],
+			"rules": [
+				{
+					"id": "r-equipment-1",
+					"text": "관리번호는 대소문자를 구분하지 않고 중복될 수 없다."
+				},
+				{
+					"id": "r-equipment-2",
+					"text": "자동 이름 규칙은 Developer가 프로젝트 관례에 맞게 정한다.",
+					"origin": "technical"
+				}
+			]
+		},
+		{
+			"id": "dt-calibration",
+			"name": "Calibration Record",
+			"label": "교정 이력",
+			"purpose": "계측기별 교정 결과 기록",
+			"existing": false,
+			"kind": "normal",
+			"naming": {
+				"mode": "auto"
+			},
+			"submittable": {
+				"mode": "auto"
+			},
+			"fields": [
+				{
+					"id": "f-cal-equipment",
+					"label": "계측기",
+					"fieldname": "equipment",
+					"fieldtype": "Link",
+					"required": true,
+					"options": "Measuring Equipment",
+					"in_list_view": true,
+					"in_standard_filter": true
+				},
+				{
+					"id": "f-cal-date",
+					"label": "교정일",
+					"fieldname": "calibration_date",
+					"fieldtype": "Date",
+					"required": true,
+					"in_list_view": true
+				},
+				{
+					"id": "f-cal-result",
+					"label": "결과",
+					"fieldname": "result",
+					"fieldtype": "Select",
+					"required": true,
+					"options": "합격\n불합격\n조건부 합격",
+					"default": "합격"
+				},
+				{
+					"id": "f-cal-by",
+					"label": "교정 기관",
+					"fieldname": "agency",
+					"fieldtype": "Data"
+				},
+				{
+					"id": "f-cal-cert",
+					"label": "교정 성적서",
+					"fieldname": "certificate",
+					"fieldtype": "Attach",
+					"origin": "suggestion",
+					"selected": true,
+					"description": "AI 제안(예시): 성적서 파일 첨부"
+				}
+			]
+		}
+	],
+	"permissions": [
+		{
+			"id": "perm-equipment-qa",
+			"doctype": "Measuring Equipment",
+			"role": "Quality Manager",
+			"rights": {
+				"read": true,
+				"write": true,
+				"create": true,
+				"delete": false,
+				"export": true
+			}
+		},
+		{
+			"id": "perm-equipment-user",
+			"doctype": "Measuring Equipment",
+			"role": "Employee",
+			"rights": {
+				"read": true,
+				"write": false,
+				"create": false,
+				"delete": false
+			}
+		}
+	],
+	"ui": [
+		{
+			"id": "ui-equipment-form",
+			"target": "Measuring Equipment Form",
+			"mode": {
+				"mode": "auto"
+			},
+			"display_conditions": "차기 교정일이 지난 계측기는 목록에서 강조한다."
+		}
+	],
+	"reports": [
+		{
+			"id": "rp-due",
+			"name": "교정 만료 임박 계측기",
+			"purpose": "30일 이내 교정이 필요한 계측기 목록",
+			"source": "Measuring Equipment",
+			"columns": "관리번호, 계측기명, 차기 교정일",
+			"filters": "기준일(오늘부터 N일)",
+			"sort": "차기 교정일 오름차순",
+			"report_type": {
+				"mode": "auto"
+			},
+			"origin": "suggestion",
+			"selected": false
+		}
+	],
+	"business_rules": [
+		{
+			"id": "br-next-date",
+			"name": "차기 교정일 계산",
+			"condition": "교정 이력이 저장될 때",
+			"input": "교정일, 교정 주기(개월)",
+			"rule": "교정일에 교정 주기(개월)를 더해 차기 교정일을 계산한다.",
+			"output": "계측기의 최근 교정일/차기 교정일 갱신",
+			"exceptions": "결과가 불합격이면 차기 교정일을 갱신하지 않는다.",
+			"expected": "교정일 2025-01-31, 주기 12 -> 차기 교정일 2026-01-31"
+		}
+	],
+	"acceptance_criteria": [
+		{
+			"id": "ac-1",
+			"text": "관리번호 중복 등록이 차단된다."
+		},
+		{
+			"id": "ac-2",
+			"text": "교정 이력을 저장하면 계측기의 차기 교정일이 정확히 계산된다."
+		},
+		{
+			"id": "ac-3",
+			"text": "교정 주기를 비우고 저장하면 오류 메시지가 표시된다."
+		},
+		{
+			"id": "ac-4",
+			"text": "교정 이력 삭제 후 차기 교정일이 이전 이력 기준으로 복원된다.",
+			"origin": "suggestion",
+			"selected": false
+		}
+	],
+	"open_decisions": [
+		{
+			"id": "od-block",
+			"question": "교정 만료된 계측기의 사용을 차단할 것인가?",
+			"options": [
+				"차단한다",
+				"경고만 표시한다",
+				"관여하지 않는다"
+			],
+			"required": true,
+			"note": "업무 정책에 따라 결정이 필요합니다(예시)."
+		},
+		{
+			"id": "od-agency",
+			"question": "교정 기관을 별도 DocType으로 관리할 것인가?",
+			"options": [
+				"예",
+				"아니오"
+			],
+			"required": false
+		}
+	]
+}

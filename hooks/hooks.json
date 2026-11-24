@@ -1,14 +1,36 @@
 {
-  "description": "Frappe Harness guard: ask (Claude) or block (Codex) clearly destructive site/DB/backup commands",
+  "description": "Frappe Harness: guard (roles, models, risky commands), worker model/usage recording, script path context",
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash|Edit|Write|MultiEdit|NotebookEdit|Agent|Task",
         "hooks": [
           {
             "type": "command",
             "command": "python3 \"${CLAUDE_PLUGIN_ROOT:-$PLUGIN_ROOT}/scripts/guard.py\"",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT:-$PLUGIN_ROOT}/scripts/record_worker.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"Frappe Harness v1.0 scripts: ${CLAUDE_PLUGIN_ROOT:-$PLUGIN_ROOT}/scripts\"",
+            "timeout": 5
           }
         ]
       }

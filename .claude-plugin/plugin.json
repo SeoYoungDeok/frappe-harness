@@ -1,6 +1,6 @@
 {
   "name": "frappe-harness",
-  "version": "0.0.2",
-  "description": "Frappe app development harness: playbooks, Frappe skills, independent Implementer/Tester.",
+  "version": "1.0.0",
+  "description": "Frappe app development harness: one lightweight flow, AI-first specification, risk-based verification, independent Developer/Tester.",
   "license": "MIT"
 }

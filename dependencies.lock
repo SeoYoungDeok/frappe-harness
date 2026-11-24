@@ -1,0 +1,27 @@
+# Frappe Harness external dependencies (record only; not parsed by code).
+# Checked: 2026-11-24. Nothing below is bundled in this plugin. Do not auto-update.
+dependencies:
+  frappe-skills:
+    source: https://github.com/frappe/skills
+    revision: d213dce39942c969293e9fe7feb96ab33cbba25c   # observed 2026-11-24
+    license: NOASSERTION   # repository has no license file; API license is null
+    status: disabled_pending_permission
+    bundled: false
+  frappe-semgrep-rules:
+    source: https://github.com/frappe/semgrep-rules
+    revision: 81a6e3d47a328249e8ddf04c586e493dd5553002
+    license: MIT   # Copyright (c) 2021 Frappe Technologies Pvt. Ltd.
+    status: approved_local
+    bundled: false
+    install: external local checkout; the path is configured per machine via [tools] semgrep_rules in .frappe-harness.toml
+  semgrep-ce:
+    source: https://pypi.org/project/semgrep/
+    version: 1.186.0
+    license: LGPL-2.1-or-later   # per PyPI
+    status: approved_local
+    bundled: false
+    install: external CLI, `uv tool install semgrep==1.186.0`
+  semgrep-registry-rules:
+    license: Semgrep Rules License v1.0
+    status: excluded   # `--config auto`, p/, r/, s/ and URLs are blocked by scripts/guard.py
+    bundled: false

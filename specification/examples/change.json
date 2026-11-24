@@ -1,0 +1,54 @@
+{
+	"schema_version": "1.0",
+	"type": "change",
+	"status": "draft",
+	"id": "example-calibration-result-required",
+	"name": "[예시] 교정 이력 결과 필수화",
+	"app": "example_app",
+	"module": "Example Quality",
+	"target": "Calibration Record DocType 및 폼 화면",
+	"current_behavior": "결과(result) 필드를 비워도 저장된다.",
+	"desired_behavior": "결과(result)를 반드시 선택해야 저장된다. 기존 데이터는 삭제하지 않는다.",
+	"preserve": [
+		"기존 필드 순서와 라벨",
+		"기존 권한 설정",
+		"차기 교정일 계산 방식"
+	],
+	"data_handling": "결과가 비어 있는 기존 이력은 그대로 두되, 수정 시에는 결과 입력을 요구한다.",
+	"doctypes": [
+		{
+			"id": "dt-calibration",
+			"name": "Calibration Record",
+			"existing": true,
+			"fields": [
+				{
+					"id": "f-cal-result",
+					"label": "결과",
+					"fieldname": "result",
+					"required": true
+				}
+			]
+		}
+	],
+	"acceptance_criteria": [
+		{
+			"id": "ac-1",
+			"text": "결과를 비우고 새 이력을 저장하면 필수 입력 오류가 표시된다."
+		},
+		{
+			"id": "ac-2",
+			"text": "기존 이력이 삭제되거나 값이 바뀌지 않는다."
+		}
+	],
+	"open_decisions": [
+		{
+			"id": "od-old",
+			"question": "결과가 비어 있는 기존 이력을 일괄 보정할 것인가?",
+			"options": [
+				"보정하지 않는다",
+				"'합격'으로 일괄 보정한다"
+			],
+			"required": true
+		}
+	]
+}

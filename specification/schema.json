@@ -1,0 +1,766 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "frappe-harness-spec-1.0",
+	"title": "Frappe Harness Specification 1.0",
+	"description": "Value authority: an explicit value (including false, 0, empty string) is Explicit; {\"mode\":\"auto\"} is Auto; {\"mode\":\"none\"} is None; a missing key is Unspecified; null is never allowed. Origin (request/suggestion/technical) is per block or item. Unknown keys are allowed and preserved. Semantic rules (duplicate ids, confirmed-state rules, basics) are checked by scripts/render_spec.py validate.",
+	"type": "object",
+	"required": [
+		"schema_version",
+		"type",
+		"status"
+	],
+	"properties": {
+		"schema_version": {
+			"const": "1.0"
+		},
+		"type": {
+			"enum": [
+				"feature",
+				"change",
+				"bug"
+			]
+		},
+		"status": {
+			"enum": [
+				"draft",
+				"confirmed"
+			]
+		},
+		"id": {
+			"type": "string",
+			"pattern": "^[a-z0-9][a-z0-9_-]*$"
+		},
+		"name": {
+			"type": "string"
+		},
+		"app": {
+			"type": "string"
+		},
+		"module": {
+			"type": "string"
+		},
+		"purpose": {
+			"type": "string"
+		},
+		"users": {
+			"type": "string"
+		},
+		"flow": {
+			"type": "string"
+		},
+		"scope": {
+			"type": "string"
+		},
+		"out_of_scope": {
+			"$ref": "#/$defs/strList"
+		},
+		"references": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/reference"
+			}
+		},
+		"acceptance_criteria": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/criterion"
+			}
+		},
+		"open_decisions": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/openDecision"
+			}
+		},
+		"decisions": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/decision"
+			}
+		},
+		"confirmed_at": {
+			"type": "string"
+		},
+		"target": {
+			"type": "string"
+		},
+		"current_behavior": {
+			"type": "string"
+		},
+		"desired_behavior": {
+			"type": "string"
+		},
+		"preserve": {
+			"$ref": "#/$defs/strList"
+		},
+		"data_handling": {
+			"type": "string"
+		},
+		"actual": {
+			"type": "string"
+		},
+		"reproduction": {
+			"type": "string"
+		},
+		"expected": {
+			"type": "string"
+		},
+		"evidence": {
+			"type": "string"
+		},
+		"doctypes": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/doctype"
+			}
+		},
+		"permissions": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/permission"
+			}
+		},
+		"workflows": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/workflow"
+			}
+		},
+		"ui": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/uiBlock"
+			}
+		},
+		"reports": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/report"
+			}
+		},
+		"business_rules": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/businessRule"
+			}
+		}
+	},
+	"$defs": {
+		"wrapper": {
+			"type": "object",
+			"required": [
+				"mode"
+			],
+			"properties": {
+				"mode": {
+					"enum": [
+						"auto",
+						"none"
+					]
+				}
+			},
+			"additionalProperties": false
+		},
+		"tri": {
+			"anyOf": [
+				{
+					"type": [
+						"boolean",
+						"string",
+						"integer",
+						"number"
+					]
+				},
+				{
+					"$ref": "#/$defs/wrapper"
+				}
+			]
+		},
+		"triBool": {
+			"anyOf": [
+				{
+					"type": "boolean"
+				},
+				{
+					"$ref": "#/$defs/wrapper"
+				}
+			]
+		},
+		"strList": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"reference": {
+			"type": "object",
+			"properties": {
+				"path": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				}
+			}
+		},
+		"criterion": {
+			"anyOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "object",
+					"required": [
+						"text"
+					],
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"text": {
+							"type": "string"
+						},
+						"origin": {
+							"enum": [
+								"request",
+								"suggestion",
+								"technical"
+							]
+						},
+						"selected": {
+							"type": "boolean"
+						},
+						"adopted_from_suggestion": {
+							"type": "boolean"
+						}
+					}
+				}
+			]
+		},
+		"openDecision": {
+			"type": "object",
+			"required": [
+				"question"
+			],
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"question": {
+					"type": "string"
+				},
+				"options": {
+					"$ref": "#/$defs/strList"
+				},
+				"required": {
+					"type": "boolean"
+				},
+				"answer": {
+					"type": "string"
+				},
+				"note": {
+					"type": "string"
+				}
+			}
+		},
+		"decision": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"question": {
+					"type": "string"
+				},
+				"answer": {
+					"type": "string"
+				}
+			}
+		},
+		"ruleItem": {
+			"anyOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"text": {
+							"type": "string"
+						},
+						"origin": {
+							"enum": [
+								"request",
+								"suggestion",
+								"technical"
+							]
+						},
+						"selected": {
+							"type": "boolean"
+						},
+						"adopted_from_suggestion": {
+							"type": "boolean"
+						}
+					}
+				}
+			]
+		},
+		"field": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"origin": {
+					"enum": [
+						"request",
+						"suggestion",
+						"technical"
+					]
+				},
+				"selected": {
+					"type": "boolean"
+				},
+				"adopted_from_suggestion": {
+					"type": "boolean"
+				},
+				"label": {
+					"type": "string"
+				},
+				"fieldname": {
+					"type": "string"
+				},
+				"fieldtype": {
+					"$ref": "#/$defs/tri"
+				},
+				"required": {
+					"$ref": "#/$defs/tri"
+				},
+				"unique": {
+					"$ref": "#/$defs/tri"
+				},
+				"options": {
+					"$ref": "#/$defs/tri"
+				},
+				"default": {
+					"$ref": "#/$defs/tri"
+				},
+				"read_only": {
+					"$ref": "#/$defs/tri"
+				},
+				"hidden": {
+					"$ref": "#/$defs/tri"
+				},
+				"in_list_view": {
+					"$ref": "#/$defs/tri"
+				},
+				"in_standard_filter": {
+					"$ref": "#/$defs/tri"
+				},
+				"depends_on": {
+					"type": "string"
+				},
+				"mandatory_depends_on": {
+					"type": "string"
+				},
+				"read_only_depends_on": {
+					"type": "string"
+				},
+				"fetch_from": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				}
+			}
+		},
+		"doctype": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"origin": {
+					"enum": [
+						"request",
+						"suggestion",
+						"technical"
+					]
+				},
+				"selected": {
+					"type": "boolean"
+				},
+				"adopted_from_suggestion": {
+					"type": "boolean"
+				},
+				"name": {
+					"type": "string"
+				},
+				"label": {
+					"type": "string"
+				},
+				"purpose": {
+					"type": "string"
+				},
+				"module": {
+					"type": "string"
+				},
+				"existing": {
+					"type": "boolean"
+				},
+				"kind": {
+					"anyOf": [
+						{
+							"enum": [
+								"normal",
+								"child",
+								"single",
+								"auto"
+							]
+						},
+						{
+							"$ref": "#/$defs/wrapper"
+						}
+					]
+				},
+				"naming": {
+					"$ref": "#/$defs/tri"
+				},
+				"submittable": {
+					"$ref": "#/$defs/tri"
+				},
+				"track_changes": {
+					"$ref": "#/$defs/tri"
+				},
+				"fields": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/field"
+					}
+				},
+				"rules": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/ruleItem"
+					}
+				}
+			}
+		},
+		"rights": {
+			"type": "object",
+			"properties": {
+				"read": {
+					"$ref": "#/$defs/triBool"
+				},
+				"write": {
+					"$ref": "#/$defs/triBool"
+				},
+				"create": {
+					"$ref": "#/$defs/triBool"
+				},
+				"delete": {
+					"$ref": "#/$defs/triBool"
+				},
+				"submit": {
+					"$ref": "#/$defs/triBool"
+				},
+				"cancel": {
+					"$ref": "#/$defs/triBool"
+				},
+				"amend": {
+					"$ref": "#/$defs/triBool"
+				},
+				"report": {
+					"$ref": "#/$defs/triBool"
+				},
+				"export": {
+					"$ref": "#/$defs/triBool"
+				},
+				"print": {
+					"$ref": "#/$defs/triBool"
+				},
+				"email": {
+					"$ref": "#/$defs/triBool"
+				},
+				"share": {
+					"$ref": "#/$defs/triBool"
+				}
+			}
+		},
+		"permission": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"origin": {
+					"enum": [
+						"request",
+						"suggestion",
+						"technical"
+					]
+				},
+				"selected": {
+					"type": "boolean"
+				},
+				"adopted_from_suggestion": {
+					"type": "boolean"
+				},
+				"doctype": {
+					"type": "string"
+				},
+				"role": {
+					"type": "string"
+				},
+				"rights": {
+					"$ref": "#/$defs/rights"
+				},
+				"if_owner": {
+					"$ref": "#/$defs/triBool"
+				},
+				"rules": {
+					"type": "string"
+				}
+			}
+		},
+		"workflow": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"origin": {
+					"enum": [
+						"request",
+						"suggestion",
+						"technical"
+					]
+				},
+				"selected": {
+					"type": "boolean"
+				},
+				"adopted_from_suggestion": {
+					"type": "boolean"
+				},
+				"doctype": {
+					"type": "string"
+				},
+				"name": {
+					"type": "string"
+				},
+				"states": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"docstatus": {
+								"$ref": "#/$defs/tri"
+							},
+							"editable_by": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"transitions": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"action": {
+								"type": "string"
+							},
+							"from": {
+								"type": "string"
+							},
+							"to": {
+								"type": "string"
+							},
+							"role": {
+								"type": "string"
+							},
+							"condition": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"docstatus_meaning": {
+					"$ref": "#/$defs/tri"
+				}
+			}
+		},
+		"uiBlock": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"origin": {
+					"enum": [
+						"request",
+						"suggestion",
+						"technical"
+					]
+				},
+				"selected": {
+					"type": "boolean"
+				},
+				"adopted_from_suggestion": {
+					"type": "boolean"
+				},
+				"target": {
+					"type": "string"
+				},
+				"mode": {
+					"anyOf": [
+						{
+							"enum": [
+								"auto",
+								"standard_desk",
+								"custom"
+							]
+						},
+						{
+							"$ref": "#/$defs/wrapper"
+						}
+					]
+				},
+				"layout": {
+					"type": "string"
+				},
+				"events": {
+					"type": "string"
+				},
+				"buttons": {
+					"type": "string"
+				},
+				"display_conditions": {
+					"type": "string"
+				},
+				"filters": {
+					"type": "string"
+				},
+				"sort": {
+					"type": "string"
+				},
+				"flow": {
+					"type": "string"
+				},
+				"reference_images": {
+					"$ref": "#/$defs/strList"
+				}
+			}
+		},
+		"report": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"origin": {
+					"enum": [
+						"request",
+						"suggestion",
+						"technical"
+					]
+				},
+				"selected": {
+					"type": "boolean"
+				},
+				"adopted_from_suggestion": {
+					"type": "boolean"
+				},
+				"name": {
+					"type": "string"
+				},
+				"purpose": {
+					"type": "string"
+				},
+				"source": {
+					"type": "string"
+				},
+				"columns": {
+					"type": "string"
+				},
+				"filters": {
+					"type": "string"
+				},
+				"sort": {
+					"type": "string"
+				},
+				"aggregation": {
+					"type": "string"
+				},
+				"permission": {
+					"type": "string"
+				},
+				"report_type": {
+					"$ref": "#/$defs/tri"
+				}
+			}
+		},
+		"businessRule": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"origin": {
+					"enum": [
+						"request",
+						"suggestion",
+						"technical"
+					]
+				},
+				"selected": {
+					"type": "boolean"
+				},
+				"adopted_from_suggestion": {
+					"type": "boolean"
+				},
+				"name": {
+					"type": "string"
+				},
+				"condition": {
+					"type": "string"
+				},
+				"input": {
+					"type": "string"
+				},
+				"rule": {
+					"type": "string"
+				},
+				"output": {
+					"type": "string"
+				},
+				"exceptions": {
+					"type": "string"
+				},
+				"expected": {
+					"type": "string"
+				},
+				"api": {
+					"type": "object",
+					"properties": {
+						"caller": {
+							"type": "string"
+						},
+						"permission": {
+							"type": "string"
+						},
+						"error_policy": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		}
+	}
+}

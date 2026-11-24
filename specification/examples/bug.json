@@ -1,0 +1,24 @@
+{
+	"schema_version": "1.0",
+	"type": "bug",
+	"status": "draft",
+	"id": "example-next-date-wrong",
+	"name": "[예시] 차기 교정일이 한 달 어긋남",
+	"app": "example_app",
+	"module": "Example Quality",
+	"target": "Calibration Record 저장 시 차기 교정일 계산",
+	"actual": "교정일 2025-01-31, 교정 주기 1개월로 저장하면 차기 교정일이 2025-03-03으로 표시된다.",
+	"reproduction": "1. Calibration Record 신규\n2. 교정일 2025-01-31, 주기 1 입력 후 저장\n3. 계측기의 차기 교정일 확인",
+	"expected": "월말 기준일은 해당 월의 마지막 날(2025-02-28)로 계산된다.",
+	"evidence": "예시 스크린샷 경로: docs/examples/next-date-bug.png",
+	"acceptance_criteria": [
+		{
+			"id": "ac-1",
+			"text": "2025-01-31 + 1개월 = 2025-02-28 로 표시된다."
+		},
+		{
+			"id": "ac-2",
+			"text": "일반 날짜(예: 2025-03-15 + 12개월)의 계산 결과는 변하지 않는다."
+		}
+	]
+}
